@@ -1,0 +1,27 @@
+﻿using Electricity_DAL;
+using Electricity_DAL.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Electricity_Service
+{
+    public class Common_Service
+    {
+        private Electricity_DAL.Common_DAL _common = null;
+        
+        public Common_Service(ConnectionStrings connectionString)
+        {
+            _common = new Electricity_DAL.Common_DAL(connectionString);
+        }
+
+        public async Task<List<AddressProof>> GetAddressProof()
+        {
+            return await _common.GetAddressProof();
+        }
+
+        public async Task<List<IdProof>> GetIdProof()
+        {
+            return await _common.GetIdProof();
+        }
+    }
+}
