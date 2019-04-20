@@ -23,5 +23,10 @@ namespace Electricity_Service
         {
             return await _common.GetIdProof();
         }
+
+        public async Task<List<State>> GetStates()
+        {
+            return await _common.GetStates();
+        }
     }
 }

@@ -94,5 +94,15 @@ namespace Electricity_Service
             }
 
         }
+
+        public async Task<int> InsertBankInfo(BankDetails bank_info)
+        {
+            return await _user.InsertBankInfo(bank_info);
+        }
+
+        public async Task<int> InsertUserInfo(UserDetails user_info)
+        {
+            return await _user.InsertUserInfo(user_info);
+        }
     }
 }

@@ -47,6 +47,15 @@ namespace Electricity_API.Controllers
             return Ok(addressProof);
         }
 
+        // GET api/values
+        [Route("states")]
+        [HttpGet]
+        public async Task<ActionResult> GetStates()
+        {
+            List<State> states = await rs.GetStates();
+            return Ok(states);
+        }
+
         [Route("upload/{filetype}")]
         [HttpPost, DisableRequestSizeLimit]
         public ActionResult UploadFile(string filetype)

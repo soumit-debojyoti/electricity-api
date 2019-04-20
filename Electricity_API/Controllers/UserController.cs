@@ -3,6 +3,7 @@ using Electricity_Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -107,9 +108,90 @@ namespace Electricity_API.Controllers
 
         [Route("registeruser")]
         [HttpPost, DisableRequestSizeLimit]
-        public ActionResult RegisterUser([FromBody] RegisterUser test)
+        public async Task<ActionResult> RegisterUser()//[FromBody] RegisterUser test)
         {
-            var tt = Request.Body;
+            RegisterUser registerUser = new RegisterUser();
+            registerUser.introcode = Request.Form["introcode"];
+            registerUser.introname = Request.Form["introname"];
+            registerUser.username = Request.Form["username"];
+            registerUser.password = Request.Form["password"];
+            registerUser.firstName = Request.Form["firstName"];
+            registerUser.middleName = Request.Form["middleName"];
+            registerUser.lastName = Request.Form["lastName"];
+            registerUser.fathername = Request.Form["fathername"];
+            registerUser.gender = Convert.ToInt32(Request.Form["gender"].ToString());
+            registerUser.dob = Request.Form["dob"];
+            registerUser.mobile = Request.Form["mobile"];
+            registerUser.email = Request.Form["email"];
+            registerUser.pancard = Request.Form["pancard"];
+            registerUser.aadharcard = Request.Form["aadharcard"];
+            registerUser.address = Request.Form["address"];
+            registerUser.po = Request.Form["po"];
+            registerUser.ps = Request.Form["ps"];
+            registerUser.district = Request.Form["district"];
+            registerUser.city = Request.Form["city"];
+            registerUser.state = Convert.ToInt32(Request.Form["state"]);
+            registerUser.pincode = Request.Form["pincode"];
+            registerUser.bankname = Request.Form["bankname"];
+            registerUser.accholdername = Request.Form["accholdername"];
+            registerUser.accnumber = Request.Form["accnumber"];
+            registerUser.ifsc = Request.Form["ifsc"];
+            registerUser.branch = Request.Form["branch"];
+            registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
+            registerUser.idproof = Request.Form["idproof"];
+            registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
+            registerUser.addressproof = Request.Form["addressproof"];
+            registerUser.photo = Request.Form["photo"];
+            registerUser.bankdetails = Request.Form["bankdetails"];
+            registerUser.payonline = Convert.ToBoolean(Request.Form["payonline"].ToString()==string.Empty?false:true);
+
+            BankDetails bdetail = new BankDetails();
+            bdetail.bank_detail_id = 0;
+            bdetail.bank_name = registerUser.bankname;
+            bdetail.account_holder_name = registerUser.accholdername;
+            bdetail.account_number = registerUser.accnumber;
+            bdetail.ifsc_number = registerUser.ifsc;
+            bdetail.branch_name = registerUser.branch;
+            bdetail.id_proof_id = registerUser.idprooftype;
+            bdetail.id_proof_document_path = registerUser.idproof;
+            bdetail.photo = registerUser.photo;
+            bdetail.address_proof_id = registerUser.addressprooftype;
+            bdetail.address_proof_document_path = registerUser.addressproof;
+            bdetail.bank_details = registerUser.bankdetails;
+            bdetail.is_pay_online = registerUser.payonline;
+
+            int bank_detail_id = await rs.InsertBankInfo(bdetail);
+
+
+
+            UserDetails udetail = new UserDetails();
+            udetail.introcode= registerUser.introcode;
+            udetail.introname = registerUser.introname;
+            udetail.username = registerUser.username; 
+            udetail.role_id = 3;
+            udetail.email = registerUser.email;
+            udetail.password = registerUser.password;
+            udetail.first_name = registerUser.firstName;
+            udetail.last_name = registerUser.lastName;
+            udetail.father_name = registerUser.fathername;
+            udetail.dob = registerUser.dob;
+            udetail.mobile_number = registerUser.mobile;
+            udetail.pan_card = registerUser.pancard;
+            udetail.aadhar_card = registerUser.aadharcard;
+            udetail.address = registerUser.address;
+            udetail.post_office = registerUser.po;
+            udetail.police_station = registerUser.ps;
+            udetail.district = registerUser.district;
+            udetail.city = registerUser.city;
+            udetail.state = registerUser.state;
+            udetail.pin = registerUser.pincode;
+            udetail.sex = Enum.GetNames(typeof(Gender)).GetValue(registerUser.gender-1).ToString();
+            udetail.middle_name = registerUser.middleName;
+            udetail.bank_detail_id = bank_detail_id;
+            udetail.introcode = registerUser.introcode;
+            udetail.introname = registerUser.introname;
+            int user_id = await rs.InsertUserInfo(udetail);
+
             return Ok("Registered.");
 
         }

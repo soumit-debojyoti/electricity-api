@@ -77,5 +77,36 @@ namespace Electricity_DAL
             Console.WriteLine("All done. Press any key to finish...");
             return idproofs;
         }
+
+        public async Task<List<State>> GetStates()
+        {
+            List<State> states = new List<State>();
+            State state = null;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_states", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            state = new State();
+                            state.state_id = Convert.ToInt32(reader["state_id"]);
+                            state.state_name = Convert.ToString(reader["state_name"]).Trim();
+                            states.Add(state);
+                        };
+
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return states;
+        }
     }
 }
