@@ -108,5 +108,62 @@ namespace Electricity_DAL
             Console.WriteLine("All done. Press any key to finish...");
             return states;
         }
+
+        public async Task<PagePermissionResponse> PagePermission(string roleId)
+        {
+            PagePermissionResponse p = new PagePermissionResponse();
+            List<PagePermissionModel> ppmEdit = new List<PagePermissionModel>();
+            List<PagePermissionModel> ppmView = new List<PagePermissionModel>();
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_role_permission", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@role_id", SqlDbType.Int).Value = roleId;
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 123456);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                            while (reader.Read())
+                            {
+                                PagePermissionModel pp = new PagePermissionModel();
+                                pp.Page = Convert.ToString(reader["edit_pages"]);
+                                pp.roleId = Convert.ToInt32(reader["role_id"]);
+                                ppmEdit.Add(pp);
+                            };
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    PagePermissionModel pp = new PagePermissionModel();
+                                    pp.Page = Convert.ToString(reader["edit_pages"]);
+                                    pp.roleId = Convert.ToInt32(reader["role_id"]);
+                                    ppmView.Add(pp);
+                                }
+                            }
+                            p.pagePermissionEdit = ppmEdit;
+                            p.pagePermissionView = ppmView;
+                            p.message = message;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return p;
+        }
     }
 }

@@ -31,7 +31,7 @@ namespace Electricity_Service
             return securityKey;
         }
 
-        public async Task<bool> FindUser(string userName, string password)
+        public async Task<FindUserResponse> FindUser(string userName, string password)
         {
             return await _user.Find_Users(userName, password);
         }
@@ -41,20 +41,23 @@ namespace Electricity_Service
             return await _user.QualifyUserToRefer(userName);
         }
 
-        public async Task<string> GetReferelToken(string userName)
+        public async Task<ReferalTokenResponse> GetReferelToken(string userName)
         {
+            ReferalTokenResponse response = new ReferalTokenResponse();
             bool isQualify = await _user.QualifyUserToRefer(userName);
             if (isQualify)
             {
-                return await _user.GetReferelToken(userName);
+                response.token= await _user.GetReferelToken(userName);
+                return response;
             }
             else
             {
-                return string.Empty;
+                response.token = string.Empty;
+                return response;
             }
         }
 
-        public async Task<bool> ValidateReferelToken(string token)
+        public async Task<ValidateReferalTokenResponse> ValidateReferelToken(string token)
         {
             return await _user.ValidateReferelToken(token);
         }
@@ -69,8 +72,8 @@ namespace Electricity_Service
             bool isQualify = await _user.ValidateUserToRefer(userName);
             if (isQualify)
             {
-                bool isValidToken = await _user.ValidateReferelToken(token);
-                if (isValidToken)
+                ValidateReferalTokenResponse validateReferalTokenResponse = await _user.ValidateReferelToken(token);
+                if (validateReferalTokenResponse.is_valid)
                 {
                     bool isSucess = await _user.ReferUserWithToken(userName, token);
                     if (isSucess)

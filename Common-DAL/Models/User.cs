@@ -63,6 +63,8 @@ namespace Electricity_DAL.Models
         public string photo { get; set; }
         public string bankdetails { get; set; }
         public bool payonline { get; set; }
+
+        public bool is_employee { get; set; }
     }
 
     public class UserDetails
@@ -92,6 +94,8 @@ namespace Electricity_DAL.Models
         public int bank_detail_id { get; set; }
         public string introcode { get; set; }
         public string introname { get; set; }
+
+        public bool is_employee { get; set; }
     }
 
     public class BankDetails

@@ -113,9 +113,10 @@ namespace Electricity_DAL
             return result;
         }
 
-        public async Task<bool> Find_Users(string user_name, string password)
+        public async Task<FindUserResponse> Find_Users(string user_name, string password)
         {
-            bool isUserExist = false;
+            FindUserResponse fur = new FindUserResponse();
+
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");
             using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -127,23 +128,28 @@ namespace Electricity_DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = user_name;
                     command.Parameters.Add("@password", SqlDbType.NVarChar).Value = password;
-
-
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    command.Parameters.Add("@is_user_exist", SqlDbType.Bit, 1);
+                    command.Parameters["@is_user_exist"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@role_id", SqlDbType.Int, 12);
+                    command.Parameters["@role_id"].Direction = ParameterDirection.Output;
+                    try
                     {
-                        while (reader.Read())
+                        await command.ExecuteReaderAsync();
                         {
-                            int i = Convert.ToInt32(reader[0]);
-                            if (i > 0)
-                            {
-                                isUserExist = true;
-                            }
+                            fur.IsUserExist = (bool)command.Parameters["@is_user_exist"].Value;
+                            fur.role_id = (int)command.Parameters["@role_id"].Value;
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                    
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
-            return isUserExist;
+            return fur;
         }
 
         public async Task<bool> QualifyUserToRefer(string user_name)
@@ -191,15 +197,18 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = user_name;
-
-
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    command.Parameters.Add("@TOKEN", SqlDbType.NVarChar, 123456);
+                    command.Parameters["@TOKEN"].Direction = ParameterDirection.Output;
+                    try
                     {
-                        while (reader.Read())
+                        await command.ExecuteReaderAsync();
                         {
-                            referelToken = Convert.ToString(reader[0]);
-
+                            referelToken = (string)command.Parameters["@TOKEN"].Value;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
                     }
                 }
             }
@@ -207,9 +216,9 @@ namespace Electricity_DAL
             return referelToken;
         }
 
-        public async Task<bool> ValidateReferelToken(string token)
+        public async Task<ValidateReferalTokenResponse> ValidateReferelToken(string token)
         {
-            bool isValid = false;
+            ValidateReferalTokenResponse objValidateReferalTokenResponse = new ValidateReferalTokenResponse();
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");
             using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -223,17 +232,28 @@ namespace Electricity_DAL
                     //SqlParameter returnParameter=command.Parameters.Add("@bit", SqlDbType.Bit);
                     //returnParameter.Direction = ParameterDirection.ReturnValue;
                     command.Parameters.Add("@bit", SqlDbType.Bit, 1);
-
                     command.Parameters["@bit"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@introducer_name", SqlDbType.NVarChar,3456);
+                    command.Parameters["@introducer_name"].Direction = ParameterDirection.Output;
 
-                    await command.ExecuteReaderAsync();
+                    try
                     {
-                        isValid = (bool)command.Parameters["@bit"].Value;
+                        await command.ExecuteReaderAsync();
+                        {
+                            objValidateReferalTokenResponse.is_valid = (bool)command.Parameters["@bit"].Value;
+                            objValidateReferalTokenResponse.introducer_name = (string)command.Parameters["@introducer_name"].Value;
+                        }
                     }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+                    
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
-            return isValid;
+            return objValidateReferalTokenResponse;
         }
 
         public async Task<bool> ValidateUserToRefer(string user_name)
@@ -374,8 +394,8 @@ namespace Electricity_DAL
                     command.Parameters.Add("@sex", SqlDbType.NVarChar).Value = user_info.sex;
                     command.Parameters.Add("@middle_name", SqlDbType.NVarChar).Value = user_info.middle_name;
                     command.Parameters.Add("@bank_detail_id", SqlDbType.NVarChar).Value = user_info.bank_detail_id;
-                    command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode;
-                    command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname;
+                    command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode!=null ? user_info.introcode:"";
+                    command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname!=null? user_info.introname:"";
 
                     command.Parameters.Add("@user_id", SqlDbType.Int, 0);
                     command.Parameters["@user_id"].Direction = ParameterDirection.Output;

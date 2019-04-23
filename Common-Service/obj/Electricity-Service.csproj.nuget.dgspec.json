@@ -1,0 +1,128 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj": {}
+  },
+  "projects": {
+    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "projectName": "Electricity-DAL",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Soumit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[2.1.1, )"
+            },
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.1.0, )",
+              "autoReferenced": true
+            },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.6.0, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
+    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj",
+        "projectName": "Electricity-Service",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj",
+        "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Soumit\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp2.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp2.1": {
+            "projectReferences": {
+              "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
+                "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp2.1": {
+          "dependencies": {
+            "Microsoft.NETCore.App": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.1.0, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    }
+  }
+}

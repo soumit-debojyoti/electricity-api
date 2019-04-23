@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Electricity_API.Controllers
 {
-    
+
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
@@ -36,7 +36,7 @@ namespace Electricity_API.Controllers
         [Authorize]
         [Route("users/{username}")]
         [HttpGet]
-        public async Task<ActionResult> GetUserByUserName(string username,string text,string text1)
+        public async Task<ActionResult> GetUserByUserName(string username, string text, string text1)
         {
             var response = await rs.GetUser(username);
             return Ok(response);
@@ -57,15 +57,7 @@ namespace Electricity_API.Controllers
         public async Task<ActionResult> GetReferalToken(string userId)
         {
             var token = await rs.GetReferelToken(userId);
-            if (string.IsNullOrEmpty(token))
-            {
-                return Ok("User is not qualify to refer.");  //(HttpStatusCode.Forbidden, "RFID is disabled for this site.");//Forbid();
-            }
-            else
-            {
                 return Ok(token);
-            }
-
         }
 
         // GET api/values
@@ -79,7 +71,7 @@ namespace Electricity_API.Controllers
 
 
 
-       
+
 
         [Authorize]// GET api/values
         [Route("validateusertorefer/{userId}")]
@@ -110,7 +102,9 @@ namespace Electricity_API.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public async Task<ActionResult> RegisterUser()//[FromBody] RegisterUser test)
         {
-            RegisterUser registerUser = new RegisterUser();
+            RegisterUserResponse rr = new RegisterUserResponse();
+               RegisterUser registerUser = new RegisterUser();
+            registerUser.is_employee = Convert.ToString(Request.Form["isEmployee"]) == "true" ? true : false;
             registerUser.introcode = Request.Form["introcode"];
             registerUser.introname = Request.Form["introname"];
             registerUser.username = Request.Form["username"];
@@ -143,7 +137,7 @@ namespace Electricity_API.Controllers
             registerUser.addressproof = Request.Form["addressproof"];
             registerUser.photo = Request.Form["photo"];
             registerUser.bankdetails = Request.Form["bankdetails"];
-            registerUser.payonline = Convert.ToBoolean(Request.Form["payonline"].ToString()==string.Empty?false:true);
+            registerUser.payonline = Convert.ToBoolean(Request.Form["payonline"].ToString() == string.Empty ? false : true);
 
             BankDetails bdetail = new BankDetails();
             bdetail.bank_detail_id = 0;
@@ -165,10 +159,10 @@ namespace Electricity_API.Controllers
 
 
             UserDetails udetail = new UserDetails();
-            udetail.introcode= registerUser.introcode;
+            udetail.introcode = registerUser.introcode;
             udetail.introname = registerUser.introname;
-            udetail.username = registerUser.username; 
-            udetail.role_id = 3;
+            udetail.username = registerUser.username;
+            udetail.role_id = registerUser.is_employee ? 2 : 3;
             udetail.email = registerUser.email;
             udetail.password = registerUser.password;
             udetail.first_name = registerUser.firstName;
@@ -185,14 +179,15 @@ namespace Electricity_API.Controllers
             udetail.city = registerUser.city;
             udetail.state = registerUser.state;
             udetail.pin = registerUser.pincode;
-            udetail.sex = Enum.GetNames(typeof(Gender)).GetValue(registerUser.gender-1).ToString();
+            udetail.sex = Enum.GetNames(typeof(Gender)).GetValue(registerUser.gender - 1).ToString();
             udetail.middle_name = registerUser.middleName;
             udetail.bank_detail_id = bank_detail_id;
             udetail.introcode = registerUser.introcode;
             udetail.introname = registerUser.introname;
+            udetail.is_employee = registerUser.is_employee;
             int user_id = await rs.InsertUserInfo(udetail);
-
-            return Ok("Registered.");
+            rr.message = "Registered.";
+            return Ok(rr);
 
         }
 

@@ -113,7 +113,14 @@ namespace Electricity_API.Controllers
         //    return File(readStream, mimeType, fileName);
         //}
 
-       
+
+        [Route("pagepermission/role/{roleId}")]
+        [HttpGet]
+        public async Task<ActionResult> PagePermission(string roleId)
+        {
+            PagePermissionResponse pages = await rs.PagePermission(roleId);
+            return Ok(pages);
+        }
 
 
     }

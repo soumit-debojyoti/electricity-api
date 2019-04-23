@@ -31,7 +31,7 @@ namespace Electricity_API.Controllers
         [HttpPost("token")]
         [ProducesResponseType(typeof(ResponseModel), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult Token()
+        public async Task<ActionResult> Token()
         {
             //string tokenString = "test";
             var header = Request.Headers["Authorization"];
@@ -41,8 +41,8 @@ namespace Electricity_API.Controllers
                 var usernameAndPassenc = Encoding.UTF8.GetString(Convert.FromBase64String(credValue)); //admin:pass
                 var usernameAndPass = usernameAndPassenc.Split(":");
                 //check in DB username and pass exist
-                
-                if (IsUserExist(usernameAndPass[0],usernameAndPass[1]).Result)
+                FindUserResponse response = await IsUserExist(usernameAndPass[0], usernameAndPass[1]);
+                if (response.IsUserExist)
                 {
                     var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ahbasshfbsahjfbshajbfhjasbfashjbfsajhfvashjfashfbsahfbsahfksdjf"));
@@ -57,7 +57,7 @@ namespace Electricity_API.Controllers
                     var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
                     //var securityKey = us.GetUserKey(usernameAndPass[0]).Result;
-                    return Ok(new ResponseModel() { access_token=tokenString});
+                    return Ok(new ResponseModel() { access_token=tokenString,role_id= response.role_id});
                 }
             }
             return Forbid("Username and Password not matching..");
@@ -65,10 +65,10 @@ namespace Electricity_API.Controllers
             // return View();
         }
 
-        private async Task<bool> IsUserExist(string user_name, string password)
+        private async Task<FindUserResponse> IsUserExist(string user_name, string password)
         {
-            bool isExist = await us.FindUser(user_name, password);
-            return isExist;
+            return await us.FindUser(user_name, password);
+            
         }
     }
 }
