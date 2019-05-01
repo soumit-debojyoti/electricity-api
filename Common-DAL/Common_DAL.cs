@@ -165,5 +165,40 @@ namespace Electricity_DAL
             Console.WriteLine("All done. Press any key to finish...");
             return p;
         }
+
+        public async Task<string> AddWallet(string user_security_stamp)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("add_wallet", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_security_stamp", SqlDbType.NVarChar).Value = user_security_stamp;
+
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
+        }
     }
 }

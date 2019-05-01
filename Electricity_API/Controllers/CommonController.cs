@@ -122,6 +122,14 @@ namespace Electricity_API.Controllers
             return Ok(pages);
         }
 
+        [Route("wallet/{user_security_stamp}")]
+        [HttpPost]
+        public async Task<ActionResult> AddWallet(string user_security_stamp)
+        {
+            AddWalletResponse response = await rs.AddWallet(user_security_stamp);
+            return Ok(response);
+        }
+
 
     }
 }

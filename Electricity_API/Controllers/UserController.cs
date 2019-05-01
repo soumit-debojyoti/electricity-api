@@ -36,7 +36,7 @@ namespace Electricity_API.Controllers
         [Authorize]
         [Route("users/{username}")]
         [HttpGet]
-        public async Task<ActionResult> GetUserByUserName(string username, string text, string text1)
+        public async Task<ActionResult> GetUserByUserName(string username)
         {
             var response = await rs.GetUser(username);
             return Ok(response);
@@ -57,7 +57,7 @@ namespace Electricity_API.Controllers
         public async Task<ActionResult> GetReferalToken(string userId)
         {
             var token = await rs.GetReferelToken(userId);
-                return Ok(token);
+            return Ok(token);
         }
 
         // GET api/values
@@ -103,7 +103,7 @@ namespace Electricity_API.Controllers
         public async Task<ActionResult> RegisterUser()//[FromBody] RegisterUser test)
         {
             RegisterUserResponse rr = new RegisterUserResponse();
-               RegisterUser registerUser = new RegisterUser();
+            RegisterUser registerUser = new RegisterUser();
             registerUser.is_employee = Convert.ToString(Request.Form["isEmployee"]) == "true" ? true : false;
             registerUser.introcode = Request.Form["introcode"];
             registerUser.introname = Request.Form["introname"];
@@ -185,11 +185,38 @@ namespace Electricity_API.Controllers
             udetail.introcode = registerUser.introcode;
             udetail.introname = registerUser.introname;
             udetail.is_employee = registerUser.is_employee;
-            int user_id = await rs.InsertUserInfo(udetail);
+            string user_security_stamp = await rs.InsertUserInfo(udetail);
             rr.message = "Registered.";
+            rr.user_security_stamp = user_security_stamp;
+            RegisterTokenResponse rtr = new RegisterTokenResponse();
+            rtr.message = await rs.RegisterToken(registerUser.introcode, user_security_stamp);
+
+            //Soumit// After this call a procedure to calculate the joining bonus and before the call a sp to get the below outputs from a user_security_stamp
+            //Immediate parent model
+            //List of shiblings
+            //List of user under this user.
+
+
             return Ok(rr);
 
         }
 
+        [Route("registertoken")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> RegisterToken(string security_number, string security_stamp_of_new_user)
+        {
+            RegisterTokenResponse rtr = new RegisterTokenResponse();
+            rtr.message = await rs.RegisterToken(security_number, security_stamp_of_new_user);
+            return Ok(rtr);
+        }
+
+        [Route("rank/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetRankAchieverList(int userId)
+        {
+            RankAchieverModel rtr = new RankAchieverModel();
+            rtr = await rs.GetRankAchieverList(userId);
+            return Ok(rtr);
+        }
     }
 }

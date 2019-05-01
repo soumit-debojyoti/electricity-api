@@ -361,9 +361,9 @@ namespace Electricity_DAL
             return bank_detail_id;
         }
 
-        public async Task<int> InsertUserInfo(UserDetails user_info)
+        public async Task<string> InsertUserInfo(UserDetails user_info)
         {
-            int user_id = 0;
+            string user_security_stamp = string.Empty;
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");
             using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -397,13 +397,13 @@ namespace Electricity_DAL
                     command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode!=null ? user_info.introcode:"";
                     command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname!=null? user_info.introname:"";
 
-                    command.Parameters.Add("@user_id", SqlDbType.Int, 0);
-                    command.Parameters["@user_id"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@user_security_stamp", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@user_security_stamp"].Direction = ParameterDirection.Output;
                     try
                     {
                         await command.ExecuteNonQueryAsync();
                         {
-                            user_id = (int)command.Parameters["@user_id"].Value;
+                            user_security_stamp = (string)command.Parameters["@user_security_stamp"].Value;
                         }
                     }
                     catch (Exception ex)
@@ -415,7 +415,159 @@ namespace Electricity_DAL
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
-            return user_id;
+            return user_security_stamp;
+        }
+
+        public async Task<RankAchieverModel> GetRankAchieverList(int user_id)
+        {
+            RankAchieverModel rank = new RankAchieverModel();
+            OwnModel o = null;
+            ParentModel p = null;
+            List<ChildModel> children = new List<ChildModel>();
+            List<SiblingModel> siblings = new List<SiblingModel>();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_rank_status", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = user_id;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                o = new OwnModel();
+                                // His Own Information
+                                o.user_name = Convert.ToString(reader["user_name"]).Trim();
+                                o.email = Convert.ToString(reader["email"]).Trim();
+                                o.role_name = Convert.ToString(reader["role_name"]).Trim();
+                                o.first_name = Convert.ToString(reader["first_name"]).Trim();
+                                o.middle_name = Convert.ToString(reader["middle_name"]).Trim();
+                                o.last_name = Convert.ToString(reader["last_name"]).Trim();
+                                o.sex = Convert.ToString(reader["sex"]).Trim();
+                                o.father_name = Convert.ToString(reader["father_name"]).Trim();
+                                o.dob = Convert.ToDateTime(reader["dob"]);
+                                o.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
+                            };
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    p = new ParentModel();
+                                    // His Parent Information
+                                    p.user_name = Convert.ToString(reader["user_name"]).Trim();
+                                    p.email = Convert.ToString(reader["email"]).Trim();
+                                    p.role_name = Convert.ToString(reader["role_name"]).Trim();
+                                    p.first_name = Convert.ToString(reader["first_name"]).Trim();
+                                    p.middle_name = Convert.ToString(reader["middle_name"]).Trim();
+                                    p.last_name = Convert.ToString(reader["last_name"]).Trim();
+                                    p.sex = Convert.ToString(reader["sex"]).Trim();
+                                    p.father_name = Convert.ToString(reader["father_name"]).Trim();
+                                    p.dob = Convert.ToDateTime(reader["dob"]);
+                                    p.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
+                                };
+                                
+                            }
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    // His Child Information
+                                    ChildModel c = new ChildModel();
+                                    
+                                    c.user_name = Convert.ToString(reader["user_name"]).Trim();
+                                    c.email = Convert.ToString(reader["email"]).Trim();
+                                    c.role_name = Convert.ToString(reader["role_name"]).Trim();
+                                    c.first_name = Convert.ToString(reader["first_name"]).Trim();
+                                    c.middle_name = Convert.ToString(reader["middle_name"]).Trim();
+                                    c.last_name = Convert.ToString(reader["last_name"]).Trim();
+                                    c.sex = Convert.ToString(reader["sex"]).Trim();
+                                    c.father_name = Convert.ToString(reader["father_name"]).Trim();
+                                    c.dob = Convert.ToDateTime(reader["dob"]);
+                                    c.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
+                                    children.Add(c);
+                                };
+                                
+                            }
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    // His Child Information
+                                    SiblingModel s = new SiblingModel();
+                                    
+                                    s.user_name = Convert.ToString(reader["user_name"]).Trim();
+                                    s.email = Convert.ToString(reader["email"]).Trim();
+                                    s.role_name = Convert.ToString(reader["role_name"]).Trim();
+                                    s.first_name = Convert.ToString(reader["first_name"]).Trim();
+                                    s.middle_name = Convert.ToString(reader["middle_name"]).Trim();
+                                    s.last_name = Convert.ToString(reader["last_name"]).Trim();
+                                    s.sex = Convert.ToString(reader["sex"]).Trim();
+                                    s.father_name = Convert.ToString(reader["father_name"]).Trim();
+                                    s.dob = Convert.ToDateTime(reader["dob"]);
+                                    s.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
+                                    siblings.Add(s);
+                                };
+
+                            }
+                            rank.self = o;
+                            rank.parent = p;
+                            rank.children = children;
+                            rank.siblings = siblings; 
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return rank;
+        }
+
+
+        public async Task<string> RegisterToken(string  security_number,string security_stamp_of_new_user)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("register_user_with_token", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@security_number", SqlDbType.NVarChar).Value = security_number;
+                    command.Parameters.Add("@security_stamp_of_new_user", SqlDbType.NVarChar).Value = security_stamp_of_new_user;
+
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
         }
     }
 }
