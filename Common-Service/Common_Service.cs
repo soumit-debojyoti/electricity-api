@@ -33,6 +33,18 @@ namespace Electricity_Service
         {
             return await _common.PagePermission(roleId);
         }
+
+        public async Task<ConfigurationModel> GetConfiguration()
+        {
+            return await _common.GetConfiguration();
+        }
+
+
+        public async Task<string> UpdateConfiguration(ConfigurationModel config)
+        {
+            return await _common.UpdateConfiguration(config);
+        }
+
         public async Task<AddWalletResponse> AddWallet(string user_security_stamp)
         {
             AddWalletResponse response = new AddWalletResponse();

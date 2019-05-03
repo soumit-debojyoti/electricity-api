@@ -12,6 +12,13 @@ namespace Electricity_DAL.Models
         public List<SiblingModel> siblings { get; set; }
     }
 
+
+    public class RankAchieverCountModel
+    {
+        public int childrenCount { get; set; }
+        public int siblingsCount { get; set; }
+    }
+
     public class OwnModel
     {
         public string user_name { get; set; }

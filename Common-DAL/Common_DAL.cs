@@ -166,6 +166,82 @@ namespace Electricity_DAL
             return p;
         }
 
+        public async Task<ConfigurationModel> GetConfiguration()
+        {
+            ConfigurationModel pp = new ConfigurationModel();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_configuration", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                   
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                pp.referal_wallet_balance_deduct_amount = Convert.ToDouble(reader["referal_wallet_balance_deduct_amount"]);
+                                pp.down_side_direct_numer_of_joinee = Convert.ToInt32(reader["down_side_direct_numer_of_joinee"]);
+                                pp.down_side_direct_of_joinee_point = Convert.ToInt32(reader["down_side_direct_of_joinee_point"]);
+                                pp.point_unit_price = Convert.ToDouble(reader["point_unit_price"]);
+                                pp.first_registration_wallet_balance = Convert.ToDouble(reader["first_registration_wallet_balance"]);
+                            };
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return pp;
+        }
+
+        public async Task<string> UpdateConfiguration(ConfigurationModel config)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("update_configuration", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@referal_wallet_balance_deduct_amount", SqlDbType.Decimal).Value = config.referal_wallet_balance_deduct_amount;
+                    command.Parameters.Add("@down_side_direct_numer_of_joinee", SqlDbType.Int).Value = config.down_side_direct_numer_of_joinee;
+                    command.Parameters.Add("@down_side_direct_of_joinee_point", SqlDbType.Int).Value = config.down_side_direct_of_joinee_point;
+                    command.Parameters.Add("@point_unit_price", SqlDbType.Decimal).Value = config.point_unit_price;
+                    command.Parameters.Add("@first_registration_wallet_balance", SqlDbType.Decimal).Value = config.first_registration_wallet_balance;
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 123456);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
+        }
+
         public async Task<string> AddWallet(string user_security_stamp)
         {
             string message = string.Empty;

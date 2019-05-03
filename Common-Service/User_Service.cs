@@ -117,5 +117,15 @@ namespace Electricity_Service
         {
             return await _user.GetRankAchieverList(user_id);
         }
+
+        public async Task<RankAchieverCountModel> GetRankAchieverListCount(int user_id)
+        {
+            return await _user.GetRankAchieverListCount(user_id);
+        }
+
+        public async Task<bool> FindUser(string user_name)
+        {
+            return await _user.FindUser(user_name);
+        }
     }
 }

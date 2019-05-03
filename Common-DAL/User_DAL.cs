@@ -533,6 +533,85 @@ namespace Electricity_DAL
             return rank;
         }
 
+        public async Task<RankAchieverCountModel> GetRankAchieverListCount(int user_id)
+        {
+            RankAchieverCountModel rank = new RankAchieverCountModel();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_rank_count_status", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = user_id;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                rank.childrenCount = Convert.ToInt32(reader["child"]);
+                                
+                            };
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    rank.siblingsCount = Convert.ToInt32(reader["sibling"]);
+                                };
+
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return rank;
+        }
+
+        public async Task<bool> FindUser(string user_name)
+        {
+            int user_count = 0;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("user_exist", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = user_name;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                user_count = Convert.ToInt32(reader["count"]);
+
+                            };
+                           
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return (user_count>0)?true:false;
+        }
+
 
         public async Task<string> RegisterToken(string  security_number,string security_stamp_of_new_user)
         {

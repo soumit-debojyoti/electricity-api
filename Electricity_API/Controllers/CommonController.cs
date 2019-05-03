@@ -91,34 +91,27 @@ namespace Electricity_API.Controllers
             }
         }
 
-        ////[Authorize]
-        //[Route("download/{fileName}/type/{fileType}")]
-        //[HttpGet]
-        //public FileResult GetFile(string fileName, string fileType)
-        //{
-
-        //    string _folderName = fileType;
-        //    string webRootPath = _hostingEnvironment.WebRootPath;
-        //    string newPath = Path.Combine(webRootPath, _folderName);
-        //    //Set the File Path.
-        //    string filePath = Path.Combine(newPath, fileName);
-
-
-
-        //    FileInfo file = new FileInfo(filePath);
-        //    IFileProvider provider = new PhysicalFileProvider(newPath);
-        //    IFileInfo fileInfo = provider.GetFileInfo(fileName);
-        //    var readStream = fileInfo.CreateReadStream();
-        //    var mimeType = "application/octet-stream";
-        //    return File(readStream, mimeType, fileName);
-        //}
-
-
         [Route("pagepermission/role/{roleId}")]
         [HttpGet]
         public async Task<ActionResult> PagePermission(string roleId)
         {
             PagePermissionResponse pages = await rs.PagePermission(roleId);
+            return Ok(pages);
+        }
+
+        [Route("configuration")]
+        [HttpGet]
+        public async Task<ActionResult> GetConfiguration()
+        {
+            ConfigurationModel pages = await rs.GetConfiguration();
+            return Ok(pages);
+        }
+
+        [Route("configuration")]
+        [HttpPut]
+        public async Task<ActionResult> UpdateConfiguration(ConfigurationModel config)
+        {
+            string pages = await rs.UpdateConfiguration(config);
             return Ok(pages);
         }
 

@@ -218,5 +218,22 @@ namespace Electricity_API.Controllers
             rtr = await rs.GetRankAchieverList(userId);
             return Ok(rtr);
         }
+
+        [Route("rank/user/count/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetRankAchieverListCount(int userId)
+        {
+            RankAchieverCountModel rtr = new RankAchieverCountModel();
+            rtr = await rs.GetRankAchieverListCount(userId);
+            return Ok(rtr);
+        }
+
+        [Route("exist/{userName}")]
+        [HttpGet]
+        public async Task<ActionResult> FindUser(string userName)
+        {
+            bool rtr = await rs.FindUser(userName);
+            return Ok(rtr);
+        }
     }
 }
