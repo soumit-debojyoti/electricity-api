@@ -26,6 +26,7 @@ namespace Electricity_DAL.Models
         public string state_name { get; set; }
         public string pin { get; set; }
         public string sex { get; set; }
+        public string photo { get; set; }
     }
 
     public class RegisterUser

@@ -103,6 +103,7 @@ namespace Electricity_DAL
                             result.state_name = Convert.ToString(reader["state_name"]).Trim();
                             result.pin = Convert.ToString(reader["pin"]).Trim();
                             result.sex = Convert.ToString(reader["sex"]).Trim();
+                            result.photo = Convert.ToString(reader["photo"]).Trim();
                         };
 
                     }

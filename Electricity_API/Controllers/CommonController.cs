@@ -83,7 +83,43 @@ namespace Electricity_API.Controllers
                     }
                 }
 
-                return Ok(filetype+"/"+fileName);
+                return Ok(filetype + "/" + fileName);
+            }
+            catch (System.Exception ex)
+            {
+                return Ok("Upload Failed: ");
+            }
+        }
+
+        [Route("uploadphoto/{fileType}/{fileName}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public ActionResult UploadPhoto(string fileType, string fileName)
+        {
+
+            string fullPath = string.Empty;
+            string filename = string.Empty;
+            try
+            {
+                var file = Request.Form.Files[0];
+                string folderName = fileType;
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                string newPath = Path.Combine(webRootPath, folderName);
+                if (!Directory.Exists(newPath))
+                {
+                    Directory.CreateDirectory(newPath);
+                }
+                if (file.Length > 0)
+                {
+                    filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    fileName = fileName + "." + filename.Split(".")[1];
+                    fullPath = Path.Combine(newPath, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                }
+
+                return Ok(fileType + "/" + fileName);
             }
             catch (System.Exception ex)
             {
