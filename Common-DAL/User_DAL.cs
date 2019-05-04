@@ -534,6 +534,74 @@ namespace Electricity_DAL
             return rank;
         }
 
+        public void GetFirstAchieverList(int user_id, int numberOfChild, List<AchieverList> als)
+        {
+            
+            if (user_id > 0)
+            {
+                Rank rank = GetRank(user_id);
+                if (rank.child > 0)
+                {
+                    if(rank.child >= numberOfChild)
+                    {
+                        AchieverList al = new AchieverList();
+                        al.user_id = user_id;
+                        al.rank = 1;
+                        als.Add(al);
+                    }
+                    for (int i=0; i<rank.ids.Count; i++)
+                    {
+                        GetFirstAchieverList(rank.ids[i], numberOfChild, als);
+                    }
+                }
+            }
+        }
+
+
+
+        public Rank GetRank(int user_id)
+        {
+            Rank r = new Rank();
+            List<int> ids = new List<int>();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_child_count", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = user_id;
+                    command.Parameters.Add("@child", SqlDbType.Int, 0);
+
+                    command.Parameters["@child"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            int child = (Int32)command.Parameters["@child"].Value;
+                            while (reader.Read())
+                            {
+                                int id = Convert.ToInt32(reader["user_id"]);
+                                ids.Add(id);
+                            };
+                            r.child = child;
+                            r.ids = ids;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return r;
+        }
+
         public async Task<RankAchieverCountModel> GetRankAchieverListCount(int user_id)
         {
             RankAchieverCountModel rank = new RankAchieverCountModel();
@@ -612,7 +680,6 @@ namespace Electricity_DAL
             Console.WriteLine("All done. Press any key to finish...");
             return (user_count>0)?true:false;
         }
-
 
         public async Task<string> RegisterToken(string  security_number,string security_stamp_of_new_user)
         {
