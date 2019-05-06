@@ -196,6 +196,49 @@ namespace Electricity_API.Controllers
             //List of shiblings
             //List of user under this user.
 
+            // ------- Added for Rank Achievement
+            #region Rank Achievement
+            if( rs.UpdateUserRank(user_security_stamp, 0))
+            {
+                RankUser introducer = rs.GetIntroducerInfo(user_security_stamp);
+                if (introducer != null)
+                {
+                    var introducerRank = 0;
+                    //rs.UpdateUserRank(introducer.SecurityStamp, 0);
+                    if (rs.FetchUserRank(introducer.SecurityStamp) != null)
+                    {
+                        introducerRank = rs.FetchUserRank(introducer.SecurityStamp).UserRank;
+                    } 
+                    else
+                    {
+                        rs.UpdateUserRank(introducer.SecurityStamp, 0);
+
+                    }
+                    // 1st Level
+                    if (introducerRank  == 0)
+                    {
+                        if (rs.GetUserSamePeer(user_security_stamp).Count >= 5 && introducer.UserJoiningDate.AddDays(70) <= DateTime.Now)
+                        {
+                            rs.UpdateUserRank(introducer.SecurityStamp, 1);
+                        }
+                        else
+                        {
+                            rs.UpdateUserRank(introducer.SecurityStamp, 0);
+                        }
+                    }
+                    // 2nd Level
+                    else if( introducerRank == 1 && introducer.UserJoiningDate.AddDays(120) <= DateTime.Now)
+                    {
+                        //
+                        if (rs.UpdateNextLevel(introducer.SecurityStamp, introducerRank).Count >= 3)
+                        {
+                            rs.UpdateUserRank(user_security_stamp, 2);
+                        }
+                    }
+                }
+            }
+
+            #endregion
 
             return Ok(rr);
 
@@ -234,6 +277,13 @@ namespace Electricity_API.Controllers
         {
             bool rtr = await rs.FindUser(userName);
             return Ok(rtr);
+        }
+
+        [Route("exist/{securityStamp}")]
+        [HttpGet]
+        public async Task<ActionResult> GetUserSamePeer(string securityStamp)
+        {
+            return Ok(rs.GetUserSamePeer(securityStamp));
         }
     }
 }

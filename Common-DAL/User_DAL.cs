@@ -716,5 +716,180 @@ namespace Electricity_DAL
             Console.WriteLine("All done. Press any key to finish...");
             return message;
         }
+
+        public int UpdateUserRank(string userSecurityStamp, int userRank = 0)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UpdateUserRank", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = userSecurityStamp;
+                    command.Parameters.Add("@UserRank", SqlDbType.Int).Value = userRank;
+                    try
+                    {
+                        var resultCount = command.ExecuteNonQuery();
+                        return resultCount;
+                    }
+                    catch (Exception ex)
+                    {
+                        return 0;
+                        // throw ex;
+                    }
+                }
+            }
+        }
+
+        public List<RankUser> GetUserSamePeer(string securityStamp)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("Get_Users_Same_Peer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = securityStamp;
+                    List<RankUser> userInSamePeer = new List<RankUser>();
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var result = new RankUser();
+                                result.UserID = Convert.ToInt32(reader["user_id"]);
+                                result.UserName = Convert.ToString(reader["user_name"]).Trim();
+                                result.Email = Convert.ToString(reader["email"]).Trim();
+                                result.SecurityStamp = Convert.ToString(reader["refered_user_token"]).Trim();
+                                result.FirstName = Convert.ToString(reader["first_name"]).Trim();
+                                result.LastName = Convert.ToString(reader["last_name"]).Trim();
+                                result.RoleID = Convert.ToString(reader["role_id"]).Trim();
+                                result.UserJoiningDate = Convert.ToDateTime(reader["created_date"]);
+                                result.IntroducerCode = Convert.ToString(reader["introcode"]);
+                                result.IntroducerSecurityStamp = Convert.ToString(reader["user_token_key"]).Trim();
+                                userInSamePeer.Add(result);
+                            };
+
+                        }
+                        return userInSamePeer;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                        // throw ex;
+                    }
+                }
+            }
+        }
+
+        public RankUser GetIntroducerInfo(string securityStamp)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GET_USER_INTRODUCER_INFO", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = securityStamp;
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var result = new RankUser();
+                                result.UserID = Convert.ToInt32(reader["user_id"]);
+                                result.UserName = Convert.ToString(reader["user_name"]).Trim();
+                                result.Email = Convert.ToString(reader["email"]).Trim();
+                                result.FirstName = Convert.ToString(reader["first_name"]).Trim();
+                                result.LastName = Convert.ToString(reader["last_name"]).Trim();
+                                result.RoleID = Convert.ToString(reader["role_id"]).Trim();
+                                //result.UserJoiningDate = Convert.ToDateTime(reader["created_date"]);
+                                result.IntroducerCode = Convert.ToString(reader["introcode"]);
+                                result.SecurityStamp = Convert.ToString(reader["security_stamp"]).Trim();
+                                return result;
+                            };
+
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                        // throw ex;
+                    }
+                }
+            }
+        }
+
+        public RankUser FetchUserRank(string userSecurityStamp)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GET_USER_RANK", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = userSecurityStamp;
+                    try
+                    {
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var result = new RankUser();
+                                result.UserRank = Convert.ToInt32(reader["userrank"]);
+                                result.UserJoiningDate = Convert.ToDateTime(reader["joiningdate"]);
+                                return result;
+                            };
+
+                        }
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                        // throw ex;
+                    }
+                }
+            }
+        }
+
+        public List<RankUser> UpdateNextLevel(string userSecurityStamp, int userRank)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GET_RANK_LIST", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = userSecurityStamp;
+                    command.Parameters.Add("@UserRank", SqlDbType.Int).Value = userRank;
+                    try
+                    {
+                        List<RankUser> childList = new List<RankUser>();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var result = new RankUser();
+                                result.UserRank = Convert.ToInt32(reader["userrank"]);
+                                result.UserJoiningDate = Convert.ToDateTime(reader["joiningdate"]);
+                                result.IntroducerSecurityStamp = Convert.ToString(reader["user_token_key"]);
+                                result.SecurityStamp = Convert.ToString(reader["refered_user_token"]);
+                                childList.Add(result);
+                            };
+                            return childList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                        // throw ex;
+                    }
+                }
+            }
+        }
     }
 }
