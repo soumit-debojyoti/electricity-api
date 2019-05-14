@@ -534,6 +534,49 @@ namespace Electricity_DAL
             return rank;
         }
 
+        public void GetAchieverList(int user_id, int numberOfChild)
+        {
+            List<AchieverList> firstAchieverList = new List<AchieverList>();
+            List<AchieverList> secondAchieverList = new List<AchieverList>();
+            //First Acheiver List
+            GetFirstAchieverList(user_id, numberOfChild, firstAchieverList);
+
+            //Second Achiever List
+            if (firstAchieverList.Count > 0)
+            {
+                
+             GetSecondAchieverList(user_id, numberOfChild, secondAchieverList);
+                
+            }
+        }
+
+        public void GetSecondAchieverList(int user_id, int numberOfChild, List<AchieverList> als,bool isChild=false)
+        {
+            if (user_id > 0)
+            {
+                Rank rank = GetRank(user_id);
+                if (rank.child > 0)
+                {
+                    if (isChild==true && rank.child >= numberOfChild)
+                    {
+                        AchieverList achieverList = new AchieverList();
+                        achieverList.user_id = user_id;
+                        achieverList.rank = 1;
+                        als.Add(achieverList);
+                        
+                    }
+                    else
+                    {
+
+                    }
+                    for (int i = 0; i < rank.ids.Count; i++)
+                    {
+                        GetSecondAchieverList(rank.ids[i], numberOfChild, als, true);
+                    }
+                }
+            }
+        }
+
         public void GetFirstAchieverList(int user_id, int numberOfChild, List<AchieverList> als)
         {
             
@@ -544,18 +587,20 @@ namespace Electricity_DAL
                 {
                     if(rank.child >= numberOfChild)
                     {
-                        AchieverList al = new AchieverList();
-                        al.user_id = user_id;
-                        al.rank = 1;
-                        als.Add(al);
+                        AchieverList achieverList = new AchieverList();
+                        achieverList.user_id = user_id;
+                        achieverList.rank = 1;
+                        als.Add(achieverList);
                     }
-                    for (int i=0; i<rank.ids.Count; i++)
-                    {
-                        GetFirstAchieverList(rank.ids[i], numberOfChild, als);
-                    }
+                    //for (int i=0; i<rank.ids.Count; i++)
+                    //{
+                    //    GetFirstAchieverList(rank.ids[i], numberOfChild, als);
+                    //}
                 }
             }
         }
+
+       
 
 
 
