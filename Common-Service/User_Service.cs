@@ -127,5 +127,43 @@ namespace Electricity_Service
         {
             return await _user.FindUser(user_name);
         }
+
+        public bool UpdateUserRank(string userSecurityStamp, int userRank)
+        {
+            return _user.UpdateUserRank(userSecurityStamp, userRank) > 0;
+        }
+
+        public List<RankUser> GetUserSamePeer(string securityStamp)
+        {
+            return _user.GetUserSamePeer(securityStamp);
+        }
+        /// <summary>
+        /// Fetches the Introducer Information
+        /// </summary>
+        /// <param name="securityStamp"></param>
+        /// <returns></returns>
+        public RankUser GetIntroducerInfo(string securityStamp)
+        {
+            return _user.GetIntroducerInfo(securityStamp);
+        }
+        /// <summary>
+        /// Fetch user Rank
+        /// </summary>
+        /// <param name="userSecurityStamp"></param>
+        /// <returns></returns>
+        public RankUser FetchUserRank(string userSecurityStamp)
+        {
+            return _user.FetchUserRank(userSecurityStamp);
+        }
+        /// <summary>
+        /// Updates the rank to next level
+        /// </summary>
+        /// <param name="userSecurityStamp"></param>
+        /// <param name="userRank"></param>
+        /// <returns></returns>
+        public List<RankUser> UpdateNextLevel(string userSecurityStamp, int userRank)
+        {
+            return _user.UpdateNextLevel(userSecurityStamp,userRank);
+        }
     }
 }

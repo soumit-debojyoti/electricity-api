@@ -97,6 +97,8 @@ namespace Electricity_DAL.Models
         public string introname { get; set; }
 
         public bool is_employee { get; set; }
+
+        
     }
 
     public class BankDetails
@@ -122,6 +124,22 @@ namespace Electricity_DAL.Models
         Female = 2,
         Trans = 3,
         NA = 4
+
+    }
+
+    public class RankUser
+    {
+        public int UserID { get; set; }
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string SecurityStamp { get; set; }
+        public string RoleID { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string IntroducerSecurityStamp { get; set; }
+        public string IntroducerCode { get; set; }
+        public DateTime UserJoiningDate { get; set; }
+        public int UserRank { get; set; }
 
     }
 }
