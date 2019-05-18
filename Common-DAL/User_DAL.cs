@@ -786,15 +786,16 @@ namespace Electricity_DAL
             }
         }
 
-        public List<RankUser> GetUserSamePeer(string securityStamp)
+        public List<RankUser> GetUserSamePeer(string introducerSecurityStamp,int introducerRank)
         {
             using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
-                using (SqlCommand command = new SqlCommand("Get_Users_Same_Peer", connection))
+                using (SqlCommand command = new SqlCommand("GET_REFERED_USER_SAME_LEVEL", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("@UserSecurityStamp", SqlDbType.NVarChar).Value = securityStamp;
+                    command.Parameters.Add("@introducerTokenKey", SqlDbType.NVarChar).Value = introducerSecurityStamp;
+                    command.Parameters.Add("@introducerRank", SqlDbType.Int).Value = introducerRank;
                     List<RankUser> userInSamePeer = new List<RankUser>();
                     try
                     {
@@ -813,6 +814,7 @@ namespace Electricity_DAL
                                 result.UserJoiningDate = Convert.ToDateTime(reader["created_date"]);
                                 result.IntroducerCode = Convert.ToString(reader["introcode"]);
                                 result.IntroducerSecurityStamp = Convert.ToString(reader["user_token_key"]).Trim();
+                                result.UserRank = Convert.ToInt32(reader["userrank"]);
                                 userInSamePeer.Add(result);
                             };
 
@@ -828,7 +830,7 @@ namespace Electricity_DAL
             }
         }
 
-        public RankUser GetIntroducerInfo(string securityStamp)
+        public Introducer GetIntroducerInfo(string securityStamp)
         {
             using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
@@ -843,17 +845,15 @@ namespace Electricity_DAL
                         {
                             while (reader.Read())
                             {
-                                var result = new RankUser();
-                                result.UserID = Convert.ToInt32(reader["user_id"]);
-                                result.UserName = Convert.ToString(reader["user_name"]).Trim();
-                                result.Email = Convert.ToString(reader["email"]).Trim();
-                                result.FirstName = Convert.ToString(reader["first_name"]).Trim();
-                                result.LastName = Convert.ToString(reader["last_name"]).Trim();
-                                result.RoleID = Convert.ToString(reader["role_id"]).Trim();
-                                //result.UserJoiningDate = Convert.ToDateTime(reader["created_date"]);
-                                result.IntroducerCode = Convert.ToString(reader["introcode"]);
-                                result.SecurityStamp = Convert.ToString(reader["security_stamp"]).Trim();
-                                return result;
+                                var introducer = new Introducer();
+                                introducer.UserName = Convert.ToString(reader["user_name"]).Trim();
+                                introducer.Name = Convert.ToString(reader["introname"]).Trim();
+                                introducer.SecurityStamp = Convert.ToString(reader["security_stamp"]).Trim();
+                                introducer.IntroductionCode = Convert.ToInt64(reader["introcode"]);
+                                introducer.JoiningDate = Convert.ToDateTime(reader["used_date"]);
+                                introducer.InroducerSecurityStamp = Convert.ToString(reader["user_token_key"]).Trim();
+                                introducer.RoleID = Convert.ToInt32(reader["role_id"]);
+                                return introducer;
                             };
 
                         }
@@ -935,6 +935,28 @@ namespace Electricity_DAL
                     }
                 }
             }
+        }
+
+        public string FetchUserSecurityStamp(int userID)
+        {
+            string userSecurityStamp = string.Empty;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GET_SECURITY_INFO_BY_ID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            userSecurityStamp = reader["security_stamp"].ToString().Trim();
+                        }
+                    }
+                }
+            }
+            return userSecurityStamp;
         }
     }
 }

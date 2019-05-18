@@ -133,16 +133,16 @@ namespace Electricity_Service
             return _user.UpdateUserRank(userSecurityStamp, userRank) > 0;
         }
 
-        public List<RankUser> GetUserSamePeer(string securityStamp)
-        {
-            return _user.GetUserSamePeer(securityStamp);
-        }
+        //public List<RankUser> GetUserSamePeer(string securityStamp)
+        //{
+        //    return _user.GetUserSamePeer(securityStamp);
+        //}
         /// <summary>
         /// Fetches the Introducer Information
         /// </summary>
         /// <param name="securityStamp"></param>
         /// <returns></returns>
-        public RankUser GetIntroducerInfo(string securityStamp)
+        public Introducer GetIntroducerInfo(string securityStamp)
         {
             return _user.GetIntroducerInfo(securityStamp);
         }
@@ -161,9 +161,80 @@ namespace Electricity_Service
         /// <param name="userSecurityStamp"></param>
         /// <param name="userRank"></param>
         /// <returns></returns>
-        public List<RankUser> UpdateNextLevel(string userSecurityStamp, int userRank)
+        public void UpdateNextLevel(string userSecurityStamp)
         {
-            return _user.UpdateNextLevel(userSecurityStamp,userRank);
+            bool response = true;
+            while (response)
+            {
+                response = false;
+                Introducer introducer = _user.GetIntroducerInfo(userSecurityStamp);
+                if (introducer != null && introducer.RoleID != 4)
+                {
+                    response = GetUserSamePeer(introducer);
+                    userSecurityStamp = introducer.SecurityStamp;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Check user count and update rank for introducer
+        /// </summary>
+        /// <param name="user_security_stamp"></param>
+        /// <param name="introducerRank"></param>
+        /// <returns></returns>
+        public bool GetUserSamePeer(Introducer introducer)
+        {
+            bool isIntroducerRankUpdated = false;
+            //Introducer introducer = _user.GetIntroducerInfo(user_security_stamp);
+            if (introducer != null && introducer.RoleID != 4)
+            {
+                var introducerRank = 0;
+                //rs.UpdateUserRank(introducer.SecurityStamp, 0);
+                if (_user.FetchUserRank(introducer.SecurityStamp) != null)
+                {
+                    introducerRank = _user.FetchUserRank(introducer.SecurityStamp).UserRank;
+                }
+                else
+                {
+                    _user.UpdateUserRank(introducer.SecurityStamp, 0);
+
+                }
+                // 1st Level
+                if (introducerRank == 0)
+                {
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2 && introducer.JoiningDate.AddDays(-70) <= DateTime.Now)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 1);
+                        isIntroducerRankUpdated = true;
+                    }
+                    else
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 0);
+                    }
+                }
+                // 2nd Level
+                else if (introducerRank == 1 && introducer.JoiningDate.AddDays(-120) <= DateTime.Now)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 2);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+            }
+            return isIntroducerRankUpdated; 
+        }
+        /// <summary>
+        /// Fetches the User Rank By User ID
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public int FetchUserRank(int userID)
+        {
+            return   _user.FetchUserRank(
+                _user.FetchUserSecurityStamp(userID)).UserRank;
         }
     }
 }
