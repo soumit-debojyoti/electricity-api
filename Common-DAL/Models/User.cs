@@ -142,4 +142,39 @@ namespace Electricity_DAL.Models
         public int UserRank { get; set; }
 
     }
+
+    /// <summary>
+    /// This model defines the Introducer Information of User
+    /// </summary>
+    public class Introducer
+    {
+        /// <summary>
+        /// Introducer's User name
+        /// </summary>
+        public string UserName { get; set; }
+        /// <summary>
+        /// Introducer's Security Stamp
+        /// </summary>
+        public string SecurityStamp { get; set; }
+        /// <summary>
+        /// Introduction Code used to register the user by this introducer
+        /// </summary>
+        public Int64 IntroductionCode { get; set; }
+        /// <summary>
+        /// Introducer's Name
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// Introducer's Joining date
+        /// </summary>
+        public DateTime JoiningDate { get; set; }
+        /// <summary>
+        /// Introducer's Role ID
+        /// </summary>
+        public int RoleID { get; set; }
+        /// <summary>
+        /// Introducer's introducer_Security Stamp
+        /// </summary>
+        public string InroducerSecurityStamp { get; set; } 
+    }
 }
