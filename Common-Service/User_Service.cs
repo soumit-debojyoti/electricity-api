@@ -233,8 +233,17 @@ namespace Electricity_Service
         /// <returns></returns>
         public int FetchUserRank(int userID)
         {
-            return   _user.FetchUserRank(
-                _user.FetchUserSecurityStamp(userID)).UserRank;
+            try
+            {
+                return _user.FetchUserRank(
+               _user.FetchUserSecurityStamp(userID)).UserRank;
+            }
+            catch
+            {
+
+                return 0;
+            }
+           
         }
     }
 }

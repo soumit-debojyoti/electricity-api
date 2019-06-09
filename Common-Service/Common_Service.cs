@@ -1,5 +1,6 @@
 ﻿using Electricity_DAL;
 using Electricity_DAL.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -48,7 +49,72 @@ namespace Electricity_Service
         public async Task<AddWalletResponse> AddWallet(string user_security_stamp)
         {
             AddWalletResponse response = new AddWalletResponse();
-            response.message = await _common.AddWallet(user_security_stamp);
+            response = await _common.AddWallet(user_security_stamp);
+            return response;
+        }
+
+        public async Task<AddWalletTrnsactionResponse> AddWalletTransaction(double amount, int userId, string message, string transaction_mode)
+        {
+            AddWalletTrnsactionResponse response = new AddWalletTrnsactionResponse();
+            response = await _common.AddWalletTransaction(amount, userId, message, transaction_mode);
+            return response;
+        }
+
+        public async Task<WalletWidthdrawalResponse> AddWalletWidthdrawalRequest(int request_initiator_id,string comment)
+        {
+            WalletWidthdrawalResponse response = new WalletWidthdrawalResponse();
+            response = await _common.AddWalletWidthdrawalRequest(request_initiator_id, comment);
+            return response;
+        }
+
+        public async Task<BalanceRequestResponse> AddWalletBalanceRequest(int requestInitiatorId, decimal amount, string comment)
+        {
+            BalanceRequestResponse response = new BalanceRequestResponse();
+            response = await _common.AddWalletBalanceRequest(requestInitiatorId, amount, comment);
+            return response;
+        }
+
+        public async Task<AdminApprovalNotificationModel> AdminApprovalNotification(int userId)
+        {
+            AdminApprovalNotificationModel response = new AdminApprovalNotificationModel();
+            response = await _common.AdminApprovalNotification(userId);
+            return response;
+        }
+
+        public async Task<AdminWalletAddApprovalNotificationModel> AdminAddWalletApprovalNotification(int userId)
+        {
+            AdminWalletAddApprovalNotificationModel response = new AdminWalletAddApprovalNotificationModel();
+            response = await _common.AdminAddWalletApprovalNotification(userId);
+            return response;
+        }
+
+        public async Task<List<WithdrawalWallet>> UpdateWalletWithdrawal(List<WithdrawalWallet> withdrawalWalletModels)
+        {
+            foreach (WithdrawalWallet withdrawalWalletModel in withdrawalWalletModels)
+            {
+                WithdrawalWallet response = await _common.UpdateWalletWithdrawal(withdrawalWalletModel);
+
+            }
+           
+            
+            return withdrawalWalletModels;
+        }
+
+        public async Task<List<AddWallet>> UpdateWalletAdd(List<AddWallet> withdrawalWalletModels)
+        {
+            foreach (AddWallet withdrawalWalletModel in withdrawalWalletModels)
+            {
+                AddWallet response = await _common.UpdateWalletAdd(withdrawalWalletModel);
+
+            }
+
+
+            return withdrawalWalletModels;
+        }
+
+        public async Task<bool> IsWithdrawalRequestSendByThisUser(int userId)
+        {
+            var response = await _common.IsWithdrawalRequestSendByThisUser(userId);
             return response;
         }
     }

@@ -44,21 +44,24 @@ namespace Electricity_API.Controllers
                 FindUserResponse response = await IsUserExist(usernameAndPass[0], usernameAndPass[1]);
                 if (response.IsUserExist)
                 {
-                    var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ahbasshfbsahjfbshajbfhjasbfashjbfsajhfvashjfashfbsahfbsahfksdjf"));
-                    var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-                    var token = new JwtSecurityToken(
-                         issuer: "mysite.com",
-                         audience: "mysite.com",
-                         expires: DateTime.Now.AddMinutes(1),
-                         claims: claimsdata,
-                         signingCredentials: signInCred
-                        );
-                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                    
+                        var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ahbasshfbsahjfbshajbfhjasbfashjbfsajhfvashjfashfbsahfbsahfksdjf"));
+                        var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+                        var token = new JwtSecurityToken(
+                             issuer: "mysite.com",
+                             audience: "mysite.com",
+                             expires: DateTime.Now.AddMinutes(1),
+                             claims: claimsdata,
+                             signingCredentials: signInCred
+                            );
+                        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                    //var securityKey = us.GetUserKey(usernameAndPass[0]).Result;
-                    return Ok(new ResponseModel() { access_token=tokenString,role_id= response.role_id});
+                        //var securityKey = us.GetUserKey(usernameAndPass[0]).Result;
+                        return Ok(new ResponseModel() { isLoginSuccess=true, access_token = tokenString, role_id = response.role_id, message = response.message });
+                    
                 }
+                
             }
             return Forbid("Username and Password not matching..");
 

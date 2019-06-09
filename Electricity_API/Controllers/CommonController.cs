@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -159,6 +160,79 @@ namespace Electricity_API.Controllers
             return Ok(response);
         }
 
+        [Route("wallettransaction")]
+        [HttpPost]
+        public async Task<ActionResult> AddWalletTransaction()
+        {
+            double amount_wallet = Convert.ToDouble(Request.Form["amount"]);
+            int userId = Convert.ToInt32(Request.Form["userId"]);
+            string message = Convert.ToString(Request.Form["message"]);
+            string transaction_mode = Convert.ToString(Request.Form["transactionMode"]);
+            AddWalletTrnsactionResponse response = await rs.AddWalletTransaction(amount_wallet, userId, message, transaction_mode);
+            return Ok(response);
+        }
 
+        [Authorize]
+        [Route("walletwidthdrawal/user/{requestInitiatorId}/comment/{comment}")]
+        [HttpPost]
+        public async Task<ActionResult> AddWalletWidthdrawalRequest(int requestInitiatorId,string comment)
+        {
+            WalletWidthdrawalResponse response = await rs.AddWalletWidthdrawalRequest(requestInitiatorId, comment);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [Route("requestbalance/user/{requestInitiatorId}/amount/{amount}/comment/{comment}")]
+        [HttpPost]
+        public async Task<ActionResult> AddWalletBalanceRequest(int requestInitiatorId,decimal amount, string comment)
+        {
+            BalanceRequestResponse response = await rs.AddWalletBalanceRequest(requestInitiatorId, amount, comment);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [Route("adminwalletwithdrawalapprovalnotification/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> AdminApprovalNotification(int userId)
+        {
+            AdminApprovalNotificationModel response = await rs.AdminApprovalNotification(userId);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [Route("adminaddwalletapprovalnotification/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> AdminAddWalletApprovalNotification(int userId)
+        {
+            AdminWalletAddApprovalNotificationModel response = await rs.AdminAddWalletApprovalNotification(userId);
+            return Ok(response);
+        }
+
+        //[Authorize]
+        [Route("walletwidthdrawal/approve")]
+        [HttpPost]
+        public async Task<ActionResult> UpdateWalletWithdrawal([FromBody] List<WithdrawalWallet> withdrawalWalletModels)
+        {
+            List<WithdrawalWallet> response = await rs.UpdateWalletWithdrawal(withdrawalWalletModels);
+           return Ok(response);
+        }
+
+        //[Authorize]
+        [Route("walletadd/approve")]
+        [HttpPost]
+        public async Task<ActionResult> UpdateWalletAdd([FromBody] List<AddWallet> withdrawalWalletModels)
+        {
+            List<AddWallet> response = await rs.UpdateWalletAdd(withdrawalWalletModels);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [Route("withdrawalrequestfinder/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> IsWithdrawalRequestSendByThisUser(int userId)
+        {
+            bool response = await rs.IsWithdrawalRequestSendByThisUser(userId);
+            return Ok(response);
+        }
     }
 }

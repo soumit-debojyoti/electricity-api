@@ -8,5 +8,7 @@ namespace Electricity_DAL.Models
     {
         public string access_token { get; set; }
         public int role_id { get; set; }
+        public string message { get; set; }
+        public bool isLoginSuccess { get; set; }
     }
 }
