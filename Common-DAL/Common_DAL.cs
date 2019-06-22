@@ -399,6 +399,44 @@ namespace Electricity_DAL
             return walletWidthdrawalResponse;
         }
 
+        public async Task<BalanceRequestResponse> DeductWalletBalanceRequest(int request_initiator_id, decimal amount, string comment)
+        {
+            BalanceRequestResponse walletWidthdrawalResponse = new BalanceRequestResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("deduct_balance_request", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@request_initiator_id", SqlDbType.Int).Value = request_initiator_id;
+                    command.Parameters.Add("@comment", SqlDbType.NVarChar).Value = comment;
+                    command.Parameters.Add("@amount", SqlDbType.Decimal).Value = amount;
+                    command.Parameters.Add("@widthdrawal_amount", SqlDbType.Decimal, 123);
+                    command.Parameters["@widthdrawal_amount"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@return_message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@return_message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            walletWidthdrawalResponse.amount_requested = (decimal)command.Parameters["@widthdrawal_amount"].Value;
+                            walletWidthdrawalResponse.message = (string)command.Parameters["@return_message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return walletWidthdrawalResponse;
+        }
         public async Task<AdminApprovalNotificationModel> AdminApprovalNotification(int userId)
         {
             AdminApprovalNotificationModel adminApprovalNotificationModel = new AdminApprovalNotificationModel();
@@ -435,6 +473,7 @@ namespace Electricity_DAL
                                     pp.createdon = Convert.ToDateTime(reader["created_on"]);
                                     pp.request_initiator_id = Convert.ToInt32(reader["request_initiator_id"]);
                                     pp.wallet_balance = Convert.ToDecimal(reader["wallet_balance"]);
+                                    //pp.balance_request_type = Convert.ToString(reader["balance_request_type"]);
                                     withdrawals.Add(pp);
                                 }
                             }
@@ -454,16 +493,16 @@ namespace Electricity_DAL
             return adminApprovalNotificationModel;
         }
 
-        public async Task<AdminWalletAddApprovalNotificationModel> AdminAddWalletApprovalNotification(int userId)
+        public async Task<AdminWalletAddDeductApprovalNotificationModel> AdminAddDeductWalletApprovalNotification(int userId)
         {
-            AdminWalletAddApprovalNotificationModel adminApprovalNotificationModel = new AdminWalletAddApprovalNotificationModel();
+            AdminWalletAddDeductApprovalNotificationModel adminApprovalNotificationModel = new AdminWalletAddDeductApprovalNotificationModel();
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");
             using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
                 connection.Open();
                 Console.WriteLine("Done.");
-                using (SqlCommand command = new SqlCommand("admin_wallet_add_approval_notification", connection))
+                using (SqlCommand command = new SqlCommand("admin_wallet_add_deduct_approval_notification", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@user_id", SqlDbType.Int).Value = userId;
@@ -472,7 +511,7 @@ namespace Electricity_DAL
                         using (SqlDataReader reader = await command.ExecuteReaderAsync())
                         {
 
-                            List<AddWallet> withdrawals = new List<AddWallet>();
+                            List<AddDeductWallet> withdrawals = new List<AddDeductWallet>();
                             while (reader.Read())
                             {
                                 adminApprovalNotificationModel.addRequestCount = Convert.ToInt32(reader["withdrawal_request_count"]);
@@ -481,7 +520,7 @@ namespace Electricity_DAL
                             {
                                 while (reader.Read())
                                 {
-                                    AddWallet pp = new AddWallet();
+                                    AddDeductWallet pp = new AddDeductWallet();
                                     pp.addwalletid = Convert.ToInt32(reader["balance_request_id"]);
                                     pp.firstname = Convert.ToString(reader["first_name"]);
                                     pp.middlename = Convert.ToString(reader["middle_name"]);
@@ -490,10 +529,11 @@ namespace Electricity_DAL
                                     pp.createdon = Convert.ToDateTime(reader["created_on"]);
                                     pp.request_initiator_id = Convert.ToInt32(reader["request_initiator_id"]);
                                     pp.wallet_balance = Convert.ToDecimal(reader["amount"]);
+                                    pp.balance_request_type = Convert.ToString(reader["balance_request_type"]);
                                     withdrawals.Add(pp);
                                 }
                             }
-                            adminApprovalNotificationModel.addWalletModels = withdrawals;
+                            adminApprovalNotificationModel.addDeductWalletModels = withdrawals;
                             adminApprovalNotificationModel.message = "success";
                         }
                     }
@@ -576,7 +616,7 @@ namespace Electricity_DAL
             return withdrawalWalletModel;
         }
 
-        public async Task<AddWallet> UpdateWalletAdd(AddWallet withdrawalWalletModel)
+        public async Task<AddDeductWallet> UpdateWalletAdd(AddDeductWallet withdrawalWalletModel)
         {
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");

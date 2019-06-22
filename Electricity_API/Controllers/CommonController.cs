@@ -191,6 +191,15 @@ namespace Electricity_API.Controllers
         }
 
         [Authorize]
+        [Route("requestbalancededuct/user/{requestInitiatorId}/amount/{amount}/comment/{comment}")]
+        [HttpPost]
+        public async Task<ActionResult> DeductWalletBalanceRequest(int requestInitiatorId, decimal amount, string comment)
+        {
+            BalanceRequestResponse response = await rs.DeductWalletBalanceRequest(requestInitiatorId, amount, comment);
+            return Ok(response);
+        }
+
+        [Authorize]
         [Route("adminwalletwithdrawalapprovalnotification/user/{userId}")]
         [HttpGet]
         public async Task<ActionResult> AdminApprovalNotification(int userId)
@@ -200,11 +209,11 @@ namespace Electricity_API.Controllers
         }
 
         [Authorize]
-        [Route("adminaddwalletapprovalnotification/user/{userId}")]
+        [Route("adminadddeductwalletapprovalnotification/user/{userId}")]
         [HttpGet]
-        public async Task<ActionResult> AdminAddWalletApprovalNotification(int userId)
+        public async Task<ActionResult> AdminAddDeductWalletApprovalNotification(int userId)
         {
-            AdminWalletAddApprovalNotificationModel response = await rs.AdminAddWalletApprovalNotification(userId);
+            AdminWalletAddDeductApprovalNotificationModel response = await rs.AdminAddDeductWalletApprovalNotification(userId);
             return Ok(response);
         }
 
@@ -218,11 +227,11 @@ namespace Electricity_API.Controllers
         }
 
         //[Authorize]
-        [Route("walletadd/approve")]
+        [Route("walletadddeduct/approve")]
         [HttpPost]
-        public async Task<ActionResult> UpdateWalletAdd([FromBody] List<AddWallet> withdrawalWalletModels)
+        public async Task<ActionResult> UpdateWalletAdd([FromBody] List<AddDeductWallet> withdrawalWalletModels)
         {
-            List<AddWallet> response = await rs.UpdateWalletAdd(withdrawalWalletModels);
+            List<AddDeductWallet> response = await rs.UpdateWalletAdd(withdrawalWalletModels);
             return Ok(response);
         }
 

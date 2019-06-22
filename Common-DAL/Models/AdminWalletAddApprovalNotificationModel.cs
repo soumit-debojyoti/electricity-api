@@ -4,14 +4,14 @@ using System.Text;
 
 namespace Electricity_DAL.Models
 {
-    public class AdminWalletAddApprovalNotificationModel
+    public class AdminWalletAddDeductApprovalNotificationModel
     {
         public int addRequestCount { get; set; }
-        public List<AddWallet> addWalletModels { get; set; }
+        public List<AddDeductWallet> addDeductWalletModels { get; set; }
         public string message { get; set; }
     }
 
-    public class AddWallet
+    public class AddDeductWallet
     {
         public int addwalletid { get; set; }
         public string firstname { get; set; }
@@ -26,5 +26,6 @@ namespace Electricity_DAL.Models
         public string message { get; set; }
         public int request_initiator_id { get; set; }
         public decimal wallet_balance { get; set; }
+        public string balance_request_type { get; set; }
     }
 }

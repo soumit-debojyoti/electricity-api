@@ -74,6 +74,13 @@ namespace Electricity_Service
             return response;
         }
 
+        public async Task<BalanceRequestResponse> DeductWalletBalanceRequest(int requestInitiatorId, decimal amount, string comment)
+        {
+            BalanceRequestResponse response = new BalanceRequestResponse();
+            response = await _common.DeductWalletBalanceRequest(requestInitiatorId, amount, comment);
+            return response;
+        }
+
         public async Task<AdminApprovalNotificationModel> AdminApprovalNotification(int userId)
         {
             AdminApprovalNotificationModel response = new AdminApprovalNotificationModel();
@@ -81,10 +88,10 @@ namespace Electricity_Service
             return response;
         }
 
-        public async Task<AdminWalletAddApprovalNotificationModel> AdminAddWalletApprovalNotification(int userId)
+        public async Task<AdminWalletAddDeductApprovalNotificationModel> AdminAddDeductWalletApprovalNotification(int userId)
         {
-            AdminWalletAddApprovalNotificationModel response = new AdminWalletAddApprovalNotificationModel();
-            response = await _common.AdminAddWalletApprovalNotification(userId);
+            AdminWalletAddDeductApprovalNotificationModel response = new AdminWalletAddDeductApprovalNotificationModel();
+            response = await _common.AdminAddDeductWalletApprovalNotification(userId);
             return response;
         }
 
@@ -100,11 +107,11 @@ namespace Electricity_Service
             return withdrawalWalletModels;
         }
 
-        public async Task<List<AddWallet>> UpdateWalletAdd(List<AddWallet> withdrawalWalletModels)
+        public async Task<List<AddDeductWallet>> UpdateWalletAdd(List<AddDeductWallet> withdrawalWalletModels)
         {
-            foreach (AddWallet withdrawalWalletModel in withdrawalWalletModels)
+            foreach (AddDeductWallet withdrawalWalletModel in withdrawalWalletModels)
             {
-                AddWallet response = await _common.UpdateWalletAdd(withdrawalWalletModel);
+                AddDeductWallet response = await _common.UpdateWalletAdd(withdrawalWalletModel);
 
             }
 

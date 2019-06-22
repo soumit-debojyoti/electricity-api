@@ -17,3 +17,4 @@ E:\EXPERIMENT\business\API\Electricity-API\Common-DAL\obj\Debug\netcoreapp2.1\El
 E:\EXPERIMENT\business\API\Electricity-API\Common-DAL\obj\Debug\netcoreapp2.1\Electricity-DAL.AssemblyInfo.cs
 E:\EXPERIMENT\business\API\Electricity-API\Common-DAL\obj\Debug\netcoreapp2.1\Electricity-DAL.dll
 E:\EXPERIMENT\business\API\Electricity-API\Common-DAL\obj\Debug\netcoreapp2.1\Electricity-DAL.pdb
+E:\EXPERIMENT\business\API\Electricity-API\Common-DAL\obj\Debug\netcoreapp2.1\Electricity-DAL.csprojAssemblyReference.cache

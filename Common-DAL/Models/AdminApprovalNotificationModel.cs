@@ -26,5 +26,6 @@ namespace Electricity_DAL.Models
         public string message { get; set; }
         public int request_initiator_id { get; set; }
         public decimal wallet_balance { get; set; }
+        public string balance_request_type { get; set; }
     }
 }
