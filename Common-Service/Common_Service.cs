@@ -107,11 +107,11 @@ namespace Electricity_Service
             return withdrawalWalletModels;
         }
 
-        public async Task<List<AddDeductWallet>> UpdateWalletAdd(List<AddDeductWallet> withdrawalWalletModels)
+        public async Task<List<AddDeductWallet>> UpdateWalletAddDeduct(List<AddDeductWallet> withdrawalWalletModels)
         {
             foreach (AddDeductWallet withdrawalWalletModel in withdrawalWalletModels)
             {
-                AddDeductWallet response = await _common.UpdateWalletAdd(withdrawalWalletModel);
+                AddDeductWallet response = await _common.UpdateWalletAddDeduct(withdrawalWalletModel);
 
             }
 

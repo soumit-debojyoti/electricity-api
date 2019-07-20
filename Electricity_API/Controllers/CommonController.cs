@@ -229,9 +229,9 @@ namespace Electricity_API.Controllers
         //[Authorize]
         [Route("walletadddeduct/approve")]
         [HttpPost]
-        public async Task<ActionResult> UpdateWalletAdd([FromBody] List<AddDeductWallet> withdrawalWalletModels)
+        public async Task<ActionResult> UpdateWalletAddDeduct([FromBody] List<AddDeductWallet> withdrawalWalletModels)
         {
-            List<AddDeductWallet> response = await rs.UpdateWalletAdd(withdrawalWalletModels);
+            List<AddDeductWallet> response = await rs.UpdateWalletAddDeduct(withdrawalWalletModels);
             return Ok(response);
         }
 

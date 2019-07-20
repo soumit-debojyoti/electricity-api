@@ -616,7 +616,7 @@ namespace Electricity_DAL
             return withdrawalWalletModel;
         }
 
-        public async Task<AddDeductWallet> UpdateWalletAdd(AddDeductWallet withdrawalWalletModel)
+        public async Task<AddDeductWallet> UpdateWalletAddDeduct(AddDeductWallet withdrawalWalletModel)
         {
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
             Console.Write("Connecting to SQL Server ... ");
@@ -624,13 +624,14 @@ namespace Electricity_DAL
             {
                 connection.Open();
                 Console.WriteLine("Done.");
-                using (SqlCommand command = new SqlCommand("wallet_add_update", connection))
+                using (SqlCommand command = new SqlCommand("wallet_add_deduct_update", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@balance_request_id", SqlDbType.Int).Value = withdrawalWalletModel.addwalletid;
                     command.Parameters.Add("@is_approve", SqlDbType.Bit).Value = withdrawalWalletModel.approved;
                     command.Parameters.Add("@is_rejected", SqlDbType.Bit).Value = withdrawalWalletModel.rejected;
                     command.Parameters.Add("@approver_comment", SqlDbType.NVarChar).Value = withdrawalWalletModel.admin_comment;
+                    command.Parameters.Add("@mode_of_operation", SqlDbType.NVarChar).Value = withdrawalWalletModel.balance_request_type;
                     command.Parameters.Add("@return_message", SqlDbType.NVarChar, 1233232);
                     command.Parameters["@return_message"].Direction = ParameterDirection.Output;
                     try
