@@ -260,6 +260,41 @@ namespace Electricity_DAL
             return objValidateReferalTokenResponse;
         }
 
+        public async Task<UserWalletBalanceResponse> GetWalletBalance(int userId)
+        {
+            UserWalletBalanceResponse objUserWalletBalanceResponse = new UserWalletBalanceResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_balance", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = userId;
+                    command.Parameters.Add("@wallet_count", SqlDbType.Int, 45);
+                    command.Parameters["@wallet_count"].Direction = ParameterDirection.Output;
+
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        {
+                            objUserWalletBalanceResponse.WalletBalance = (int)command.Parameters["@wallet_count"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return objUserWalletBalanceResponse;
+        }
+
         public async Task<bool> ValidateUserToRefer(string user_name)
         {
             bool isValid = false;

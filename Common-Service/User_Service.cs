@@ -62,6 +62,11 @@ namespace Electricity_Service
             return await _user.ValidateReferelToken(token);
         }
 
+        public async Task<UserWalletBalanceResponse> GetWalletBalance(int userId)
+        {
+            return await _user.GetWalletBalance(userId);
+        }
+
         public async Task<bool> ValidateUserToRefer(string userName)
         {
             return await _user.ValidateUserToRefer(userName);

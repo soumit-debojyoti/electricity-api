@@ -69,7 +69,14 @@ namespace Electricity_API.Controllers
             return Ok(isValid);
         }
 
-
+        // GET api/values
+        [Route("walletbalance/user/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetWalletBalance(int userId)
+        {
+            var walletBalance = await rs.GetWalletBalance(userId);
+            return Ok(walletBalance);
+        }
 
 
 
