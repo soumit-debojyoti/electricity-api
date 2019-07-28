@@ -295,6 +295,98 @@ namespace Electricity_DAL
             return objUserWalletBalanceResponse;
         }
 
+        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId,int monthNumber, int yearNumber)
+        {
+            WalletReportResponse objWalletReportResponse = new WalletReportResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("wallet_balance_report", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = userId;
+                    command.Parameters.Add("@transaction_month", SqlDbType.Int).Value = monthNumber;
+                    command.Parameters.Add("@transaction_year", SqlDbType.Int).Value = yearNumber;
+                    List<UserLog> userlogs = new List<UserLog>();
+                    List<WalletLog> walletlogs = new List<WalletLog>();
+                    List<DateLog> datelogs = new List<DateLog>();
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                UserLog ul = new UserLog();
+                                ul.user_id = Convert.ToInt32(reader["user_id"]);
+                                ul.user_name = Convert.ToString(reader["user_name"]);
+                                userlogs.Add(ul);
+                            };
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    WalletLog wl = new WalletLog();
+                                    wl.wallet_transaction_id = Convert.ToInt32(reader["wallet_transaction_id"]);
+                                    wl.transaction_amount = Convert.ToDouble(reader["transaction_amount"]);
+                                    wl.transaction_initiated_user = Convert.ToInt32(reader["transaction_initiated_user"]);
+                                    wl.message = Convert.ToString(reader["message"]);
+                                    wl.created_on = Convert.ToDateTime(reader["created_on"]);
+                                    wl.transaction_mode = Convert.ToString(reader["transaction_mode"]);
+                                    walletlogs.Add(wl);
+                                }
+                            }
+                            if (reader.NextResult())
+                            {
+                                while (reader.Read())
+                                {
+                                    DateLog dl = new DateLog();
+                                    dl.month_number = Convert.ToInt32(reader["month_number"]);
+                                    dl.month_name = Convert.ToString(reader["month_name"]);
+                                    dl.year_name = Convert.ToString(reader["year_name"]);
+                                    var fild = datelogs.FindAll(x =>
+                                    {
+                                        if (x.month_name == dl.month_name)
+                                        {
+                                            if (x.year_name == dl.year_name)
+                                            {
+                                                return true;
+                                            }
+                                            else
+                                            {
+                                                return false;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            return false;
+                                        }
+                                    });
+                                    if (fild.Count == 0)
+                                    {
+                                        datelogs.Add(dl);
+                                    }
+                                }
+                            }
+                            objWalletReportResponse.user_logs = userlogs;
+                            objWalletReportResponse.wallet_logs = walletlogs;
+                            objWalletReportResponse.date_logs = datelogs;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return objWalletReportResponse;
+        }
+
         public async Task<bool> ValidateUserToRefer(string user_name)
         {
             bool isValid = false;

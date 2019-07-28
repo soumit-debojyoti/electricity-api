@@ -78,7 +78,14 @@ namespace Electricity_API.Controllers
             return Ok(walletBalance);
         }
 
-
+        // GET api/values
+        [Route("walletbalancereport/user/{userId}/month/{monthNumber}/year/{yearNumber}")]
+        [HttpGet]
+        public async Task<ActionResult> GetWalletTransactionReport(int userId,int monthNumber,int yearNumber)
+        {
+            var walletBalanceReport = await rs.GetWalletTransactionReport(userId, monthNumber, yearNumber);
+            return Ok(walletBalanceReport);
+        }
 
         [Authorize]// GET api/values
         [Route("validateusertorefer/{userId}")]
