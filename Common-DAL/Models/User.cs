@@ -11,6 +11,7 @@ namespace Electricity_DAL.Models
         public string email { get; set; }
         public string security_stamp { get; set; }
         public string role_name { get; set; }
+        public int role_id { get; set; }
         public string first_name { get; set; }
         public string last_name { get; set; }
         public string father_name { get; set; }

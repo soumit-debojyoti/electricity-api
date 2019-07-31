@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -256,12 +257,15 @@ namespace Electricity_API.Controllers
             return Ok(rtr);
         }
 
-        //[Route("exist/{securityStamp}")]
-        //[HttpGet]
-        //public async Task<ActionResult> GetUserSamePeer(string securityStamp)
-        //{
-        //    return Ok(rs.GetUserSamePeer(securityStamp));
-        //}
+        [Authorize]
+        [Route("balancetransfer/sender/{senderId}/receiver/{receiverId}/amount/{amount}/comment/{comment}")]
+        [HttpPost]
+        public async Task<ActionResult> BalanceTransfer(int senderId, int receiverId, decimal amount, string comment)
+        {
+            TransferAmountModel response = await rs.BalanceTransfer(senderId, receiverId, amount, comment);
+            return Ok(response);
+        }
+
         [HttpGet("{userID}/userrank")]
         public int FetchUserRank(int userID)
         {

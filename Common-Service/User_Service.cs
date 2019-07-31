@@ -133,6 +133,11 @@ namespace Electricity_Service
             return await _user.GetRankAchieverListCount(user_id);
         }
 
+        public async Task<TransferAmountModel> BalanceTransfer(int senderId, int receiverId, decimal amount, string comment)
+        {
+            return await _user.BalanceTransfer(senderId, receiverId, amount, comment);
+        }
+
         public async Task<bool> FindUser(string user_name)
         {
             return await _user.FindUser(user_name);

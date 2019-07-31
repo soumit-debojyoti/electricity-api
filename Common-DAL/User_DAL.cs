@@ -33,30 +33,41 @@ namespace Electricity_DAL
                     {
                         while (reader.Read())
                         {
-                            var user = new User
+                            try
                             {
-                                user_id = Convert.ToInt32(reader["user_id"]),
-                                user_name = Convert.ToString(reader["user_name"]),
-                                email = Convert.ToString(reader["email"]),
-                                security_stamp = Convert.ToString(reader["security_stamp"]),
-                                role_name = Convert.ToString(reader["role_name"]),
-                                first_name = Convert.ToString(reader["first_name"]),
-                                last_name = Convert.ToString(reader["last_name"]),
-                                father_name = Convert.ToString(reader["father_name"]),
-                                dob = Convert.ToDateTime(reader["dob"]).ToString("dd/MM/yyyy"),
-                                mobile_number = Convert.ToString(reader["mobile_number"]),
-                                pan_card = Convert.ToString(reader["pan_card"]),
-                                aadhar_card = Convert.ToString(reader["aadhar_card"]),
-                                address = Convert.ToString(reader["address"]),
-                                post_office = Convert.ToString(reader["post_office"]),
-                                police_station = Convert.ToString(reader["police_station"]),
-                                district = Convert.ToString(reader["district"]),
-                                city = Convert.ToString(reader["city"]),
-                                state_name = Convert.ToString(reader["state_name"]),
-                                pin = Convert.ToString(reader["pin"]),
-                                sex = Convert.ToString(reader["sex"])
-                            };
-                            results.Add(user);
+                                var user = new User
+                                {
+                                    user_id = Convert.ToInt32(reader["user_id"]),
+                                    user_name = Convert.ToString(reader["user_name"]),
+                                    email = Convert.ToString(reader["email"]),
+                                    security_stamp = Convert.ToString(reader["security_stamp"]),
+                                    role_name = Convert.ToString(reader["role_name"]),
+                                    role_id = Convert.ToInt32(reader["role_id"])
+                                    //,
+                                    //first_name = Convert.ToString(reader["first_name"]),
+                                    //last_name = Convert.ToString(reader["last_name"]),
+                                    //father_name = Convert.ToString(reader["father_name"]),
+                                    //dob = Convert.ToDateTime(reader["dob"]).ToString("dd/MM/yyyy"),
+                                    //mobile_number = Convert.ToString(reader["mobile_number"]),
+                                    //pan_card = Convert.ToString(reader["pan_card"]),
+                                    //aadhar_card = Convert.ToString(reader["aadhar_card"]),
+                                    //address = Convert.ToString(reader["address"]),
+                                    //post_office = Convert.ToString(reader["post_office"]),
+                                    //police_station = Convert.ToString(reader["police_station"]),
+                                    //district = Convert.ToString(reader["district"]),
+                                    //city = Convert.ToString(reader["city"]),
+                                    //state_name = Convert.ToString(reader["state_name"]),
+                                    //pin = Convert.ToString(reader["pin"]),
+                                    //sex = Convert.ToString(reader["sex"])
+                                };
+                                results.Add(user);
+                            }
+                            catch (Exception ex)
+                            {
+
+                               
+                            }
+                            
                         }
                     }
                 }
@@ -818,6 +829,46 @@ namespace Electricity_DAL
 
             Console.WriteLine("All done. Press any key to finish...");
             return rank;
+        }
+
+        public async Task<TransferAmountModel> BalanceTransfer(int senderId, int receiverId, decimal amount, string comment)
+        {
+            TransferAmountModel transfer = new TransferAmountModel();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("wallet_balance_transfer", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@sender_id", SqlDbType.Int).Value = senderId;
+                    command.Parameters.Add("@receiver_id", SqlDbType.Int).Value = receiverId;
+                    command.Parameters.Add("@balance", SqlDbType.Decimal).Value = amount;
+                    command.Parameters.Add("@sender_comment", SqlDbType.NVarChar).Value = amount;
+
+                    command.Parameters.Add("@is_rejected", SqlDbType.Bit, 5);
+                    command.Parameters["@is_rejected"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@return_message", SqlDbType.NVarChar, 100000);
+                    command.Parameters["@return_message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            transfer.is_rejected = (bool)command.Parameters["@is_rejected"].Value;
+                            transfer.return_message = (string)command.Parameters["@return_message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return transfer;
         }
 
         public async Task<bool> FindUser(string user_name)

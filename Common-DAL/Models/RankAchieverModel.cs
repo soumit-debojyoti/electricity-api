@@ -19,6 +19,12 @@ namespace Electricity_DAL.Models
         public int siblingsCount { get; set; }
     }
 
+    public class TransferAmountModel
+    {
+        public bool is_rejected { get; set; }
+        public string return_message { get; set; }
+    }
+
     public class OwnModel
     {
         public string user_name { get; set; }
