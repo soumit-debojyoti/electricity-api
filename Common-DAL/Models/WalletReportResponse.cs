@@ -8,7 +8,7 @@ namespace Electricity_DAL.Models
     {
         public List<UserLog> user_logs { get; set; }
         public List<WalletLog> wallet_logs { get; set; }
-        public List<DateLog> date_logs { get; set; }
+        //public List<DateLog> date_logs { get; set; }
     }
 
     public class UserLog

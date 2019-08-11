@@ -125,6 +125,58 @@ namespace Electricity_DAL
             return result;
         }
 
+        public async Task<List<User>> SearchUser(string user_name)
+        {
+            User result = null;
+            List<User> results = new List<User>();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("search_user", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = user_name;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            result = new User();
+                            result.user_id = Convert.ToInt32(reader["user_id"]);
+                            result.user_name = Convert.ToString(reader["user_name"]).Trim();
+                            result.email = Convert.ToString(reader["email"]).Trim();
+                            result.security_stamp = Convert.ToString(reader["security_stamp"]).Trim();
+                            result.role_name = Convert.ToString(reader["role_name"]).Trim();
+                            result.first_name = Convert.ToString(reader["first_name"]).Trim();
+                            result.last_name = Convert.ToString(reader["last_name"]).Trim();
+                            result.father_name = Convert.ToString(reader["father_name"]).Trim();
+                            result.dob = Convert.ToDateTime(reader["dob"]).ToString("dd/MMM/yyyy").Trim();
+                            result.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
+                            result.pan_card = Convert.ToString(reader["pan_card"]).Trim();
+                            result.aadhar_card = Convert.ToString(reader["aadhar_card"]).Trim();
+                            result.address = Convert.ToString(reader["address"]).Trim();
+                            result.post_office = Convert.ToString(reader["post_office"]).Trim();
+                            result.police_station = Convert.ToString(reader["police_station"]).Trim();
+                            result.district = Convert.ToString(reader["district"]).Trim();
+                            result.city = Convert.ToString(reader["city"]).Trim();
+                            result.state_name = Convert.ToString(reader["state_name"]).Trim();
+                            result.pin = Convert.ToString(reader["pin"]).Trim();
+                            result.sex = Convert.ToString(reader["sex"]).Trim();
+                            result.photo = Convert.ToString(reader["photo"]).Trim();
+
+                            results.Add(result);
+                        };
+
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return results;
+        }
+
         public async Task<FindUserResponse> Find_Users(string user_name, string password)
         {
             FindUserResponse fur = new FindUserResponse();
@@ -306,7 +358,7 @@ namespace Electricity_DAL
             return objUserWalletBalanceResponse;
         }
 
-        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId,int monthNumber, int yearNumber)
+        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId,string start_date, string end_date)
         {
             WalletReportResponse objWalletReportResponse = new WalletReportResponse();
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
@@ -319,8 +371,8 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@user_id", SqlDbType.Int).Value = userId;
-                    command.Parameters.Add("@transaction_month", SqlDbType.Int).Value = monthNumber;
-                    command.Parameters.Add("@transaction_year", SqlDbType.Int).Value = yearNumber;
+                    command.Parameters.Add("@start_date", SqlDbType.NVarChar).Value = end_date;
+                    command.Parameters.Add("@end_date", SqlDbType.NVarChar).Value = start_date;
                     List<UserLog> userlogs = new List<UserLog>();
                     List<WalletLog> walletlogs = new List<WalletLog>();
                     List<DateLog> datelogs = new List<DateLog>();
@@ -349,41 +401,41 @@ namespace Electricity_DAL
                                     walletlogs.Add(wl);
                                 }
                             }
-                            if (reader.NextResult())
-                            {
-                                while (reader.Read())
-                                {
-                                    DateLog dl = new DateLog();
-                                    dl.month_number = Convert.ToInt32(reader["month_number"]);
-                                    dl.month_name = Convert.ToString(reader["month_name"]);
-                                    dl.year_name = Convert.ToString(reader["year_name"]);
-                                    var fild = datelogs.FindAll(x =>
-                                    {
-                                        if (x.month_name == dl.month_name)
-                                        {
-                                            if (x.year_name == dl.year_name)
-                                            {
-                                                return true;
-                                            }
-                                            else
-                                            {
-                                                return false;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            return false;
-                                        }
-                                    });
-                                    if (fild.Count == 0)
-                                    {
-                                        datelogs.Add(dl);
-                                    }
-                                }
-                            }
+                            //if (reader.NextResult())
+                            //{
+                            //    while (reader.Read())
+                            //    {
+                            //        DateLog dl = new DateLog();
+                            //        dl.month_number = Convert.ToInt32(reader["month_number"]);
+                            //        dl.month_name = Convert.ToString(reader["month_name"]);
+                            //        dl.year_name = Convert.ToString(reader["year_name"]);
+                            //        var fild = datelogs.FindAll(x =>
+                            //        {
+                            //            if (x.month_name == dl.month_name)
+                            //            {
+                            //                if (x.year_name == dl.year_name)
+                            //                {
+                            //                    return true;
+                            //                }
+                            //                else
+                            //                {
+                            //                    return false;
+                            //                }
+                            //            }
+                            //            else
+                            //            {
+                            //                return false;
+                            //            }
+                            //        });
+                            //        if (fild.Count == 0)
+                            //        {
+                            //            datelogs.Add(dl);
+                            //        }
+                            //    }
+                            //}
                             objWalletReportResponse.user_logs = userlogs;
                             objWalletReportResponse.wallet_logs = walletlogs;
-                            objWalletReportResponse.date_logs = datelogs;
+                            //objWalletReportResponse.date_logs = datelogs;
                         }
                     }
                     catch (Exception ex)

@@ -43,6 +43,20 @@ namespace Electricity_API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [Route("searchusers/{name}")]
+        [HttpGet]
+        public async Task<ActionResult> SearchUserByUserName(string name)
+        {
+            if(name== "all")
+            {
+                name = "";
+            }
+
+            var response = await rs.SearchUser(name);
+            return Ok(response);
+        }
+
         [Authorize]// GET api/values
         [Route("qualifyusertorefer/{userId}")]
         [HttpGet]
@@ -80,11 +94,11 @@ namespace Electricity_API.Controllers
         }
 
         // GET api/values
-        [Route("walletbalancereport/user/{userId}/month/{monthNumber}/year/{yearNumber}")]
+        [Route("walletbalancereport/user/{userId}/start/{startDate}/end/{endDate}")]
         [HttpGet]
-        public async Task<ActionResult> GetWalletTransactionReport(int userId,int monthNumber,int yearNumber)
+        public async Task<ActionResult> GetWalletTransactionReport(int userId, string startDate, string endDate)
         {
-            var walletBalanceReport = await rs.GetWalletTransactionReport(userId, monthNumber, yearNumber);
+            var walletBalanceReport = await rs.GetWalletTransactionReport(userId, startDate, endDate);
             return Ok(walletBalanceReport);
         }
 

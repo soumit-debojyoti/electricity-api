@@ -24,6 +24,11 @@ namespace Electricity_Service
             return await _user.Get_User(user_name);
         }
 
+        public async Task<List<User>> SearchUser(string user_name)
+        {
+            return await _user.SearchUser(user_name);
+        }
+
         public async Task<string> GetUserKey(string userName)
         {
             List<User> users = await _user.Get_Users();
@@ -67,9 +72,9 @@ namespace Electricity_Service
             return await _user.GetWalletBalance(userId);
         }
 
-        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId, int monthNumber, int yearNumber)
+        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId, string start_date, string end_date)
         {
-            return await _user.GetWalletTransactionReport(userId, monthNumber, yearNumber);
+            return await _user.GetWalletTransactionReport(userId, start_date, end_date);
         }
 
         public async Task<bool> ValidateUserToRefer(string userName)
