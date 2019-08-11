@@ -8,5 +8,10 @@ namespace Electricity_DAL.Models
     {
         public string message { get; set; }
     }
-    
+
+    public class ReactivateTokenResponse
+    {
+        public string message { get; set; }
+    }
+
 }

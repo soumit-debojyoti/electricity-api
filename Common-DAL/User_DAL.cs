@@ -283,6 +283,90 @@ namespace Electricity_DAL
             return referelToken;
         }
 
+        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails()
+        {
+            List<TokenDetailsGeneric> tokens = new List<TokenDetailsGeneric>();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_token_details", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@token", SqlDbType.NVarChar).Value = string.Empty;
+                    
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                TokenDetailsGeneric token = new TokenDetailsGeneric();
+                                token.token = Convert.ToString(reader["token"]);
+                                token.created_date = Convert.ToDateTime(reader["created_date"]);
+                                token.is_expired = Convert.ToBoolean(reader["is_expired"]);
+                                tokens.Add(token);
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return tokens;
+        }
+
+        public async Task<List<TokenDetailsSpecific>> GetUnusedReferalTokenDetailsByToken(string tokenstring)
+        {
+            {
+                List<TokenDetailsSpecific> tokens = new List<TokenDetailsSpecific>();
+                Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+                Console.Write("Connecting to SQL Server ... ");
+                using (SqlConnection connection = new SqlConnection(this._connectionString))
+                {
+                    connection.Open();
+                    Console.WriteLine("Done.");
+                    using (SqlCommand command = new SqlCommand("get_token_details", connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@token", SqlDbType.NVarChar).Value = tokenstring;
+
+                        try
+                        {
+                            using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                            {
+                                while (reader.Read())
+                                {
+                                    TokenDetailsSpecific token = new TokenDetailsSpecific();
+                                    token.token = Convert.ToString(reader["token"]);
+                                    token.created_date = Convert.ToDateTime(reader["created_date"]);
+                                    token.expiry_date = Convert.ToDateTime(reader["expiry_date"]);
+                                    token.token_generator = Convert.ToString(reader["token_generator"]);
+                                    token.is_expired = Convert.ToBoolean(reader["is_expired"]);
+                                    tokens.Add(token);
+                                };
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
+                            throw ex;
+                        }
+
+                    }
+                }
+                Console.WriteLine("All done. Press any key to finish...");
+                return tokens;
+            }
+        }
+
         public async Task<ValidateReferalTokenResponse> ValidateReferelToken(string token)
         {
             ValidateReferalTokenResponse objValidateReferalTokenResponse = new ValidateReferalTokenResponse();
@@ -986,6 +1070,40 @@ namespace Electricity_DAL
                     catch (Exception ex)
                     {
 
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
+        }
+
+        public async Task<string> ReactivateToken(string token)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("reactivate_token", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@token", SqlDbType.NVarChar).Value = token;
+
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
                         throw ex;
                     }
 

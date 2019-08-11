@@ -75,6 +75,24 @@ namespace Electricity_API.Controllers
             return Ok(token);
         }
 
+        [Authorize]// GET api/values
+        [Route("unusedtokendetails")]
+        [HttpGet]
+        public async Task<ActionResult> GetUnusedReferalTokenDetails()
+        {
+            var token = await rs.GetUnusedReferalTokenDetails();
+            return Ok(token);
+        }
+
+        [Authorize]// GET api/values
+        [Route("unusedtokendetails/{token}")]
+        [HttpGet]
+        public async Task<ActionResult> GetUnusedReferalTokenDetailsByToken(string token)
+        {
+            var tokens = await rs.GetUnusedReferalTokenDetailsByToken(token);
+            return Ok(tokens);
+        }
+
         // GET api/values
         [Route("validatetoken/{token}")]
         [HttpGet]
@@ -242,6 +260,16 @@ namespace Electricity_API.Controllers
         {
             RegisterTokenResponse rtr = new RegisterTokenResponse();
             rtr.message = await rs.RegisterToken(security_number, security_stamp_of_new_user);
+            return Ok(rtr);
+        }
+
+        [Authorize]
+        [Route("reactivatetoken/{token}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> ReactivateToken(string token)
+        {
+            ReactivateTokenResponse rtr = new ReactivateTokenResponse();
+            rtr.message = await rs.ReactivateToken(token);
             return Ok(rtr);
         }
 

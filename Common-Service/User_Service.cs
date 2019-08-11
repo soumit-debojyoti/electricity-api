@@ -46,6 +46,16 @@ namespace Electricity_Service
             return await _user.QualifyUserToRefer(userName);
         }
 
+        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails()
+        {
+            return await _user.GetUnusedReferalTokenDetails();
+        }
+
+        public async Task<List<TokenDetailsSpecific>> GetUnusedReferalTokenDetailsByToken(string token)
+        {
+            return await _user.GetUnusedReferalTokenDetailsByToken(token);
+        }
+
         public async Task<ReferalTokenResponse> GetReferelToken(string userName)
         {
             ReferalTokenResponse response = new ReferalTokenResponse();
@@ -126,6 +136,11 @@ namespace Electricity_Service
         public async Task<string> RegisterToken(string security_number, string security_stamp_of_new_user)
         {
             return await _user.RegisterToken(security_number, security_stamp_of_new_user);
+        }
+
+        public async Task<string> ReactivateToken(string token)
+        {
+            return await _user.ReactivateToken(token);
         }
 
         public async Task<RankAchieverModel> GetRankAchieverList(int user_id)
