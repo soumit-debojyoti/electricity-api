@@ -11,3 +11,16 @@ E:\EXPERIMENT\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electri
 E:\EXPERIMENT\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.csproj.CopyComplete
 E:\EXPERIMENT\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.dll
 E:\EXPERIMENT\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.pdb
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-Service.deps.json
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-Service.dll
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-Service.pdb
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-DAL.dll
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-DAL.pdb
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\bin\Debug\netcoreapp2.1\Electricity-DAL.dll.config
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.csprojAssemblyReference.cache
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.csproj.CoreCompileInputs.cache
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.AssemblyInfoInputs.cache
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.AssemblyInfo.cs
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.csproj.CopyComplete
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.dll
+E:\EXPERIMENT\business\API\Electricity-API\Common-Service\obj\Debug\netcoreapp2.1\Electricity-Service.pdb

@@ -30,6 +30,11 @@ namespace Electricity_Service
             return await _common.GetStates();
         }
 
+        public async Task<bool> ReUploadPhoto(string userName, string filePath)
+        {
+            return await _common.ReUploadPhoto(userName, filePath);
+        }
+
         public async Task<PagePermissionResponse> PagePermission(string roleId)
         {
             return await _common.PagePermission(roleId);

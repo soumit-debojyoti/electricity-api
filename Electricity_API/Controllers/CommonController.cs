@@ -8,7 +8,9 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -121,6 +123,48 @@ namespace Electricity_API.Controllers
                 }
 
                 return Ok(fileType + "/" + fileName);
+            }
+            catch (System.Exception ex)
+            {
+                return Ok("Upload Failed: ");
+            }
+        }
+
+
+        [Route("reuploadphoto/{userName}/{fileType}/{fileName}/{oldfileName}/{oldfileExtension}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> ReUploadPhoto(string userName, string fileType, string fileName, string oldfileName, string oldfileExtension)
+        {
+
+            string fullPath = string.Empty;
+            string filename = string.Empty;
+            bool isSuccess = false;
+            string oldImage = string.Empty;
+            try
+            {
+               
+                var file = Request.Form.Files[0];
+                string folderName = fileType;
+                string webRootPath = _hostingEnvironment.WebRootPath;
+                string newPath = Path.Combine(webRootPath, folderName);
+                if (!Directory.Exists(newPath))
+                {
+                    Directory.CreateDirectory(newPath);
+                }
+                if (file.Length > 0)
+                {
+                    filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName.Trim('"');
+                    fileName = fileName + "." + filename.Split(".")[1];
+                    fullPath = Path.Combine(newPath, fileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create))
+                    {
+                        file.CopyTo(stream);
+                    }
+                    System.IO.File.Delete(Path.Combine(newPath, oldfileName+"."+ oldfileExtension));
+                }
+                fullPath = fileType + "/" + fileName;
+                isSuccess = await rs.ReUploadPhoto(userName, fullPath);
+                return Ok(fullPath);
             }
             catch (System.Exception ex)
             {

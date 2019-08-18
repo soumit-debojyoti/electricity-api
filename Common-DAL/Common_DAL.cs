@@ -109,6 +109,40 @@ namespace Electricity_DAL
             return states;
         }
 
+        public async Task<bool> ReUploadPhoto(string userName, string filePath)
+        {
+            bool isSuccess = false;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("update_profile_picture", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = userName;
+                    command.Parameters.Add("@file_name_with_path", SqlDbType.NVarChar).Value = filePath;
+                    command.Parameters.Add("@is_success", SqlDbType.Bit, 123456);
+                    command.Parameters["@is_success"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            isSuccess = (bool)command.Parameters["@is_success"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+
+            Console.WriteLine("All done. Press any key to finish...");
+            return isSuccess;
+        }
+
         public async Task<PagePermissionResponse> PagePermission(string roleId)
         {
             PagePermissionResponse p = new PagePermissionResponse();
