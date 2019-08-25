@@ -195,15 +195,11 @@ namespace Electricity_API.Controllers
             bdetail.branch_name = registerUser.branch;
             bdetail.id_proof_id = registerUser.idprooftype;
             bdetail.id_proof_document_path = registerUser.idproof;
-            bdetail.photo = registerUser.photo;
             bdetail.address_proof_id = registerUser.addressprooftype;
             bdetail.address_proof_document_path = registerUser.addressproof;
             bdetail.bank_details = registerUser.bankdetails;
             bdetail.is_pay_online = registerUser.payonline;
-
             int bank_detail_id = await rs.InsertBankInfo(bdetail);
-
-
 
             UserDetails udetail = new UserDetails();
             udetail.introcode = registerUser.introcode;
@@ -231,6 +227,7 @@ namespace Electricity_API.Controllers
             udetail.bank_detail_id = bank_detail_id;
             udetail.introcode = registerUser.introcode;
             udetail.introname = registerUser.introname;
+            udetail.photo = registerUser.photo;
             udetail.is_employee = registerUser.is_employee;
             string user_security_stamp = await rs.InsertUserInfo(udetail);
             rr.message = "Registered.";

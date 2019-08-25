@@ -612,7 +612,6 @@ namespace Electricity_DAL
                     command.Parameters.Add("@branch_name", SqlDbType.NVarChar).Value = bank_info.branch_name;
                     command.Parameters.Add("@id_proof_id", SqlDbType.Int).Value = bank_info.id_proof_id;
                     command.Parameters.Add("@id_proof_document_path", SqlDbType.NVarChar).Value = bank_info.id_proof_document_path;
-                    command.Parameters.Add("@photo_loc", SqlDbType.NVarChar).Value = bank_info.photo;
                     command.Parameters.Add("@address_proof_id", SqlDbType.Int).Value = bank_info.address_proof_id;
                     command.Parameters.Add("@address_proof_document_path", SqlDbType.NVarChar).Value = bank_info.address_proof_document_path;
                     command.Parameters.Add("@bank_details", SqlDbType.NVarChar).Value = bank_info.bank_details;
@@ -660,6 +659,7 @@ namespace Electricity_DAL
                     command.Parameters.Add("@father_name", SqlDbType.NVarChar).Value = user_info.father_name;
                     command.Parameters.Add("@dob", SqlDbType.NVarChar).Value = user_info.dob;
                     command.Parameters.Add("@mobile_number", SqlDbType.NVarChar).Value = user_info.mobile_number;
+                    command.Parameters.Add("@photo_loc", SqlDbType.NVarChar).Value = user_info.photo;
                     command.Parameters.Add("@pan_card", SqlDbType.NVarChar).Value = user_info.pan_card;
                     command.Parameters.Add("@aadhar_card", SqlDbType.NVarChar).Value = user_info.aadhar_card;
                     command.Parameters.Add("@address", SqlDbType.NVarChar).Value = user_info.address;

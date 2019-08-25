@@ -96,7 +96,7 @@ namespace Electricity_DAL.Models
         public int bank_detail_id { get; set; }
         public string introcode { get; set; }
         public string introname { get; set; }
-
+        public string photo { get; set; }
         public bool is_employee { get; set; }
 
         
@@ -112,7 +112,6 @@ namespace Electricity_DAL.Models
         public string branch_name { get; set; }
         public int id_proof_id { get; set; }
         public string id_proof_document_path { get; set; }
-        public string photo { get; set; }
         public int address_proof_id { get; set; }
         public string address_proof_document_path { get; set; }
         public string bank_details { get; set; }
