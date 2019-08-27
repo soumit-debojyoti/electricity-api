@@ -12,5 +12,6 @@ namespace Electricity_DAL.Models
         public double point_unit_price { get; set; }
         public double first_registration_wallet_balance { get; set; }
         public int wallet_approver_role { get; set; }
+        public int kyc_submission_days { get; set; }
     }
 }

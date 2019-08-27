@@ -225,6 +225,7 @@ namespace Electricity_DAL
                                 pp.point_unit_price = Convert.ToDouble(reader["point_unit_price"]);
                                 pp.first_registration_wallet_balance = Convert.ToDouble(reader["first_registration_wallet_balance"]);
                                 pp.wallet_approver_role = Convert.ToInt32(reader["wallet_approver_role"]);
+                                pp.kyc_submission_days = Convert.ToInt32(reader["kyc_submission_days"]);
                             };
                         }
 
@@ -258,6 +259,7 @@ namespace Electricity_DAL
                     command.Parameters.Add("@point_unit_price", SqlDbType.Decimal).Value = config.point_unit_price;
                     command.Parameters.Add("@first_registration_wallet_balance", SqlDbType.Decimal).Value = config.first_registration_wallet_balance;
                     command.Parameters.Add("@wallet_approver_role", SqlDbType.Int).Value = config.wallet_approver_role;
+                    command.Parameters.Add("@kyc_submission_days", SqlDbType.Int).Value = config.kyc_submission_days;
                     command.Parameters.Add("@message", SqlDbType.NVarChar, 123456);
                     command.Parameters["@message"].Direction = ParameterDirection.Output;
                     try
