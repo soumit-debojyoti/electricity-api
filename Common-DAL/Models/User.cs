@@ -94,12 +94,14 @@ namespace Electricity_DAL.Models
         public string sex { get; set; }
         public string middle_name { get; set; }
         public int bank_detail_id { get; set; }
+        public int kyc_detail_id { get; set; }
+
         public string introcode { get; set; }
         public string introname { get; set; }
         public string photo { get; set; }
         public bool is_employee { get; set; }
 
-        
+
     }
 
     public class BankDetails
@@ -110,12 +112,18 @@ namespace Electricity_DAL.Models
         public string account_number { get; set; }
         public string ifsc_number { get; set; }
         public string branch_name { get; set; }
+        public bool is_pay_online { get; set; }
+    }
+
+    public class KYCDetails
+    {
+        public int kyc_detail_id { get; set; }
         public int id_proof_id { get; set; }
         public string id_proof_document_path { get; set; }
         public int address_proof_id { get; set; }
         public string address_proof_document_path { get; set; }
         public string bank_details { get; set; }
-        public bool is_pay_online { get; set; }
+        public DateTime created_on { get; set; }
     }
 
     public enum Gender
@@ -175,6 +183,6 @@ namespace Electricity_DAL.Models
         /// <summary>
         /// Introducer's introducer_Security Stamp
         /// </summary>
-        public string InroducerSecurityStamp { get; set; } 
+        public string InroducerSecurityStamp { get; set; }
     }
 }

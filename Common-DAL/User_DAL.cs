@@ -65,9 +65,9 @@ namespace Electricity_DAL
                             catch (Exception ex)
                             {
 
-                               
+
                             }
-                            
+
                         }
                     }
                 }
@@ -212,7 +212,7 @@ namespace Electricity_DAL
                         throw ex;
                     }
 
-                    
+
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
@@ -296,7 +296,7 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@token", SqlDbType.NVarChar).Value = string.Empty;
-                    
+
                     try
                     {
                         using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -384,7 +384,7 @@ namespace Electricity_DAL
                     //returnParameter.Direction = ParameterDirection.ReturnValue;
                     command.Parameters.Add("@bit", SqlDbType.Bit, 1);
                     command.Parameters["@bit"].Direction = ParameterDirection.Output;
-                    command.Parameters.Add("@introducer_name", SqlDbType.NVarChar,3456);
+                    command.Parameters.Add("@introducer_name", SqlDbType.NVarChar, 3456);
                     command.Parameters["@introducer_name"].Direction = ParameterDirection.Output;
 
                     try
@@ -400,7 +400,7 @@ namespace Electricity_DAL
 
                         throw ex;
                     }
-                    
+
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
@@ -442,7 +442,7 @@ namespace Electricity_DAL
             return objUserWalletBalanceResponse;
         }
 
-        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId,string start_date, string end_date)
+        public async Task<WalletReportResponse> GetWalletTransactionReport(int userId, string start_date, string end_date)
         {
             WalletReportResponse objWalletReportResponse = new WalletReportResponse();
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
@@ -593,6 +593,44 @@ namespace Electricity_DAL
             return isSuccess;
         }
 
+        public async Task<int> InsertKYCInfo(KYCDetails kyc_info)
+        {
+            int bank_detail_id = 0;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("add_kyc_details", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@id_proof_id", SqlDbType.Int).Value = kyc_info.id_proof_id;
+                    command.Parameters.Add("@id_proof_document_path", SqlDbType.NVarChar).Value = kyc_info.id_proof_document_path;
+                    command.Parameters.Add("@address_proof_id", SqlDbType.Int).Value = kyc_info.address_proof_id;
+                    command.Parameters.Add("@address_proof_document_path", SqlDbType.NVarChar).Value = kyc_info.address_proof_document_path;
+                    command.Parameters.Add("@bank_details", SqlDbType.NVarChar).Value = kyc_info.bank_details;
+
+                    command.Parameters.Add("@kyc_detail_id", SqlDbType.Int, 0);
+                    command.Parameters["@kyc_detail_id"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            bank_detail_id = (int)command.Parameters["@kyc_detail_id"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return bank_detail_id;
+        }
         public async Task<int> InsertBankInfo(BankDetails bank_info)
         {
             int bank_detail_id = 0;
@@ -610,13 +648,8 @@ namespace Electricity_DAL
                     command.Parameters.Add("@account_number", SqlDbType.NVarChar).Value = bank_info.account_number;
                     command.Parameters.Add("@ifsc_number", SqlDbType.NVarChar).Value = bank_info.ifsc_number;
                     command.Parameters.Add("@branch_name", SqlDbType.NVarChar).Value = bank_info.branch_name;
-                    command.Parameters.Add("@id_proof_id", SqlDbType.Int).Value = bank_info.id_proof_id;
-                    command.Parameters.Add("@id_proof_document_path", SqlDbType.NVarChar).Value = bank_info.id_proof_document_path;
-                    command.Parameters.Add("@address_proof_id", SqlDbType.Int).Value = bank_info.address_proof_id;
-                    command.Parameters.Add("@address_proof_document_path", SqlDbType.NVarChar).Value = bank_info.address_proof_document_path;
-                    command.Parameters.Add("@bank_details", SqlDbType.NVarChar).Value = bank_info.bank_details;
 
-                    command.Parameters.Add("@is_pay_online", SqlDbType.Bit).Value = bank_info.is_pay_online==true?1:0;
+                    command.Parameters.Add("@is_pay_online", SqlDbType.Bit).Value = bank_info.is_pay_online == true ? 1 : 0;
                     command.Parameters.Add("@bank_detail_id", SqlDbType.Int, 0);
                     command.Parameters["@bank_detail_id"].Direction = ParameterDirection.Output;
                     try
@@ -631,7 +664,7 @@ namespace Electricity_DAL
 
                         throw ex;
                     }
-                   
+
                 }
             }
             Console.WriteLine("All done. Press any key to finish...");
@@ -671,9 +704,25 @@ namespace Electricity_DAL
                     command.Parameters.Add("@pin", SqlDbType.NVarChar).Value = user_info.pin;
                     command.Parameters.Add("@sex", SqlDbType.NVarChar).Value = user_info.sex;
                     command.Parameters.Add("@middle_name", SqlDbType.NVarChar).Value = user_info.middle_name;
-                    command.Parameters.Add("@bank_detail_id", SqlDbType.NVarChar).Value = user_info.bank_detail_id;
-                    command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode!=null ? user_info.introcode:"";
-                    command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname!=null? user_info.introname:"";
+                    if (user_info.bank_detail_id > 0)
+                    {
+                        command.Parameters.Add("@bank_detail_id", SqlDbType.Int).Value = user_info.bank_detail_id;
+                    }
+                    else
+                    {
+                        command.Parameters.Add("@bank_detail_id", SqlDbType.Int).Value = DBNull.Value;
+                    }
+
+                    if (user_info.kyc_detail_id > 0)
+                    {
+                        command.Parameters.Add("@kyc_detail_id", SqlDbType.Int).Value = user_info.kyc_detail_id;
+                    }
+                    else
+                    {
+                        command.Parameters.Add("@kyc_detail_id", SqlDbType.Int).Value = DBNull.Value;
+                    }
+                    command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode != null ? user_info.introcode : "";
+                    command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname != null ? user_info.introname : "";
 
                     command.Parameters.Add("@user_security_stamp", SqlDbType.NVarChar, 1233232);
                     command.Parameters["@user_security_stamp"].Direction = ParameterDirection.Output;
@@ -749,7 +798,7 @@ namespace Electricity_DAL
                                     p.dob = Convert.ToDateTime(reader["dob"]);
                                     p.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
                                 };
-                                
+
                             }
                             if (reader.NextResult())
                             {
@@ -757,7 +806,7 @@ namespace Electricity_DAL
                                 {
                                     // His Child Information
                                     ChildModel c = new ChildModel();
-                                    
+
                                     c.user_name = Convert.ToString(reader["user_name"]).Trim();
                                     c.email = Convert.ToString(reader["email"]).Trim();
                                     c.role_name = Convert.ToString(reader["role_name"]).Trim();
@@ -770,7 +819,7 @@ namespace Electricity_DAL
                                     c.mobile_number = Convert.ToString(reader["mobile_number"]).Trim();
                                     children.Add(c);
                                 };
-                                
+
                             }
                             if (reader.NextResult())
                             {
@@ -778,7 +827,7 @@ namespace Electricity_DAL
                                 {
                                     // His Child Information
                                     SiblingModel s = new SiblingModel();
-                                    
+
                                     s.user_name = Convert.ToString(reader["user_name"]).Trim();
                                     s.email = Convert.ToString(reader["email"]).Trim();
                                     s.role_name = Convert.ToString(reader["role_name"]).Trim();
@@ -796,7 +845,7 @@ namespace Electricity_DAL
                             rank.self = o;
                             rank.parent = p;
                             rank.children = children;
-                            rank.siblings = siblings; 
+                            rank.siblings = siblings;
                         }
 
                     }
@@ -821,26 +870,26 @@ namespace Electricity_DAL
             //Second Achiever List
             if (firstAchieverList.Count > 0)
             {
-                
-             GetSecondAchieverList(user_id, numberOfChild, secondAchieverList);
-                
+
+                GetSecondAchieverList(user_id, numberOfChild, secondAchieverList);
+
             }
         }
 
-        public void GetSecondAchieverList(int user_id, int numberOfChild, List<AchieverList> als,bool isChild=false)
+        public void GetSecondAchieverList(int user_id, int numberOfChild, List<AchieverList> als, bool isChild = false)
         {
             if (user_id > 0)
             {
                 Rank rank = GetRank(user_id);
                 if (rank.child > 0)
                 {
-                    if (isChild==true && rank.child >= numberOfChild)
+                    if (isChild == true && rank.child >= numberOfChild)
                     {
                         AchieverList achieverList = new AchieverList();
                         achieverList.user_id = user_id;
                         achieverList.rank = 1;
                         als.Add(achieverList);
-                        
+
                     }
                     else
                     {
@@ -856,13 +905,13 @@ namespace Electricity_DAL
 
         public void GetFirstAchieverList(int user_id, int numberOfChild, List<AchieverList> als)
         {
-            
+
             if (user_id > 0)
             {
                 Rank rank = GetRank(user_id);
                 if (rank.child > 0)
                 {
-                    if(rank.child >= numberOfChild)
+                    if (rank.child >= numberOfChild)
                     {
                         AchieverList achieverList = new AchieverList();
                         achieverList.user_id = user_id;
@@ -877,7 +926,7 @@ namespace Electricity_DAL
             }
         }
 
-       
+
 
 
 
@@ -944,7 +993,7 @@ namespace Electricity_DAL
                             while (reader.Read())
                             {
                                 rank.childrenCount = Convert.ToInt32(reader["child"]);
-                                
+
                             };
                             if (reader.NextResult())
                             {
@@ -1029,7 +1078,7 @@ namespace Electricity_DAL
                                 user_count = Convert.ToInt32(reader["count"]);
 
                             };
-                           
+
                         }
                     }
                     catch (Exception ex)
@@ -1040,10 +1089,10 @@ namespace Electricity_DAL
             }
 
             Console.WriteLine("All done. Press any key to finish...");
-            return (user_count>0)?true:false;
+            return (user_count > 0) ? true : false;
         }
 
-        public async Task<string> RegisterToken(string  security_number,string security_stamp_of_new_user)
+        public async Task<string> RegisterToken(string security_number, string security_stamp_of_new_user)
         {
             string message = string.Empty;
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
@@ -1113,6 +1162,74 @@ namespace Electricity_DAL
             return message;
         }
 
+        public async Task<string> DeactivateToken(string token)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("deactivate_token", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@token", SqlDbType.NVarChar).Value = token;
+
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
+        }
+
+        public async Task<string> SurrenderToken(string token)
+        {
+            string message = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("surrender_token", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@token", SqlDbType.NVarChar).Value = token;
+
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 1233232);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return message;
+        }
+
         public int UpdateUserRank(string userSecurityStamp, int userRank = 0)
         {
             using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -1137,7 +1254,7 @@ namespace Electricity_DAL
             }
         }
 
-        public List<RankUser> GetUserSamePeer(string introducerSecurityStamp,int introducerRank)
+        public List<RankUser> GetUserSamePeer(string introducerSecurityStamp, int introducerRank)
         {
             using (SqlConnection connection = new SqlConnection(this._connectionString))
             {

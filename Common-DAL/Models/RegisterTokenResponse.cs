@@ -14,4 +14,14 @@ namespace Electricity_DAL.Models
         public string message { get; set; }
     }
 
+    public class DeactivateTokenResponse
+    {
+        public string message { get; set; }
+    }
+
+    public class SurrenderTokenResponse
+    {
+        public string message { get; set; }
+    }
+
 }

@@ -62,7 +62,7 @@ namespace Electricity_Service
             bool isQualify = await _user.QualifyUserToRefer(userName);
             if (isQualify)
             {
-                response.token= await _user.GetReferelToken(userName);
+                response.token = await _user.GetReferelToken(userName);
                 return response;
             }
             else
@@ -123,6 +123,11 @@ namespace Electricity_Service
 
         }
 
+        public async Task<int> InsertKYCInfo(KYCDetails kyc_info)
+        {
+            return await _user.InsertKYCInfo(kyc_info);
+        }
+
         public async Task<int> InsertBankInfo(BankDetails bank_info)
         {
             return await _user.InsertBankInfo(bank_info);
@@ -141,6 +146,16 @@ namespace Electricity_Service
         public async Task<string> ReactivateToken(string token)
         {
             return await _user.ReactivateToken(token);
+        }
+
+        public async Task<string> DeactivateToken(string token)
+        {
+            return await _user.DeactivateToken(token);
+        }
+
+        public async Task<string> SurrenderToken(string token)
+        {
+            return await _user.SurrenderToken(token);
         }
 
         public async Task<RankAchieverModel> GetRankAchieverList(int user_id)
@@ -259,7 +274,7 @@ namespace Electricity_Service
                     }
                 }
             }
-            return isIntroducerRankUpdated; 
+            return isIntroducerRankUpdated;
         }
         /// <summary>
         /// Fetches the User Rank By User ID
@@ -278,7 +293,7 @@ namespace Electricity_Service
 
                 return 0;
             }
-           
+
         }
     }
 }

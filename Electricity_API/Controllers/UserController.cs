@@ -48,7 +48,7 @@ namespace Electricity_API.Controllers
         [HttpGet]
         public async Task<ActionResult> SearchUserByUserName(string name)
         {
-            if(name== "all")
+            if (name == "all")
             {
                 name = "";
             }
@@ -193,13 +193,20 @@ namespace Electricity_API.Controllers
             bdetail.account_number = registerUser.accnumber;
             bdetail.ifsc_number = registerUser.ifsc;
             bdetail.branch_name = registerUser.branch;
-            bdetail.id_proof_id = registerUser.idprooftype;
-            bdetail.id_proof_document_path = registerUser.idproof;
-            bdetail.address_proof_id = registerUser.addressprooftype;
-            bdetail.address_proof_document_path = registerUser.addressproof;
-            bdetail.bank_details = registerUser.bankdetails;
             bdetail.is_pay_online = registerUser.payonline;
             int bank_detail_id = await rs.InsertBankInfo(bdetail);
+
+
+            KYCDetails kdetail = new KYCDetails();
+            kdetail.kyc_detail_id = 0;
+            kdetail.id_proof_id = registerUser.idprooftype;
+            kdetail.id_proof_document_path = registerUser.idproof;
+            kdetail.address_proof_id = registerUser.addressprooftype;
+            kdetail.address_proof_document_path = registerUser.addressproof;
+            kdetail.bank_details = registerUser.bankdetails;
+            int kyc_detail_id = await rs.InsertKYCInfo(kdetail);
+
+
 
             UserDetails udetail = new UserDetails();
             udetail.introcode = registerUser.introcode;
@@ -225,6 +232,7 @@ namespace Electricity_API.Controllers
             udetail.sex = Enum.GetNames(typeof(Gender)).GetValue(registerUser.gender - 1).ToString();
             udetail.middle_name = registerUser.middleName;
             udetail.bank_detail_id = bank_detail_id;
+            udetail.kyc_detail_id = kyc_detail_id;
             udetail.introcode = registerUser.introcode;
             udetail.introname = registerUser.introname;
             udetail.photo = registerUser.photo;
@@ -242,7 +250,7 @@ namespace Electricity_API.Controllers
 
             // ------- Added for Rank Achievement
             #region Rank Achievement
-            if( rs.UpdateUserRank(user_security_stamp, 0))
+            if (rs.UpdateUserRank(user_security_stamp, 0))
             {
                 rs.UpdateNextLevel(user_security_stamp);
 
@@ -267,6 +275,26 @@ namespace Electricity_API.Controllers
         {
             ReactivateTokenResponse rtr = new ReactivateTokenResponse();
             rtr.message = await rs.ReactivateToken(token);
+            return Ok(rtr);
+        }
+
+        [Authorize]
+        [Route("deactivatetoken/{token}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> DeactivateToken(string token)
+        {
+            DeactivateTokenResponse rtr = new DeactivateTokenResponse();
+            rtr.message = await rs.DeactivateToken(token);
+            return Ok(rtr);
+        }
+
+        [Authorize]
+        [Route("surrendertoken/{token}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> SurrenderToken(string token)
+        {
+            SurrenderTokenResponse rtr = new SurrenderTokenResponse();
+            rtr.message = await rs.SurrenderToken(token);
             return Ok(rtr);
         }
 
