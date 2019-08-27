@@ -3,14 +3,10 @@ using Electricity_Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
@@ -142,7 +138,7 @@ namespace Electricity_API.Controllers
             string oldImage = string.Empty;
             try
             {
-               
+
                 var file = Request.Form.Files[0];
                 string folderName = fileType;
                 string webRootPath = _hostingEnvironment.WebRootPath;
@@ -160,7 +156,7 @@ namespace Electricity_API.Controllers
                     {
                         file.CopyTo(stream);
                     }
-                    System.IO.File.Delete(Path.Combine(newPath, oldfileName+"."+ oldfileExtension));
+                    System.IO.File.Delete(Path.Combine(newPath, oldfileName + "." + oldfileExtension));
                 }
                 fullPath = fileType + "/" + fileName;
                 isSuccess = await rs.ReUploadPhoto(userName, fullPath);
@@ -219,7 +215,7 @@ namespace Electricity_API.Controllers
         [Authorize]
         [Route("walletwidthdrawal/user/{requestInitiatorId}/comment/{comment}")]
         [HttpPost]
-        public async Task<ActionResult> AddWalletWidthdrawalRequest(int requestInitiatorId,string comment)
+        public async Task<ActionResult> AddWalletWidthdrawalRequest(int requestInitiatorId, string comment)
         {
             WalletWidthdrawalResponse response = await rs.AddWalletWidthdrawalRequest(requestInitiatorId, comment);
             return Ok(response);
@@ -228,7 +224,7 @@ namespace Electricity_API.Controllers
         [Authorize]
         [Route("requestbalance/user/{requestInitiatorId}/amount/{amount}/comment/{comment}")]
         [HttpPost]
-        public async Task<ActionResult> AddWalletBalanceRequest(int requestInitiatorId,decimal amount, string comment)
+        public async Task<ActionResult> AddWalletBalanceRequest(int requestInitiatorId, decimal amount, string comment)
         {
             BalanceRequestResponse response = await rs.AddWalletBalanceRequest(requestInitiatorId, amount, comment);
             return Ok(response);
@@ -267,7 +263,7 @@ namespace Electricity_API.Controllers
         public async Task<ActionResult> UpdateWalletWithdrawal([FromBody] List<WithdrawalWallet> withdrawalWalletModels)
         {
             List<WithdrawalWallet> response = await rs.UpdateWalletWithdrawal(withdrawalWalletModels);
-           return Ok(response);
+            return Ok(response);
         }
 
         //[Authorize]

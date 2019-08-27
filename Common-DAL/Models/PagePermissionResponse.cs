@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Electricity_DAL.Models
 {
@@ -8,6 +6,6 @@ namespace Electricity_DAL.Models
     {
         public List<PagePermissionModel> pagePermissionEdit { get; set; }
         public List<PagePermissionModel> pagePermissionView { get; set; }
-        public string  message { get; set; }
+        public string message { get; set; }
     }
 }

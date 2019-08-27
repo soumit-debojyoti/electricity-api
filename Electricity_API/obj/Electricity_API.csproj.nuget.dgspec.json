@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj": {}
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj": {}
   },
   "projects": {
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj",
         "projectName": "Electricity-DAL",
-        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj",
         "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
-        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\obj\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -68,14 +68,14 @@
         }
       }
     },
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj": {
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj",
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj",
         "projectName": "Electricity-Service",
-        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj",
         "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
-        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\obj\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -94,8 +94,8 @@
         "frameworks": {
           "netcoreapp2.1": {
             "projectReferences": {
-              "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
-                "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj"
+              "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {
+                "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj"
               }
             }
           }
@@ -124,14 +124,14 @@
         }
       }
     },
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj": {
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj",
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj",
         "projectName": "Electricity_API",
-        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj",
         "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
-        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\obj\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -150,11 +150,11 @@
         "frameworks": {
           "netcoreapp2.1": {
             "projectReferences": {
-              "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
-                "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj"
+              "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {
+                "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj"
               },
-              "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj": {
-                "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj"
+              "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj": {
+                "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj"
               }
             }
           }

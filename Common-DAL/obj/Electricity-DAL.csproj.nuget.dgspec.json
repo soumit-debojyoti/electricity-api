@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {}
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {}
   },
   "projects": {
-    "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
+    "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj",
         "projectName": "Electricity-DAL",
-        "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj",
+        "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj",
         "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
-        "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\obj\\",
+        "outputPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -65,11 +65,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true
-        }
-      },
-      "runtimes": {
-        "win-x86": {
-          "#import": []
         }
       }
     }

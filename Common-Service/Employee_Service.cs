@@ -7,7 +7,7 @@ namespace Electricity_Service
     public class Employee_Service
     {
         private Electricity_DAL.Employee_DAL _emp = null;
-        public Employee_Service(ConnectionStrings connectionString) 
+        public Employee_Service(ConnectionStrings connectionString)
         {
             _emp = new Electricity_DAL.Employee_DAL(connectionString);
         }

@@ -15,14 +15,14 @@ namespace Electricity_API
 {
     public class Startup
     {
-        
+
         public IConfigurationRoot Configuration
         {
             get;
             set;
         }
-        
-       
+
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -73,7 +73,7 @@ namespace Electricity_API
                         ProcessDictionaryKeys = true
                     }
                 };
-            }); 
+            });
             services.AddOptions();
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
             services.AddSwaggerGen(c =>

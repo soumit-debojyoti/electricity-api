@@ -13,18 +13,18 @@ namespace Electricity_API.Controllers
     public class ValuesController : ControllerBase
     {
         private readonly IOptions<ConnectionStrings> config;
-       Common_Service cs = null;
+        Common_Service cs = null;
         public ValuesController(IOptions<ConnectionStrings> config)
         {
             this.config = config;
             cs = new Common_Service(this.config.Value);
         }
-        
+
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            
+
             return new string[] { "value1", "value2" };
         }
 

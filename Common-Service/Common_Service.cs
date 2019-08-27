@@ -1,6 +1,4 @@
-﻿using Electricity_DAL;
-using Electricity_DAL.Models;
-using System;
+﻿using Electricity_DAL.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -9,7 +7,7 @@ namespace Electricity_Service
     public class Common_Service
     {
         private Electricity_DAL.Common_DAL _common = null;
-        
+
         public Common_Service(ConnectionStrings connectionString)
         {
             _common = new Electricity_DAL.Common_DAL(connectionString);
@@ -65,7 +63,7 @@ namespace Electricity_Service
             return response;
         }
 
-        public async Task<WalletWidthdrawalResponse> AddWalletWidthdrawalRequest(int request_initiator_id,string comment)
+        public async Task<WalletWidthdrawalResponse> AddWalletWidthdrawalRequest(int request_initiator_id, string comment)
         {
             WalletWidthdrawalResponse response = new WalletWidthdrawalResponse();
             response = await _common.AddWalletWidthdrawalRequest(request_initiator_id, comment);
@@ -107,8 +105,8 @@ namespace Electricity_Service
                 WithdrawalWallet response = await _common.UpdateWalletWithdrawal(withdrawalWalletModel);
 
             }
-           
-            
+
+
             return withdrawalWalletModels;
         }
 

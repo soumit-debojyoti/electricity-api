@@ -601,7 +601,7 @@ namespace Electricity_DAL
                     command.Parameters.Add("@user_id", SqlDbType.Int).Value = userId;
                     try
                     {
-                        int tt = (int) await command.ExecuteScalarAsync();
+                        int tt = (int)await command.ExecuteScalarAsync();
                         if (tt == 1)
                         {
                             isSend = true;
