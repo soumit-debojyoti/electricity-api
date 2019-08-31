@@ -19742,11 +19742,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj",
+      "projectUniqueName": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj",
       "projectName": "Electricity_API",
-      "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\Electricity_API.csproj",
+      "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\Electricity_API.csproj",
       "packagesPath": "C:\\Users\\Soumit\\.nuget\\packages\\",
-      "outputPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Electricity_API\\obj\\publish\\win-x86\\",
+      "outputPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Electricity_API\\obj\\publish\\win-x86\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -19765,11 +19765,11 @@
       "frameworks": {
         "netcoreapp2.1": {
           "projectReferences": {
-            "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj": {
-              "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-DAL\\Electricity-DAL.csproj"
+            "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj": {
+              "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-DAL\\Electricity-DAL.csproj"
             },
-            "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj": {
-              "projectPath": "E:\\EXPERIMENT\\business\\API\\Electricity-API\\Common-Service\\Electricity-Service.csproj"
+            "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj": {
+              "projectPath": "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj"
             }
           }
         }

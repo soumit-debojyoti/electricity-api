@@ -66,6 +66,11 @@
           "assetTargetFallback": true,
           "warn": true
         }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "E:\\EXPERIMENT\\business\\API\\electricity-api\\Common-Service\\Electricity-Service.csproj": {
@@ -121,6 +126,11 @@
           ],
           "assetTargetFallback": true,
           "warn": true
+        }
+      },
+      "runtimes": {
+        "win-x86": {
+          "#import": []
         }
       }
     }

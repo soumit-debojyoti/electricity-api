@@ -711,15 +711,7 @@ namespace Electricity_DAL
                     {
                         command.Parameters.Add("@bank_detail_id", SqlDbType.Int).Value = DBNull.Value;
                     }
-
-                    if (user_info.kyc_detail_id > 0)
-                    {
-                        command.Parameters.Add("@kyc_detail_id", SqlDbType.Int).Value = user_info.kyc_detail_id;
-                    }
-                    else
-                    {
-                        command.Parameters.Add("@kyc_detail_id", SqlDbType.Int).Value = DBNull.Value;
-                    }
+                    command.Parameters.Add("@kyc_detail_id", SqlDbType.Int).Value = user_info.kyc_detail_id;
                     command.Parameters.Add("@introcode", SqlDbType.NVarChar).Value = user_info.introcode != null ? user_info.introcode : "";
                     command.Parameters.Add("@introname", SqlDbType.NVarChar).Value = user_info.introname != null ? user_info.introname : "";
 

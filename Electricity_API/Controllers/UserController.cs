@@ -176,12 +176,20 @@ namespace Electricity_API.Controllers
             registerUser.accnumber = Request.Form["accnumber"];
             registerUser.ifsc = Request.Form["ifsc"];
             registerUser.branch = Request.Form["branch"];
-            registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
-            registerUser.idproof = Request.Form["idproof"];
-            registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
-            registerUser.addressproof = Request.Form["addressproof"];
             registerUser.photo = Request.Form["photo"];
-            registerUser.bankdetails = Request.Form["bankdetails"];
+            registerUser.isKYCLater = Convert.ToBoolean(Request.Form["isKYCLater"]);
+
+            if (!registerUser.isKYCLater)
+            {
+                registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
+                registerUser.idproof = Request.Form["idproof"];
+                registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
+                registerUser.addressproof = Request.Form["addressproof"];
+                registerUser.bankdetails = Request.Form["bankdetails"];
+            }
+            
+
+
             registerUser.payonline = Convert.ToBoolean(Request.Form["payonline"].ToString() == string.Empty ? false : true);
 
             BankDetails bdetail = new BankDetails();
@@ -193,17 +201,18 @@ namespace Electricity_API.Controllers
             bdetail.branch_name = registerUser.branch;
             bdetail.is_pay_online = registerUser.payonline;
             int bank_detail_id = await rs.InsertBankInfo(bdetail);
-
-
-            KYCDetails kdetail = new KYCDetails();
-            kdetail.kyc_detail_id = 0;
-            kdetail.id_proof_id = registerUser.idprooftype;
-            kdetail.id_proof_document_path = registerUser.idproof;
-            kdetail.address_proof_id = registerUser.addressprooftype;
-            kdetail.address_proof_document_path = registerUser.addressproof;
-            kdetail.bank_details = registerUser.bankdetails;
-            int kyc_detail_id = await rs.InsertKYCInfo(kdetail);
-
+            int kyc_detail_id = 0;
+            if (!registerUser.isKYCLater)
+            {
+                KYCDetails kdetail = new KYCDetails();
+                kdetail.kyc_detail_id = 0;
+                kdetail.id_proof_id = registerUser.idprooftype;
+                kdetail.id_proof_document_path = registerUser.idproof;
+                kdetail.address_proof_id = registerUser.addressprooftype;
+                kdetail.address_proof_document_path = registerUser.addressproof;
+                kdetail.bank_details = registerUser.bankdetails;
+                kyc_detail_id = await rs.InsertKYCInfo(kdetail);
+            }
 
 
             UserDetails udetail = new UserDetails();

@@ -56,6 +56,9 @@ namespace Electricity_DAL.Models
         public string accnumber { get; set; }
         public string ifsc { get; set; }
         public string branch { get; set; }
+
+        public bool isKYCLater { get; set; }
+
         public int idprooftype { get; set; }
         public string idproof { get; set; }
         public int addressprooftype { get; set; }
