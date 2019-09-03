@@ -45,7 +45,8 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.InsertTransaction(userID, rechargeMode, rechargeAmount);
         }
-        [Route("api/response/status/{status}/transactionid/{operatortxnid}/joloorderid/{joloorderid}/userorderid/{userorderid}/servicetype/{servicetype}")]
+        //[Route("api/response/status/{status}/transactionid/{operatortxnid}/joloorderid/{joloorderid}/userorderid/{userorderid}/servicetype/{servicetype}")]
+        [Route("api/response")]
         [HttpPost]
         public async Task<bool> GetJoloAPIResponse(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)
         {
