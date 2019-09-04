@@ -50,7 +50,7 @@ namespace Electricity_API.Controllers
         [HttpPost]
         public async Task<bool> GetJoloAPIResponse(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)
         {
-            return true;
+            return await this.rs.UpdateRechargeTransactionStatus(status, operatortxnid, joloorderid, userorderid, servicetype);
         }
     }
 }

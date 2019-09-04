@@ -31,5 +31,10 @@ namespace Electricity_Service
         {
             return await this._rechargeApiDAL.InsertTransaction(userID, rechargeMode,rechargeAmount);
         }
+
+        public async Task<bool> UpdateRechargeTransactionStatus(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)
+        {
+            return await this._rechargeApiDAL.UpdateRechargeTransactionStatus(status, operatortxnid, joloorderid, userorderid, servicetype);
+        }
     }
 }

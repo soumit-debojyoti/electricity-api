@@ -103,5 +103,57 @@ namespace Electricity_DAL
                 }
             }
         }
+
+        public async Task<bool> UpdateRechargeTransactionStatus(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)
+        {
+            string serviceTypeName = "";
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT_INFO_RECHARGE_API_TRANSACTION_DETAILS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@rechargeStatus", SqlDbType.VarChar, 20).Value = status;
+                    command.Parameters.Add("@operatorTransactionID", SqlDbType.VarChar, 50).Value = operatortxnid;
+                    command.Parameters.Add("@joloOrderID", SqlDbType.VarChar, 50).Value = joloorderid;
+                    command.Parameters.Add("@userOrderID", SqlDbType.VarChar, 28).Value = userorderid;
+                    switch (servicetype)
+                    {
+                        case 1 :
+                            serviceTypeName = "PREPAID";
+                            break;
+                        case 2:
+                            serviceTypeName = "DTH";
+                            break;
+                        case 4:
+                            serviceTypeName = "POSTPAID";
+                            break;
+                        case 5:
+                            serviceTypeName = "LANDLINE";
+                            break;
+                        case 6:
+                            serviceTypeName = "ELECTRICITY";
+                            break;
+                        case 7:
+                            serviceTypeName = "GAS";
+                            break;
+                        case 8:
+                            serviceTypeName = "WATER";
+                            break;
+                    }
+                    command.Parameters.Add("@serviceType", SqlDbType.VarChar, 20).Value = serviceTypeName;
+                    command.Parameters.Add("@transactionUpdateTime", SqlDbType.VarChar, 100).Value = DateTime.Now.ToString();
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }
