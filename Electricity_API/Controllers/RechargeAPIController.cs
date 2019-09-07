@@ -52,5 +52,17 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.UpdateRechargeTransactionStatus(status, operatortxnid, joloorderid, userorderid, servicetype);
         }
+        [Route("api/transaction/{orderID}/status/{transactionStatus}/message/{errorMessage}")]
+        [HttpPost]
+        public async Task<bool> UpdateTransactionDetails(string orderID, string transactionStatus, string errorMessage)
+        {
+            return await this.rs.UpdateTransactionDetails(orderID, transactionStatus, errorMessage);
+        }
+        [Route("api/transaction/user/{userID}/wallet/amount/{amount}/message/{message}")]
+        [HttpPost]
+        public async Task<bool> DeductWalletBalance(string userID, string amount, string message)
+        {
+            return await this.rs.DeductWalletBalance(userID, amount, message);
+        }
     }
 }
