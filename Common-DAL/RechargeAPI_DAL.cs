@@ -88,7 +88,7 @@ namespace Electricity_DAL
                     command.Parameters.Add("@transactionDate", SqlDbType.VarChar, 20).Value = DateTime.Now.ToShortDateString();
                     command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode.ToUpper();
                     command.Parameters.Add("@rechargeAmount", SqlDbType.Decimal).Value = Convert.ToDecimal(rechargeAmount);
-                    command.Parameters.Add("@transactionStatus", SqlDbType.VarChar, 10).Value = "SUCCESS";
+                    command.Parameters.Add("@transactionStatus", SqlDbType.VarChar, 10).Value = "FAILURE";
                     command.Parameters.Add("@transactionID", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                     try
@@ -143,6 +143,54 @@ namespace Electricity_DAL
                     }
                     command.Parameters.Add("@serviceType", SqlDbType.VarChar, 20).Value = serviceTypeName;
                     command.Parameters.Add("@transactionUpdateTime", SqlDbType.VarChar, 100).Value = DateTime.Now.ToString();
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateTransactionDetails(string orderID, string transactionStatus, string errorMessage)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_RECHARGE_TRANSACTION", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@transactionID", SqlDbType.Int).Value = Convert.ToInt32(orderID);
+                    command.Parameters.Add("@transactionStatus", SqlDbType.VarChar, 10).Value = transactionStatus;
+                    command.Parameters.Add("@errorMessage", SqlDbType.VarChar).Value = errorMessage;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> DeductWalletBalance(string userID, string amount, string message)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("DEDUCT_WALLET_BALANCE_RECHARGE", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = Convert.ToInt32(userID);
+                    command.Parameters.Add("@amount", SqlDbType.Decimal).Value = Convert.ToDecimal(amount);
+                    command.Parameters.Add("@message", SqlDbType.VarChar, 100).Value = message;
                     try
                     {
                         await command.ExecuteReaderAsync();

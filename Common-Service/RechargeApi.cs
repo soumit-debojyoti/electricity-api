@@ -36,5 +36,15 @@ namespace Electricity_Service
         {
             return await this._rechargeApiDAL.UpdateRechargeTransactionStatus(status, operatortxnid, joloorderid, userorderid, servicetype);
         }
+
+        public async Task<bool> UpdateTransactionDetails(string orderID, string transactionStatus, string errorMessage)
+        {
+            return await this._rechargeApiDAL.UpdateTransactionDetails(orderID, transactionStatus, errorMessage);
+        }
+
+        public async Task<bool> DeductWalletBalance(string userID, string amount, string message)
+        {
+            return await this._rechargeApiDAL.DeductWalletBalance(userID, amount, message);
+        }
     }
 }

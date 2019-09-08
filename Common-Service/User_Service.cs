@@ -267,7 +267,7 @@ namespace Electricity_Service
                 // 1st Level
                 if (introducerRank == 0)
                 {
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2 && introducer.JoiningDate.AddDays(-70) <= DateTime.Now)
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
                     {
                         _user.UpdateUserRank(introducer.SecurityStamp, 1);
                         isIntroducerRankUpdated = true;
@@ -278,12 +278,122 @@ namespace Electricity_Service
                     }
                 }
                 // 2nd Level
-                else if (introducerRank == 1 && introducer.JoiningDate.AddDays(-120) <= DateTime.Now)
+                else if (introducerRank == 1)
                 {
                     //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2)
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
                     {
                         _user.UpdateUserRank(introducer.SecurityStamp, 2);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 3rd Level
+                else if (introducerRank == 2)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 3);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 4th Level
+                else if (introducerRank == 3)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 4);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 5th Level
+                else if (introducerRank == 4)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 5);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 6th Level
+                else if (introducerRank == 5)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 6);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 7th Level
+                else if (introducerRank == 6)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 7);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 8th Level
+                else if (introducerRank == 7)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 8);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 9th Level
+                else if (introducerRank == 8)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 9);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 10th Level
+                else if (introducerRank == 9)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 10);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                //11th Level
+                else if (introducerRank == 10)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp,11);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 12th Level
+                else if (introducerRank == 11)
+                {
+                    //
+                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        _user.UpdateUserRank(introducer.SecurityStamp, 12);
                         isIntroducerRankUpdated = true;
                     }
                 }
