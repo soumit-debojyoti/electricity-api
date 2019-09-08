@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Electricity_API.Controllers
@@ -142,6 +143,48 @@ namespace Electricity_API.Controllers
                 return Ok(response.Reason);
             }
         }
+
+        [Authorize]// GET api/values
+        [Route("getkycdetail/{userId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetkKYCDetail(int userId)
+        {
+            GetKYCDetailsResponse response = new GetKYCDetailsResponse();
+            response.list= await rs.GetkKYCDetail(userId);
+            return Ok(response);
+        }
+
+        [Route("addkyc/{userId}")]
+        [HttpPost, DisableRequestSizeLimit]
+        public async Task<ActionResult> AddKYC(int userId)
+        {
+            bool isSuccess = false;
+            if (userId > 0)
+            {
+                RegisterUserResponse rr = new RegisterUserResponse();
+                RegisterUser registerUser = new RegisterUser();
+                registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
+                registerUser.idproof = Request.Form["idproof"];
+                registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
+                registerUser.addressproof = Request.Form["addressproof"];
+                registerUser.bankdetails = Request.Form["bankdetails"];
+
+                KYCDetails kdetail = new KYCDetails();
+                kdetail.kyc_detail_id = 0;
+                kdetail.id_proof_id = registerUser.idprooftype;
+                kdetail.id_proof_document_path = registerUser.idproof;
+                kdetail.address_proof_id = registerUser.addressprooftype;
+                kdetail.address_proof_document_path = registerUser.addressproof;
+                kdetail.bank_details = registerUser.bankdetails;
+                int kyc_detail_id = await rs.InsertKYCInfo(kdetail);
+                if (kyc_detail_id > 0)
+                {
+                    isSuccess = await rs.UpdateKYCInfoInUser(userId, kyc_detail_id);
+                }
+            }
+            return Ok(isSuccess);
+        }
+
 
         [Route("registeruser")]
         [HttpPost, DisableRequestSizeLimit]

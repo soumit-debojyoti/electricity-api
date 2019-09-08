@@ -282,6 +282,85 @@ namespace Electricity_DAL
             return referelToken;
         }
 
+        public async Task<KYCDetailsResponse> CheckKYCDetail(string user_name)
+        {
+            KYCDetailsResponse kycResponse = new KYCDetailsResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("check_kyc", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_name", SqlDbType.NVarChar).Value = user_name;
+                    command.Parameters.Add("@isSuccess", SqlDbType.Bit, 1);
+                    command.Parameters["@isSuccess"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 100000000);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        {
+                            kycResponse.is_success = (bool)command.Parameters["@isSuccess"].Value;
+                            kycResponse.message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return kycResponse;
+        }
+
+        public async Task<List<KYCDetails>> GetkKYCDetail(int user_id)
+        {
+            List<KYCDetails> kycs = new List<KYCDetails>();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("get_kyc_details", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = user_id;
+
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                KYCDetails kyc = new KYCDetails();
+                                kyc.kyc_detail_id = Convert.ToInt32(reader["kyc_detail_id"]);
+                                kyc.id_proof_id = Convert.ToInt32(reader["id_proof_id"]);
+                                kyc.id_proof_document_path = Convert.ToString(reader["id_proof_document_path"]);
+                                kyc.address_proof_id = Convert.ToInt32(reader["address_proof_id"]);
+                                kyc.address_proof_document_path = Convert.ToString(reader["address_proof_document_path"]);
+                                kyc.bank_details = Convert.ToString(reader["bank_details"]);
+                                kyc.created_on = Convert.ToDateTime(reader["created_on"]);
+                                kycs.Add(kyc);
+                            };
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return kycs;
+        }
+
         public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails()
         {
             List<TokenDetailsGeneric> tokens = new List<TokenDetailsGeneric>();
@@ -629,6 +708,42 @@ namespace Electricity_DAL
             }
             Console.WriteLine("All done. Press any key to finish...");
             return bank_detail_id;
+        }
+
+        public async Task<bool> UpdateKYCInfoInUser(int user_id, int kyc_id)
+        {
+            bool is_success = false;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("update_kyc_details_user", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = user_id;
+                    command.Parameters.Add("@kyc_id", SqlDbType.Int).Value = kyc_id;
+
+                    command.Parameters.Add("@is_success", SqlDbType.Bit, 0);
+                    command.Parameters["@is_success"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteNonQueryAsync();
+                        {
+                            is_success = (bool)command.Parameters["@is_success"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return is_success;
         }
         public async Task<int> InsertBankInfo(BankDetails bank_info)
         {
