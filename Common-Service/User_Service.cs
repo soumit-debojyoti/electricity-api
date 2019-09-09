@@ -91,6 +91,16 @@ namespace Electricity_Service
             return await _user.ValidateUserToRefer(userName);
         }
 
+        public async Task<KYCDetailsResponse> CheckKYCDetail(string userName)
+        {
+            return await _user.CheckKYCDetail(userName);
+        }
+
+        public async Task<List<KYCDetails>> GetkKYCDetail(int user_id)
+        {
+            return await _user.GetkKYCDetail(user_id);
+        }
+
         public async Task<ReferalResponseModel> ReferUserWithToken(string userName, string token)
         {
             bool isQualify = await _user.ValidateUserToRefer(userName);
@@ -125,6 +135,11 @@ namespace Electricity_Service
         public async Task<int> InsertKYCInfo(KYCDetails kyc_info)
         {
             return await _user.InsertKYCInfo(kyc_info);
+        }
+
+        public async Task<bool> UpdateKYCInfoInUser(int user_id, int kyc_info)
+        {
+            return await _user.UpdateKYCInfoInUser(user_id, kyc_info);
         }
 
         public async Task<int> InsertBankInfo(BankDetails bank_info)

@@ -54,11 +54,18 @@ namespace Electricity_API.Controllers
                         );
                     var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-                    //var securityKey = us.GetUserKey(usernameAndPass[0]).Result;
-                    return Ok(new ResponseModel() { isLoginSuccess = true, access_token = tokenString, role_id = response.role_id, message = response.message });
-
+                    KYCDetailsResponse responseKYC = new KYCDetailsResponse();
+                    responseKYC=await us.CheckKYCDetail(usernameAndPass[0]);
+                    response.message = responseKYC.message;
+                    if (responseKYC.is_success)
+                    {
+                        return Ok(new ResponseModel() { isLoginSuccess = true, access_token = tokenString, role_id = response.role_id, message = response.message });
+                    }
+                    else
+                    {
+                        return Ok(new ResponseModel() { isLoginSuccess = false, access_token = tokenString, role_id = response.role_id, message = response.message });
+                    }
                 }
-
             }
             return Forbid("Username and Password not matching..");
 

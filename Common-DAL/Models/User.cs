@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Electricity_DAL.Models
 {
@@ -125,6 +126,17 @@ namespace Electricity_DAL.Models
         public string address_proof_document_path { get; set; }
         public string bank_details { get; set; }
         public DateTime created_on { get; set; }
+    }
+
+    public class KYCDetailsResponse
+    {
+        public bool is_success { get; set; }
+        public string message { get; set; }
+    }
+
+    public class GetKYCDetailsResponse
+    {
+        public List<KYCDetails> list { get; set; }
     }
 
     public enum Gender
