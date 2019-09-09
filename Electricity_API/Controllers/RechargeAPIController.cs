@@ -64,5 +64,18 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.DeductWalletBalance(userID, amount, message);
         }
+
+        [Route("api/validation")]
+        [HttpPost]
+        public async Task<bool> SaveRechargeAPIValidation([FromBody] RechargeAPI api)
+        {
+            return await this.rs.InsertValidationApiDetails(api.RechargeMode,api.OperatorName, api.ApiValue);
+        }
+        [Route("api/validation/rechargemode/{rechargeMode}/operator/{operatorName}")]
+        [HttpGet]
+        public async Task<RechargeAPI> FetchValidationApiDetails(string rechargeMode, string operatorName)
+        {
+            return await this.rs.FetchValidationApiDetails(rechargeMode,operatorName);
+        }
     }
 }

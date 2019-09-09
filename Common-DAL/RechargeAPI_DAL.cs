@@ -203,5 +203,65 @@ namespace Electricity_DAL
                 }
             }
         }
+
+        public async Task<bool> InsertValidationApiDetails(string rechargeMode,string operatorName, string validationApiValue)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT_API_VALIDATION_STATUS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode;
+                    command.Parameters.Add("@operatorName", SqlDbType.VarChar, 50).Value = operatorName;
+                    command.Parameters.Add("@validationApiValue", SqlDbType.VarChar).Value = validationApiValue;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<RechargeAPI> FetchValidationApiDetails(string rechargeMode,string operatorName)
+        {
+            RechargeAPI api = null;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_API_VALIDATION_STATUS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode;
+                    command.Parameters.Add("@operatorName", SqlDbType.VarChar, 50).Value = operatorName;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                api = new RechargeAPI
+                                {
+                                    RechargeMode = reader["rechargeMode"].ToString(),
+                                    OperatorName = reader["operatorName"].ToString(),
+                                    ApiValue = reader["validationApiValue"].ToString()
+                                };
+                                break;
+                            }
+                        }
+                        return api;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
     }
 }

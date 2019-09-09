@@ -46,5 +46,15 @@ namespace Electricity_Service
         {
             return await this._rechargeApiDAL.DeductWalletBalance(userID, amount, message);
         }
+
+        public async Task<bool> InsertValidationApiDetails(string rechargeMode, string operatorName, string validationApiValue)
+        {
+            return await this._rechargeApiDAL.InsertValidationApiDetails(rechargeMode, operatorName, validationApiValue);
+        }
+
+        public async Task<RechargeAPI> FetchValidationApiDetails(string rechargeMode, string operatorName)
+        {
+            return await this._rechargeApiDAL.FetchValidationApiDetails(rechargeMode, operatorName);
+        }
     }
 }
