@@ -130,31 +130,9 @@ namespace Electricity_Service
             return response;
         }
 
-        public bool SendEmail(string toMailAddress, string mailSubject, string mailBody, string fromEmailAddress)
+        public async Task<bool> SendEmail(string toMailAddress, string mailSubject, string mailBody, string fromEmailAddress)
         {
-            try
-            {
-                MailMessage mail = new MailMessage();
-                mail.To.Add(toMailAddress);
-                mail.From = new MailAddress(fromEmailAddress);
-                mail.Subject = mailSubject;
-                string Body = mailBody;
-                mail.Body = Body;
-                mail.IsBodyHtml = true;
-                SmtpClient smtp = new SmtpClient();
-                smtp.Host = "mail.telecharge.biz";
-                smtp.Port = 8889;
-                smtp.Credentials = new System.Net.NetworkCredential
-                     (fromEmailAddress, "Terminator#123");
-
-                //smtp.EnableSsl = true;
-                smtp.Send(mail);
-                return true;
-            }
-            catch(Exception ex)
-            {
-                return false;
-            }
+            return await _common.SendEmail(toMailAddress, mailSubject, mailBody, fromEmailAddress);
         }
     }
 }

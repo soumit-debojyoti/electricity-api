@@ -227,22 +227,8 @@ namespace Electricity_Service
         /// <returns></returns>
         public async Task UpdateNextLevel(string userSecurityStamp)
         {
-            bool response = true;
-            Introducer introducer = _user.GetIntroducerInfo(userSecurityStamp);
-            while (response)
-            {
-                response = false;
-                
-                if (introducer != null && introducer.RoleID != 4)
-                {
-                    response = GetUserSamePeer(introducer);
-                    userSecurityStamp = introducer.SecurityStamp;
-                }
-            }
-            // Add introducer bonus for succssfull referral
-            int introducerID = (_user.Get_User(introducer.UserName).Result).user_id;
-            await _user.AddWalletBalance(introducerID, _user.FetchReferralBonus(
-                _user.FetchUserRank(introducer.SecurityStamp).UserRank).Result, "Referral bonus");
+            await _user.UpdateNextLevel(userSecurityStamp);
+            
         }
 
         /// <summary>
@@ -251,161 +237,10 @@ namespace Electricity_Service
         /// <param name="user_security_stamp"></param>
         /// <param name="introducerRank"></param>
         /// <returns></returns>
-        public bool GetUserSamePeer(Introducer introducer)
-        {
-            bool isIntroducerRankUpdated = false;
-            //Introducer introducer = _user.GetIntroducerInfo(user_security_stamp);
-            if (introducer != null && introducer.RoleID != 4)
-            {
-                var introducerRank = 0;
-                //rs.UpdateUserRank(introducer.SecurityStamp, 0);
-                if (_user.FetchUserRank(introducer.SecurityStamp) != null)
-                {
-                    introducerRank = _user.FetchUserRank(introducer.SecurityStamp).UserRank;
-                }
-                else
-                {
-                    _user.UpdateUserRank(introducer.SecurityStamp, 0);
-
-                }
-                
-                // 1st Level
-                if (introducerRank == 0)
-                {
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 1);
-                        isIntroducerRankUpdated = true;
-                    }
-                    else
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 0);
-                    }
-                }
-                // 2nd Level
-                else if (introducerRank == 1)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 2);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 3rd Level
-                else if (introducerRank == 2)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 3);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 4th Level
-                else if (introducerRank == 3)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 4);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 5th Level
-                else if (introducerRank == 4)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 5);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 6th Level
-                else if (introducerRank == 5)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 6);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 7th Level
-                else if (introducerRank == 6)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 7);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 8th Level
-                else if (introducerRank == 7)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 8);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 9th Level
-                else if (introducerRank == 8)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 9);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 10th Level
-                else if (introducerRank == 9)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 10);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                //11th Level
-                else if (introducerRank == 10)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp,11);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-
-                // 12th Level
-                else if (introducerRank == 11)
-                {
-                    //
-                    if (_user.GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
-                    {
-                        _user.UpdateUserRank(introducer.SecurityStamp, 12);
-                        isIntroducerRankUpdated = true;
-                    }
-                }
-            }
-
-            return isIntroducerRankUpdated;
-        }
+        //public bool GetUserSamePeer(Introducer introducer)
+        //{
+        //    return _user.GetUserSamePeer(introducer);
+        //}
         /// <summary>
         /// Fetches the User Rank By User ID
         /// </summary>
@@ -415,8 +250,8 @@ namespace Electricity_Service
         {
             try
             {
-                return _user.FetchUserRank(
-               _user.FetchUserSecurityStamp(userID)).UserRank;
+                return _user.FetchUserRank(userID);
+
             }
             catch
             {
@@ -426,6 +261,11 @@ namespace Electricity_Service
 
         }
 
-        
+        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID)
+        {
+            return await this._user.FetchAllWalletTransaction(requestorID);
+        }
+
+
     }
 }

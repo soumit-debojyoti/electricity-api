@@ -16,10 +16,12 @@ namespace Electricity_API.Controllers
     {
         private readonly IOptions<ConnectionStrings> config;
         Electricity_Service.User_Service rs = null;
+        Electricity_Service.Common_Service commonService = null;
         public UserController(IOptions<ConnectionStrings> config)
         {
             this.config = config;
             rs = new User_Service(this.config.Value);
+            commonService = new Common_Service(this.config.Value);
         }
 
         // GET api/values
@@ -306,6 +308,16 @@ namespace Electricity_API.Controllers
 
             }
             #endregion
+
+            /* Registration successfull: registered user should recieve email for successful registration*/
+            string emailBody = "Hi, <br />" + registerUser.firstName + " " + registerUser.lastName + " you have been successfully registered to Telecharge.<br />" +
+                                "user name - " + registerUser.username + "<br />password - " + registerUser.password + "<br />Thanks and Regards,<br>Telecharge Registration Team" +
+                                "<br />This is a system generated email, do not reply back to this email-id";
+            //string emailBody = "Hi, <br />Your Login ID/ User Name - " + registerUser.username + "<br/>Password - " + registerUser.password;
+            string emailSubject = "Telecharge - Registration";
+            string fromEmailID = "postmaster@telecharge.biz";
+            await commonService.SendEmail(registerUser.email, emailSubject, emailBody, fromEmailID);
+            //await commonService.IsWithdrawalRequestSendByThisUser(5);
             return Ok(rr);
         }
 
@@ -387,6 +399,12 @@ namespace Electricity_API.Controllers
         public int FetchUserRank(int userID)
         {
             return rs.FetchUserRank(userID);
+        }
+
+        [HttpGet("{requestorID}/AllTransaction")]
+        public async Task<List<WalletTransaction>> FetchAllTransaction(int requestorID)
+        {
+            return await rs.FetchAllWalletTransaction(requestorID);
         }
     }
 }

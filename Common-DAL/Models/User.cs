@@ -180,11 +180,11 @@ namespace Electricity_DAL.Models
         /// <summary>
         /// Introduction Code used to register the user by this introducer
         /// </summary>
-        public Int64 IntroductionCode { get; set; }
+        // public Int64 IntroductionCode { get; set; }
         /// <summary>
         /// Introducer's Name
         /// </summary>
-        public string Name { get; set; }
+        // public string Name { get; set; }
         /// <summary>
         /// Introducer's Joining date
         /// </summary>
@@ -196,6 +196,6 @@ namespace Electricity_DAL.Models
         /// <summary>
         /// Introducer's introducer_Security Stamp
         /// </summary>
-        public string InroducerSecurityStamp { get; set; }
+        // public string InroducerSecurityStamp { get; set; }
     }
 }

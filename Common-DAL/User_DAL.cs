@@ -1421,11 +1421,8 @@ namespace Electricity_DAL
                             {
                                 var introducer = new Introducer();
                                 introducer.UserName = Convert.ToString(reader["user_name"]).Trim();
-                                introducer.Name = Convert.ToString(reader["introname"]).Trim();
                                 introducer.SecurityStamp = Convert.ToString(reader["security_stamp"]).Trim();
-                                introducer.IntroductionCode = Convert.ToInt64(reader["introcode"]);
                                 introducer.JoiningDate = Convert.ToDateTime(reader["used_date"]);
-                                introducer.InroducerSecurityStamp = Convert.ToString(reader["user_token_key"]).Trim();
                                 introducer.RoleID = Convert.ToInt32(reader["role_id"]);
                                 return introducer;
                             };
@@ -1573,6 +1570,248 @@ namespace Electricity_DAL
                     catch (Exception ex)
                     {
                         return false;
+                    }
+                }
+            }
+        }
+
+        public async Task UpdateNextLevel(string userSecurityStamp)
+        {
+            bool response = true;
+            while (response)
+            {
+                Introducer introducer = GetIntroducerInfo(userSecurityStamp);
+                response = false;
+                if (introducer != null && introducer.RoleID != 4)
+                {
+                    response = GetUserSamePeer(introducer);
+                    userSecurityStamp = introducer.SecurityStamp;
+                    /* Add introducer bonus for succssfull referral */
+                    int introducerID = (Get_User(introducer.UserName).Result).user_id;
+                    await AddWalletBalance(introducerID, FetchReferralBonus(
+                        FetchUserRank(introducer.SecurityStamp).UserRank).Result, "Referral bonus");
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Check user count and update rank for introducer
+        /// </summary>
+        /// <param name="user_security_stamp"></param>
+        /// <param name="introducerRank"></param>
+        /// <returns></returns>
+        public bool GetUserSamePeer(Introducer introducer)
+        {
+            bool isIntroducerRankUpdated = false;
+            //Introducer introducer = _user.GetIntroducerInfo(user_security_stamp);
+            if (introducer != null && introducer.RoleID != 4)
+            {
+                var introducerRank = 0;
+                //rs.UpdateUserRank(introducer.SecurityStamp, 0);
+                if (FetchUserRank(introducer.SecurityStamp) != null)
+                {
+                    introducerRank = FetchUserRank(introducer.SecurityStamp).UserRank;
+                }
+                else
+                {
+                    UpdateUserRank(introducer.SecurityStamp, 0);
+
+                }
+
+                // 1st Level
+                if (introducerRank == 0)
+                {
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 1);
+                        isIntroducerRankUpdated = true;
+                    }
+                    else
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 0);
+                    }
+                }
+                // 2nd Level
+                else if (introducerRank == 2)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 2);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 3rd Level
+                else if (introducerRank == 2)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 3);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 4th Level
+                else if (introducerRank == 3)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 4);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 5th Level
+                else if (introducerRank == 4)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 5);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 6th Level
+                else if (introducerRank == 5)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 6);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 7th Level
+                else if (introducerRank == 6)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 7);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 8th Level
+                else if (introducerRank == 7)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 8);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 9th Level
+                else if (introducerRank == 8)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 9);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 10th Level
+                else if (introducerRank == 9)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 10);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                //11th Level
+                else if (introducerRank == 10)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 11);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+
+                // 12th Level
+                else if (introducerRank == 11)
+                {
+                    //
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    {
+                        UpdateUserRank(introducer.SecurityStamp, 12);
+                        isIntroducerRankUpdated = true;
+                    }
+                }
+            }
+
+            return isIntroducerRankUpdated;
+        }
+        /// <summary>
+        /// Fetches the User Rank By User ID
+        /// </summary>
+        /// <param name="userID"></param>
+        /// <returns></returns>
+        public int FetchUserRank(int userID)
+        {
+            try
+            {
+                return FetchUserRank(
+               FetchUserSecurityStamp(userID)).UserRank;
+            }
+            catch
+            {
+
+                return 0;
+            }
+
+        }
+
+        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID)
+        {
+            List<WalletTransaction> walletTransactionList = new List<WalletTransaction>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_TRANSACTION", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@requestorID", SqlDbType.Int).Value = requestorID;
+                    
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var walletTransaction = new WalletTransaction();
+                                walletTransaction.WalletTransactionID = Convert.ToInt32(reader["wallet_transaction_id"].ToString());
+                                walletTransaction.TransactionAmount = Convert.ToDecimal(reader["transaction_amount"].ToString());
+                                walletTransaction.UserName = reader["user_name"].ToString();
+                                walletTransaction.TransactionMessage = reader["message"].ToString();
+                                walletTransaction.TransactionTime = Convert.ToDateTime(reader["created_on"].ToString()).ToShortDateString();
+                                walletTransaction.TransactionMode = reader["transaction_mode"].ToString();
+                                walletTransaction.TransactionByFirstName = reader["first_name"].ToString();
+                                walletTransaction.TransactionByLastName = reader["last_name"].ToString();
+                                walletTransaction.MobileNumber = reader["mobile_number"].ToString();
+                                walletTransaction.UserID = Convert.ToInt32(reader["user_id"].ToString());
+                                walletTransactionList.Add(walletTransaction);
+                            }
+                            return walletTransactionList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
                     }
                 }
             }

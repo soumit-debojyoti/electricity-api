@@ -287,7 +287,8 @@ namespace Electricity_API.Controllers
         [Route("email/receiver/{toMailAddress}/subject/{mailSubject}/body/{mailBody}/sender/{fromEmailAddress}")]
         public bool SendEmail(string toMailAddress, string mailSubject, string mailBody, string fromEmailAddress)
         {
-            return this.rs.SendEmail(toMailAddress, mailSubject, mailBody, fromEmailAddress);
+            // return this.rs.SendEmail(toMailAddress, mailSubject, mailBody, fromEmailAddress);
+            return true;
         }
     }
 }
