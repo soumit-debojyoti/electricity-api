@@ -1604,6 +1604,7 @@ namespace Electricity_DAL
         public bool GetUserSamePeer(Introducer introducer)
         {
             bool isIntroducerRankUpdated = false;
+            int levelCount = 2;
             //Introducer introducer = _user.GetIntroducerInfo(user_security_stamp);
             if (introducer != null && introducer.RoleID != 4)
             {
@@ -1622,7 +1623,7 @@ namespace Electricity_DAL
                 // 1st Level
                 if (introducerRank == 0)
                 {
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 2)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 1);
                         isIntroducerRankUpdated = true;
@@ -1636,7 +1637,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 2)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 2);
                         isIntroducerRankUpdated = true;
@@ -1647,7 +1648,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 2)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 3);
                         isIntroducerRankUpdated = true;
@@ -1658,7 +1659,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 3)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 4);
                         isIntroducerRankUpdated = true;
@@ -1669,7 +1670,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 4)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 5);
                         isIntroducerRankUpdated = true;
@@ -1680,7 +1681,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 5)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 6);
                         isIntroducerRankUpdated = true;
@@ -1691,7 +1692,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 6)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 7);
                         isIntroducerRankUpdated = true;
@@ -1702,7 +1703,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 7)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 8);
                         isIntroducerRankUpdated = true;
@@ -1713,7 +1714,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 8)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 9);
                         isIntroducerRankUpdated = true;
@@ -1724,7 +1725,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 9)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 10);
                         isIntroducerRankUpdated = true;
@@ -1735,7 +1736,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 10)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 11);
                         isIntroducerRankUpdated = true;
@@ -1746,7 +1747,7 @@ namespace Electricity_DAL
                 else if (introducerRank == 11)
                 {
                     //
-                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= 5)
+                    if (GetUserSamePeer(introducer.SecurityStamp, introducerRank).Count >= levelCount)
                     {
                         UpdateUserRank(introducer.SecurityStamp, 12);
                         isIntroducerRankUpdated = true;
