@@ -225,20 +225,24 @@ namespace Electricity_Service
         /// <param name="userSecurityStamp"></param>
         /// <param name="userRank"></param>
         /// <returns></returns>
-        public void UpdateNextLevel(string userSecurityStamp)
+        public async Task UpdateNextLevel(string userSecurityStamp)
         {
             bool response = true;
+            Introducer introducer = _user.GetIntroducerInfo(userSecurityStamp);
             while (response)
             {
                 response = false;
-                Introducer introducer = _user.GetIntroducerInfo(userSecurityStamp);
+                
                 if (introducer != null && introducer.RoleID != 4)
                 {
                     response = GetUserSamePeer(introducer);
                     userSecurityStamp = introducer.SecurityStamp;
                 }
             }
-
+            // Add introducer bonus for succssfull referral
+            int introducerID = (_user.Get_User(introducer.UserName).Result).user_id;
+            await _user.AddWalletBalance(introducerID, _user.FetchReferralBonus(
+                _user.FetchUserRank(introducer.SecurityStamp).UserRank).Result, "Referral bonus");
         }
 
         /// <summary>
@@ -264,6 +268,7 @@ namespace Electricity_Service
                     _user.UpdateUserRank(introducer.SecurityStamp, 0);
 
                 }
+                
                 // 1st Level
                 if (introducerRank == 0)
                 {
@@ -398,6 +403,7 @@ namespace Electricity_Service
                     }
                 }
             }
+
             return isIntroducerRankUpdated;
         }
         /// <summary>
@@ -419,5 +425,7 @@ namespace Electricity_Service
             }
 
         }
+
+        
     }
 }

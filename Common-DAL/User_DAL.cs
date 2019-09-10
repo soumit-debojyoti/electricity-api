@@ -1532,5 +1532,50 @@ namespace Electricity_DAL
             }
             return userSecurityStamp;
         }
+
+        public async Task<decimal> FetchReferralBonus(int introducerRank)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_INTRODUCER_BONUS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@introducerLevel", SqlDbType.Int).Value = introducerRank;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                           return Convert.ToDecimal(reader["bonus_amount"].ToString());
+                        }
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> AddWalletBalance(int userID, decimal amount, string message)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("ADD_WALLET_BALANCE", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = Convert.ToInt32(userID);
+                    command.Parameters.Add("@amount", SqlDbType.Decimal).Value = Convert.ToDecimal(amount);
+                    command.Parameters.Add("@message", SqlDbType.VarChar, 100).Value = message;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }

@@ -302,7 +302,7 @@ namespace Electricity_API.Controllers
             #region Rank Achievement
             if (rs.UpdateUserRank(user_security_stamp, 0))
             {
-                rs.UpdateNextLevel(user_security_stamp);
+                await rs.UpdateNextLevel(user_security_stamp);
 
             }
             #endregion
