@@ -152,7 +152,7 @@ namespace Electricity_API.Controllers
         public async Task<ActionResult> GetkKYCDetail(int userId)
         {
             GetKYCDetailsResponse response = new GetKYCDetailsResponse();
-            response.list= await rs.GetkKYCDetail(userId);
+            response.list = await rs.GetkKYCDetail(userId);
             return Ok(response);
         }
 
@@ -232,7 +232,7 @@ namespace Electricity_API.Controllers
                 registerUser.addressproof = Request.Form["addressproof"];
                 registerUser.bankdetails = Request.Form["bankdetails"];
             }
-            
+
 
 
             registerUser.payonline = Convert.ToBoolean(Request.Form["payonline"].ToString() == string.Empty ? false : true);
@@ -402,9 +402,14 @@ namespace Electricity_API.Controllers
         }
 
         [HttpGet("{requestorID}/AllTransaction/from/{startDate}/to/{endDate}")]
-        public async Task<List<WalletTransaction>> FetchAllTransaction(int requestorID,string startDate, string endDate)
+        public async Task<List<WalletTransaction>> FetchAllTransaction(int requestorID, string startDate, string endDate)
         {
             return await rs.FetchAllWalletTransaction(requestorID, startDate, endDate);
+        }
+        [HttpGet("rankachiever")]
+        public async Task<List<RankAcheiver>> FetchAllRankAcheiver()
+        {
+            return await rs.FetchAllRankAcheiver();
         }
     }
 }

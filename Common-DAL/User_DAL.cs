@@ -1422,7 +1422,7 @@ namespace Electricity_DAL
                                 var introducer = new Introducer();
                                 introducer.UserName = Convert.ToString(reader["user_name"]).Trim();
                                 introducer.SecurityStamp = Convert.ToString(reader["security_stamp"]).Trim();
-                                introducer.JoiningDate = Convert.ToDateTime(reader["used_date"]);
+                                introducer.JoiningDate = Convert.ToDateTime(reader["created_on"]);
                                 introducer.RoleID = Convert.ToInt32(reader["role_id"]);
                                 return introducer;
                             };
@@ -1545,7 +1545,7 @@ namespace Electricity_DAL
                         {
                            return Convert.ToDecimal(reader["bonus_amount"].ToString());
                         }
-                        return 0;
+                        return -1;
                     }
                 }
             }
@@ -1575,7 +1575,7 @@ namespace Electricity_DAL
             }
         }
 
-        public async Task UpdateNextLevel(string userSecurityStamp)
+        public async Task UpdateNextLevel(string userSecurityStamp, ConfigurationModel configuration)
         {
             bool response = true;
             while (response)
@@ -1584,12 +1584,16 @@ namespace Electricity_DAL
                 response = false;
                 if (introducer != null && introducer.RoleID != 4)
                 {
-                    response = GetUserSamePeer(introducer);
+                    response = GetUserSamePeer(introducer, configuration.down_side_direct_numer_of_joinee);
                     userSecurityStamp = introducer.SecurityStamp;
                     /* Add introducer bonus for succssfull referral */
-                    int introducerID = (Get_User(introducer.UserName).Result).user_id;
-                    await AddWalletBalance(introducerID, FetchReferralBonus(
-                        FetchUserRank(introducer.SecurityStamp).UserRank).Result, "Referral bonus");
+                    var bonusAmount = FetchReferralBonus(
+                        FetchUserRank(introducer.SecurityStamp).UserRank).Result;
+                    if(bonusAmount > 0)
+                    {
+                        int introducerID = (Get_User(introducer.UserName).Result).user_id;
+                        await AddWalletBalance(introducerID, bonusAmount, "Referral bonus");
+                    }
                 }
             }
 
@@ -1601,10 +1605,10 @@ namespace Electricity_DAL
         /// <param name="user_security_stamp"></param>
         /// <param name="introducerRank"></param>
         /// <returns></returns>
-        public bool GetUserSamePeer(Introducer introducer)
+        public bool GetUserSamePeer(Introducer introducer, int count)
         {
             bool isIntroducerRankUpdated = false;
-            int levelCount = 2;
+            int levelCount = count;
             //Introducer introducer = _user.GetIntroducerInfo(user_security_stamp);
             if (introducer != null && introducer.RoleID != 4)
             {
@@ -1810,6 +1814,42 @@ namespace Electricity_DAL
                                 walletTransactionList.Add(walletTransaction);
                             }
                             return walletTransactionList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public async Task<List<RankAcheiver>> FetchAllRankAcheiver()
+        {
+            List<RankAcheiver> rankAcheivers = new List<RankAcheiver>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_RANK_ACHIEVER", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var rankAcheiver = new RankAcheiver();
+                                rankAcheiver.UserName = reader["user_name"].ToString();
+                                rankAcheiver.FirstName = reader["first_name"].ToString();
+                                rankAcheiver.LastName = reader["last_name"].ToString();
+                                rankAcheiver.UserRank = Convert.ToInt32(reader["userrank"].ToString());
+                                rankAcheiver.RankAchievementDate = Convert.ToDateTime(reader["lastmodified"].ToString());
+                                rankAcheiver.JoiningDate = Convert.ToDateTime(reader["joiningdate"].ToString());
+
+                                rankAcheivers.Add(rankAcheiver);
+                            }
+                            return rankAcheivers;
                         }
                     }
                     catch (Exception ex)

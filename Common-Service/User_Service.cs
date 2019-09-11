@@ -8,9 +8,11 @@ namespace Electricity_Service
     public class User_Service
     {
         private Electricity_DAL.User_DAL _user = null;
+        private Electricity_DAL.Common_DAL _common = null;
         public User_Service(ConnectionStrings connectionString)
         {
             _user = new Electricity_DAL.User_DAL(connectionString);
+            _common = new Electricity_DAL.Common_DAL(connectionString);
         }
 
         public async Task<List<User>> GetUsers()
@@ -227,7 +229,8 @@ namespace Electricity_Service
         /// <returns></returns>
         public async Task UpdateNextLevel(string userSecurityStamp)
         {
-            await _user.UpdateNextLevel(userSecurityStamp);
+            var configuration = _common.GetConfiguration().Result;
+            await _user.UpdateNextLevel(userSecurityStamp, configuration);
             
         }
 
@@ -277,6 +280,11 @@ namespace Electricity_Service
             return await this._user.FetchAllWalletTransaction(requestorID, sDate, eDate);
         }
 
+        public async Task<List<RankAcheiver>> FetchAllRankAcheiver()
+        {
+            return await this._user.FetchAllRankAcheiver();
+        }
 
-    }
+
+        }
 }
