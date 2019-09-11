@@ -401,10 +401,10 @@ namespace Electricity_API.Controllers
             return rs.FetchUserRank(userID);
         }
 
-        [HttpGet("{requestorID}/AllTransaction")]
-        public async Task<List<WalletTransaction>> FetchAllTransaction(int requestorID)
+        [HttpGet("{requestorID}/AllTransaction/from/{startDate}/to/{endDate}")]
+        public async Task<List<WalletTransaction>> FetchAllTransaction(int requestorID,string startDate, string endDate)
         {
-            return await rs.FetchAllWalletTransaction(requestorID);
+            return await rs.FetchAllWalletTransaction(requestorID, startDate, endDate);
         }
     }
 }

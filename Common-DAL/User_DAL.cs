@@ -1777,7 +1777,7 @@ namespace Electricity_DAL
 
         }
 
-        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID)
+        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID, DateTime startDate, DateTime endDate)
         {
             List<WalletTransaction> walletTransactionList = new List<WalletTransaction>();
             using (SqlConnection connection = new SqlConnection(this._connectionString))
@@ -1787,7 +1787,9 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@requestorID", SqlDbType.Int).Value = requestorID;
-                    
+                    command.Parameters.Add("@startDate", SqlDbType.Date).Value = startDate;
+                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = endDate;
+
                     try
                     {
                         using (SqlDataReader reader = await command.ExecuteReaderAsync())

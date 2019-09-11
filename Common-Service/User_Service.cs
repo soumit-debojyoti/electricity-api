@@ -261,9 +261,20 @@ namespace Electricity_Service
 
         }
 
-        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID)
+        public async Task<List<WalletTransaction>> FetchAllWalletTransaction(int requestorID, string startDate = null, string endDate = null)
         {
-            return await this._user.FetchAllWalletTransaction(requestorID);
+            DateTime sDate, eDate = new DateTime();
+            if (startDate == string.Empty || startDate == null || endDate == string.Empty || endDate == null)
+            {
+                sDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                eDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+            } 
+            else
+            {
+                sDate = Convert.ToDateTime(startDate);
+                eDate = Convert.ToDateTime(endDate);
+            }
+            return await this._user.FetchAllWalletTransaction(requestorID, sDate, eDate);
         }
 
 
