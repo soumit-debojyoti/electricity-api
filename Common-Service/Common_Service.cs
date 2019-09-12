@@ -134,5 +134,15 @@ namespace Electricity_Service
         {
             return await _common.SendEmail(toMailAddress, mailSubject, mailBody, fromEmailAddress);
         }
+
+        public bool InsertNewsFeedData(NewsFeed newsFeed)
+        {
+            return _common.InsertNewsFeedData(newsFeed.Title, newsFeed.Content, DateTime.Now, DateTime.Now.AddDays(newsFeed.PostValidity));
+        }
+
+        public List<NewsFeed> FetchAllNewsFeed()
+        {
+            return _common.FetchAllNewsFeed();
+        }
     }
 }

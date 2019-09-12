@@ -715,5 +715,75 @@ namespace Electricity_DAL
                 return false;
             }
         }
+
+        public bool InsertNewsFeedData(string title, string content, DateTime postDate, DateTime expirationDate)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("INSERT_NEWS_FEED_DATA", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@title", SqlDbType.VarChar, 80).Value = title;
+                    command.Parameters.Add("@content", SqlDbType.VarChar, 180).Value = content;
+                    command.Parameters.Add("@postDate", SqlDbType.Date).Value = postDate;
+                    command.Parameters.Add("@expirationDate", SqlDbType.Date).Value = expirationDate;
+                    try
+                    {
+                        int numberOfRowsAffected = command.ExecuteNonQuery();
+                        if (numberOfRowsAffected > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public List<NewsFeed> FetchAllNewsFeed()
+        {
+            List<NewsFeed> feeds = new List<NewsFeed>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_NEWS_FEED", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using(SqlDataReader reader = command.ExecuteReader())
+                    {
+                        try
+                        {
+
+                            while (reader.Read())
+                            {
+                                var feed = new NewsFeed();
+                                feed.FeedID = Convert.ToInt32(reader["FeedID"].ToString());
+                                feed.Title = reader["Title"].ToString();
+                                feed.Content = reader["Content"].ToString();
+                                feed.PostDate = reader["PostDate"].ToString();
+                                feed.PostValidity = (Convert.ToDateTime(reader["ExpirationDate"].ToString()).Date - DateTime.UtcNow).Days ;
+                                feed.ExpirationDate = reader["ExpirationDate"].ToString();
+                                feeds.Add(feed);
+                            }
+                            return feeds;
+                        }
+                        catch (Exception ex)
+                        {
+                            return null;
+                        }
+                    }
+                    
+                }
+            }
+        }
     }
 }

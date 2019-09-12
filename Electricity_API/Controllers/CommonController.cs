@@ -290,5 +290,17 @@ namespace Electricity_API.Controllers
             // return this.rs.SendEmail(toMailAddress, mailSubject, mailBody, fromEmailAddress);
             return true;
         }
+        [HttpPost]
+        [Route("news")]
+        public bool InsertNewsFeed([FromBody] NewsFeed newsFeed)
+        {
+            return rs.InsertNewsFeedData(newsFeed);
+        }
+        [HttpGet]
+        [Route("news")]
+        public List<NewsFeed> FetchAllNewsFeed()
+        {
+            return rs.FetchAllNewsFeed();
+        }
     }
 }
