@@ -302,5 +302,12 @@ namespace Electricity_API.Controllers
         {
             return rs.FetchAllNewsFeed();
         }
+
+        [HttpPut]
+        [Route("news")]
+        public bool UpdateNewsFeed([FromBody] NewsFeed newsFeed)
+        {
+            return rs.UpdateNews(newsFeed);
+        }
     }
 }

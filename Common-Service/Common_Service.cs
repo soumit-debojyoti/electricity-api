@@ -144,5 +144,10 @@ namespace Electricity_Service
         {
             return _common.FetchAllNewsFeed();
         }
+
+        public bool UpdateNews(NewsFeed newsFeed)
+        {
+            return _common.UpdateNews(newsFeed.FeedID, DateTime.Now.AddDays(newsFeed.PostValidity));
+        }
     }
 }

@@ -770,7 +770,7 @@ namespace Electricity_DAL
                                 feed.Title = reader["Title"].ToString();
                                 feed.Content = reader["Content"].ToString();
                                 feed.PostDate = reader["PostDate"].ToString();
-                                feed.PostValidity = (Convert.ToDateTime(reader["ExpirationDate"].ToString()).Date - DateTime.UtcNow).Days ;
+                                feed.PostValidity = (Convert.ToDateTime(reader["ExpirationDate"].ToString()) - DateTime.Now).Days ;
                                 feed.ExpirationDate = reader["ExpirationDate"].ToString();
                                 feeds.Add(feed);
                             }
@@ -782,6 +782,37 @@ namespace Electricity_DAL
                         }
                     }
                     
+                }
+            }
+        }
+
+        public bool UpdateNews(int feedID, DateTime expirationDate)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_NEWS_FEED", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@feedID", SqlDbType.Int).Value = feedID;
+                    command.Parameters.Add("@ExpirationDate", SqlDbType.Date).Value = expirationDate;
+                    try
+                    {
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                        return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                        
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
                 }
             }
         }
