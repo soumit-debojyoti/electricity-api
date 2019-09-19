@@ -227,6 +227,29 @@ namespace Electricity_DAL
                 }
             }
         }
+        public async Task<bool> UpdateValidationApiDetails(string rechargeMode, string operatorName, string validationApiValue)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_VALIDATION_API", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode;
+                    command.Parameters.Add("@operatorName", SqlDbType.VarChar, 50).Value = operatorName;
+                    command.Parameters.Add("@validationApiValue", SqlDbType.VarChar).Value = validationApiValue;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
 
         public async Task<RechargeAPI> FetchValidationApiDetails(string rechargeMode,string operatorName)
         {
@@ -259,6 +282,30 @@ namespace Electricity_DAL
                     catch (Exception ex)
                     {
                         return null;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateRechargeAPI(string rechargeMode, string operatorName, string apiValue)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_RECHARGE_API", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode.ToUpper();
+                    command.Parameters.Add("@operatorName", SqlDbType.VarChar, 50).Value = operatorName.ToUpper();
+                    command.Parameters.Add("@apiValue", SqlDbType.VarChar).Value = apiValue;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
                     }
                 }
             }

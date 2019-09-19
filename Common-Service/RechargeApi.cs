@@ -56,5 +56,15 @@ namespace Electricity_Service
         {
             return await this._rechargeApiDAL.FetchValidationApiDetails(rechargeMode, operatorName);
         }
+
+        public async Task<bool> UpdateRechargeAPI(string rechargeMode, string operatorName, string apiValue)
+        {
+            return await this._rechargeApiDAL.UpdateRechargeAPI(rechargeMode, operatorName, apiValue);
+        }
+
+        public async Task<bool> UpdateValidationApiDetails(string rechargeMode, string operatorName, string validationApiValue)
+        {
+            return await this._rechargeApiDAL.UpdateValidationApiDetails(rechargeMode, operatorName, validationApiValue);
+        }
     }
 }

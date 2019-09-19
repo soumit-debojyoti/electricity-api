@@ -231,7 +231,7 @@ namespace Electricity_Service
         {
             var configuration = _common.GetConfiguration().Result;
             await _user.UpdateNextLevel(userSecurityStamp, configuration);
-            
+
         }
 
         /// <summary>
@@ -271,7 +271,7 @@ namespace Electricity_Service
             {
                 sDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
                 eDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-            } 
+            }
             else
             {
                 sDate = Convert.ToDateTime(startDate);
@@ -285,6 +285,14 @@ namespace Electricity_Service
             return await this._user.FetchAllRankAcheiver();
         }
 
-
+        public async Task<List<IntroducerBonus>> FetchAllReferralBonus()
+        {
+            return await this._user.FetchAllReferralBonus();
         }
+
+        public async Task<bool> UpdateIntroducerReferralBonus(IntroducerBonus introducerBonus)
+        {
+            return await this._user.UpdateIntroducerReferralBonus(introducerBonus.IntroducerLevel, introducerBonus.ReferralBonus, introducerBonus.MonthlyPayout);
+        }
+    }
 }

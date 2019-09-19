@@ -1859,5 +1859,56 @@ namespace Electricity_DAL
                 }
             }
         }
+
+
+        public async Task<List<IntroducerBonus>> FetchAllReferralBonus()
+        {
+            List<IntroducerBonus> introducerBonusInfo = new List<IntroducerBonus>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_INTRODUCER_BONUS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            var info = new IntroducerBonus();
+                            info.IntroducerLevel =  Convert.ToInt32(reader["introducer_level"].ToString());
+                            info.ReferralBonus = Convert.ToDecimal(reader["bonus_amount"].ToString());
+                            info.MonthlyPayout = Convert.ToDecimal(reader["monthly_payout"].ToString());
+                            introducerBonusInfo.Add(info);
+                        }
+                        return introducerBonusInfo;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateIntroducerReferralBonus(int userLevel, decimal referralAmount, decimal monthlyAmount)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_INTRODUCER_REFERRAL_BONUS_INFO", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@introducer_level", SqlDbType.Int).Value = userLevel;
+                    command.Parameters.Add("@bonus_amount", SqlDbType.Decimal).Value = referralAmount;
+                    command.Parameters.Add("@monthly_payout", SqlDbType.Decimal).Value = monthlyAmount;
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }

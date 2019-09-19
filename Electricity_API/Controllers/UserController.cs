@@ -411,5 +411,16 @@ namespace Electricity_API.Controllers
         {
             return await rs.FetchAllRankAcheiver();
         }
+        [HttpGet("levelbonusinfo")]
+        public async Task<List<IntroducerBonus>> FetchAllReferralBonus()
+        {
+            return await this.rs.FetchAllReferralBonus();
+        }
+
+        [HttpPut("levelbonusinfo")]
+        public async Task<bool> UpdateIntroducerBonusInfo([FormBody] IntroducerBonus introducerInfo)
+        {
+            return await this.rs.UpdateIntroducerReferralBonus(introducerInfo);
+        }
     }
 }

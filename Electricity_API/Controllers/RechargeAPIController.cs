@@ -77,5 +77,20 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.FetchValidationApiDetails(rechargeMode,operatorName);
         }
+
+        [Route("api")]
+        [HttpPut]
+        public async Task<bool> UpdateRechargeAPI([FromBody] RechargeAPI api)
+        {
+            return await this.rs.UpdateRechargeAPI(api.RechargeMode, api.OperatorName, api.ApiValue);
+        }
+
+
+        [Route("api/validation")]
+        [HttpPut]
+        public async Task<bool> UpdateRechargeAPIValidation([FromBody] RechargeAPI api)
+        {
+            return await this.rs.UpdateValidationApiDetails(api.RechargeMode, api.OperatorName, api.ApiValue);
+        }
     }
 }
