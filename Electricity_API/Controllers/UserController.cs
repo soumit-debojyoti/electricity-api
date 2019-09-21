@@ -418,7 +418,7 @@ namespace Electricity_API.Controllers
         }
 
         [HttpPut("levelbonusinfo")]
-        public async Task<bool> UpdateIntroducerBonusInfo([FormBody] IntroducerBonus introducerInfo)
+        public async Task<bool> UpdateIntroducerBonusInfo([FromBody] IntroducerBonus introducerInfo)
         {
             return await this.rs.UpdateIntroducerReferralBonus(introducerInfo);
         }
