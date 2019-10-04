@@ -816,5 +816,73 @@ namespace Electricity_DAL
                 }
             }
         }
+
+
+        public bool InsertBankInfo(string bankName, string branchName, string ifscCode, long accountNumber)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("insert_bank_info", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@bankName", SqlDbType.VarChar, 40).Value = bankName;
+                    command.Parameters.Add("@branchName", SqlDbType.VarChar, 60).Value = branchName;
+                    command.Parameters.Add("@isfcCode", SqlDbType.VarChar, 10).Value = ifscCode;
+                    command.Parameters.Add("@accountNumber", SqlDbType.VarChar, 16).Value = accountNumber.ToString();
+                    try
+                    {
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<List<BankInfo>> FetchAllCompanyBankInfo()
+        {
+            List<BankInfo> bankList = new List<BankInfo>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("fetch_bank_info", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var ban = new BankInfo();
+                                ban.BankName = reader["bankName"].ToString();
+                                ban.BranchName = reader["branchName"].ToString();
+                                ban.IfscCode = reader["isfcCode"].ToString();
+                                ban.AccountNumber = reader["accountNumber"].ToString();
+
+                                bankList.Add(ban);
+                            }
+                            return bankList;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
     }
 }

@@ -29,7 +29,7 @@ namespace Electricity_Service
 
         public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount)
         {
-            return await this._rechargeApiDAL.InsertTransaction(userID, rechargeMode,rechargeAmount);
+            return await this._rechargeApiDAL.InsertTransaction(userID, rechargeMode, rechargeAmount);
         }
 
         public async Task<bool> UpdateRechargeTransactionStatus(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)
@@ -65,6 +65,33 @@ namespace Electricity_Service
         public async Task<bool> UpdateValidationApiDetails(string rechargeMode, string operatorName, string validationApiValue)
         {
             return await this._rechargeApiDAL.UpdateValidationApiDetails(rechargeMode, operatorName, validationApiValue);
+        }
+
+        public async Task<List<RechargeTransaction>> FetchTransactionHistory(int userID, string startDate, string endDate)
+        {
+            return await this._rechargeApiDAL.FetchTransactionHistory(userID, startDate, endDate);
+        }
+        public async Task<List<RechargeTransaction>> FetchTransactionHistory(string startDate, string endDate)
+        {
+            return await this._rechargeApiDAL.FetchTransactionHistory(startDate, endDate);
+        }
+        public async Task<bool> AddComplaint(Complaint complaint)
+        {
+            return await this._rechargeApiDAL.AddComplaint(complaint);
+        }
+
+        public async Task<List<Complaint>> FetchUserComplaint(int raisedBy)
+        {
+            return await this._rechargeApiDAL.FetchUserComplaint(raisedBy);
+        }
+        public async Task<List<Complaint>> FetchUserComplaintAdmin()
+        {
+            return await this._rechargeApiDAL.FetchUserComplaintAdmin();
+        }
+
+        public async Task<bool> UpdateComplaint(Complaint complaint)
+        {
+            return await this._rechargeApiDAL.UpdateComplaint(complaint);
         }
     }
 }

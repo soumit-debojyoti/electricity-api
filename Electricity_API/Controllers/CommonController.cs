@@ -309,5 +309,19 @@ namespace Electricity_API.Controllers
         {
             return rs.UpdateNews(newsFeed);
         }
+        [HttpPost]
+        [Route("bankinfo")]
+        public bool InsertBankInfo(BankInfo bankInfo)
+        {
+            return rs.InsertBankInfo(bankInfo.BankName, bankInfo.BranchName, bankInfo.IfscCode, Convert.ToInt64(bankInfo.AccountNumber));
+
+        }
+        [HttpGet]
+        [Route("bankinfo")]
+        public async Task<List<BankInfo>> FetchAllCompanyBankInfo()
+        {
+            return await rs.FetchAllCompanyBankInfo();
+        }
+
     }
 }

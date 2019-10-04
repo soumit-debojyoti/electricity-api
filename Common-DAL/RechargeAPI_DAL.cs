@@ -310,5 +310,288 @@ namespace Electricity_DAL
                 }
             }
         }
+
+        public async Task<List<RechargeTransaction>> FetchTransactionHistory(int userID, string startDate, string endDate)
+        {
+            List<RechargeTransaction> transactions = new List<RechargeTransaction>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_TRANSACTION_HISTORY", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@startDate", SqlDbType.Date).Value = Convert.ToDateTime(startDate).Date;
+                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = Convert.ToDateTime(endDate).Date;
+                    
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var transaction = new RechargeTransaction
+                                {
+                                    TransactionID = Convert.ToInt32(reader["transaction_id"].ToString()),
+                                    UserID = Convert.ToInt32(reader["userID"].ToString()),
+                                    TransactionDate = Convert.ToDateTime(reader["transactionDate"].ToString()),
+                                    TransactionMode = reader["rechargeMode"].ToString(),
+                                    TransactionStatus = reader["transactionStatus"].ToString(),
+                                    TransactionMessage = reader["errorMessage"].ToString(),
+                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString())
+                                };
+                                transactions.Add(transaction);
+                            }
+                        }
+                        return transactions;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public async Task<List<RechargeTransaction>> FetchTransactionHistory(string startDate, string endDate)
+        {
+            List<RechargeTransaction> transactions = new List<RechargeTransaction>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_TRANSACTION_HISTORY", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@startDate", SqlDbType.Date).Value = Convert.ToDateTime(startDate).Date;
+                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = Convert.ToDateTime(endDate).Date;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var transaction = new RechargeTransaction
+                                {
+                                    TransactionID = Convert.ToInt32(reader["transaction_id"].ToString()),
+                                    UserID = Convert.ToInt32(reader["userID"].ToString()),
+                                    TransactionDate = Convert.ToDateTime(reader["transactionDate"].ToString()).Date,
+                                    TransactionMode = reader["rechargeMode"].ToString(),
+                                    TransactionStatus = reader["transactionStatus"].ToString(),
+                                    TransactionMessage = reader["errorMessage"].ToString(),
+                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString())
+                                };
+                                transactions.Add(transaction);
+                            }
+                        }
+                        return transactions;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> AddComplaint(Complaint complaint)
+        {
+            string serviceTypeName = "";
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("ADD_USER_COMPLAINT", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@tid", SqlDbType.Int).Value = complaint.TID;
+                    command.Parameters.Add("@cpriority", SqlDbType.Int).Value = complaint.CPriority;
+                    command.Parameters.Add("@raisedby", SqlDbType.Int).Value = complaint.RaisedBy;
+                    command.Parameters.Add("@user_contact", SqlDbType.VarChar, 10).Value = complaint.UserContactNumber;
+                    command.Parameters.Add("@user_comment", SqlDbType.VarChar, 250).Value = complaint.UserComment;
+                    command.Parameters.Add("@cstatus", SqlDbType.Int).Value = complaint.CStatus;
+                    command.Parameters.Add("@resolver_comment", SqlDbType.VarChar, 250).Value = complaint.ResolverComment;
+                    command.Parameters.Add("@assinged_to", SqlDbType.Int).Value = complaint.AssignedTo;
+                    command.Parameters.Add("@resolved_by", SqlDbType.Int).Value = complaint.ResolvedBy;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        public async Task<List<Complaint>> FetchUserComplaint(int raisedBy)
+        {
+            List<Complaint> complaints = new List<Complaint>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_USER_COMPLAINT", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@raisedBy", SqlDbType.Int).Value = raisedBy;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var complaint = new Complaint
+                                {
+                                    CID = Convert.ToInt32(reader["cid"].ToString()),
+                                    TID = Convert.ToInt32(reader["tid"].ToString()),
+                                    CPriority = Convert.ToInt32(reader["cpriority"].ToString()),
+                                    UserContactNumber = reader["user_contact"].ToString(),
+                                    UserComment = reader["user_comment"].ToString(),
+                                    CStatus = Convert.ToInt32(reader["cstatus"].ToString()),
+                                    ResolverComment = reader["resolver_comment"].ToString(),
+                                    AssignedToName = reader["user_name"].ToString(),
+                                };
+                                switch (Convert.ToInt32(reader["cpriority"].ToString()))
+                                {
+                                    case 1: complaint.CPriorityText = "Low";
+                                        break;
+                                    case 2: complaint.CPriorityText = "Medium";
+                                        break;
+                                    case 3:
+                                        complaint.CPriorityText = "High";
+                                        break;
+                                }
+                                switch (Convert.ToInt32(reader["cstatus"].ToString()))
+                                {
+                                    case 1:
+                                        complaint.CStatusText = "Acknowledged";
+                                        break;
+                                    case 2:
+                                        complaint.CStatusText = "Assigned";
+                                        break;
+                                    case 3:
+                                        complaint.CStatusText = "Work In Progress";
+                                        break;
+                                    case 4:
+                                        complaint.CStatusText = "Resolved";
+                                        break;
+                                }
+                                complaints.Add(complaint);
+                            }
+                        }
+                        return complaints;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+
+        public async Task<List<Complaint>> FetchUserComplaintAdmin()
+        {
+            List<Complaint> complaints = new List<Complaint>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_USER_COMPLAINT_ADMIN", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    try
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            while (reader.Read())
+                            {
+                                var complaint = new Complaint
+                                {
+                                    CID = Convert.ToInt32(reader["cid"].ToString()),
+                                    RaisedBy = Convert.ToInt32(reader["raisedby"].ToString()),
+                                    RaisedByText = reader["raisedBy"].ToString(),
+                                    TID = Convert.ToInt32(reader["tid"].ToString()),
+                                    CPriority = Convert.ToInt32(reader["cpriority"].ToString()),
+                                    UserContactNumber = reader["user_contact"].ToString(),
+                                    UserComment = reader["user_comment"].ToString(),
+                                    CStatus = Convert.ToInt32(reader["cstatus"].ToString()),
+                                    ResolverComment = reader["resolver_comment"].ToString(),
+                                    AssignedToName = reader["user_name"].ToString(),
+                                };
+                                var transaction = new RechargeTransaction
+                                {
+                                    TransactionMessage = reader["errorMessage"].ToString(),
+                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString()),
+                                    TransactionDate = Convert.ToDateTime(reader["transactionDate"].ToString()).Date,
+                                    TransactionMode = reader["rechargeMode"].ToString(),
+                                    TransactionStatus = reader["transactionStatus"].ToString()
+                                };
+                                complaint.Transaction = transaction;
+                                switch (Convert.ToInt32(reader["cpriority"].ToString()))
+                                {
+                                    case 1:
+                                        complaint.CPriorityText = "Low";
+                                        break;
+                                    case 2:                                        
+                                        complaint.CPriorityText = "Medium";
+                                        break;
+                                    case 3:
+                                        complaint.CPriorityText = "High";
+                                        break;
+                                }
+                                switch (Convert.ToInt32(reader["cstatus"].ToString()))
+                                {
+                                    case 1:
+                                        complaint.CStatusText = "Acknowledged";
+                                        break;
+                                    case 2:
+                                        complaint.CStatusText = "Assigned";
+                                        break;
+                                    case 3:
+                                        complaint.CStatusText = "Work In Progress";
+                                        break;
+                                    case 4:
+                                        complaint.CStatusText = "Resolved";
+                                        break;
+                                }
+                                complaints.Add(complaint);
+                            }
+                        }
+                        return complaints;
+                    }
+                    catch (Exception ex)
+                    {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        public async Task<bool> UpdateComplaint(Complaint complaint)
+        {
+            string serviceTypeName = "";
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("UPDATE_USER_COMPLAINT", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@cid", SqlDbType.Int).Value = complaint.CID;
+                    command.Parameters.Add("@cstatus", SqlDbType.Int).Value = complaint.CStatus;
+                    command.Parameters.Add("@resolver_comment", SqlDbType.VarChar, 250).Value = complaint.ResolverComment;
+                    command.Parameters.Add("@assinged_to", SqlDbType.Int).Value = complaint.AssignedTo;
+                    command.Parameters.Add("@resolved_by", SqlDbType.Int).Value = complaint.ResolvedBy;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }

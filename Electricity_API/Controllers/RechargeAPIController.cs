@@ -92,5 +92,42 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.UpdateValidationApiDetails(api.RechargeMode, api.OperatorName, api.ApiValue);
         }
+        [Route("api/transaction/user/{userID}/from/{endDate}/to/{startDate}")]
+        [HttpGet]
+        public async Task<List<RechargeTransaction>> FetchTransactionHistory(int userID, string startDate, string endDate)
+        {
+            return await this.rs.FetchTransactionHistory(userID, startDate, endDate);
+        }
+
+        [Route("api/transaction/from/{endDate}/to/{startDate}")]
+        [HttpGet]
+        public async Task<List<RechargeTransaction>> FetchAllTransactionHistory(string startDate, string endDate)
+        {
+            return await this.rs.FetchTransactionHistory(startDate, endDate);
+        }
+        [Route("api/transaction/complaint")]
+        [HttpPost]
+        public async Task<bool> AddComplaint([FromBody] Complaint complaint)
+        {
+            return await this.rs.AddComplaint(complaint);
+        }
+        [Route("api/transaction/complaint/user/{userid}")]
+        [HttpGet]
+        public async Task<List<Complaint>> FetchUserComplaint(int userid)
+        {
+            return await this.rs.FetchUserComplaint(userid);
+        }
+        [Route("api/transaction/complaint/admin")]
+        [HttpGet]
+        public async Task<List<Complaint>> FetchUserComplaintAdmin()
+        {
+            return await this.rs.FetchUserComplaintAdmin();
+        }
+        [Route("api/transaction/complaint")]
+        [HttpPut]
+        public async Task<bool> UpdateComplaint([FromBody] Complaint complaint)
+        {
+            return await this.rs.UpdateComplaint(complaint);
+        }
     }
 }

@@ -149,5 +149,15 @@ namespace Electricity_Service
         {
             return _common.UpdateNews(newsFeed.FeedID, DateTime.Now.AddDays(newsFeed.PostValidity));
         }
+        public bool InsertBankInfo(string bankName, string branchName, string ifscCode, long accountNumber)
+        {
+            return _common.InsertBankInfo(bankName, branchName, ifscCode, accountNumber);
+
+        }
+
+        public async Task<List<BankInfo>> FetchAllCompanyBankInfo()
+        {
+            return await _common.FetchAllCompanyBankInfo();
+        }
     }
 }
