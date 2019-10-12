@@ -1792,7 +1792,7 @@ namespace Electricity_DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@requestorID", SqlDbType.Int).Value = requestorID;
                     command.Parameters.Add("@startDate", SqlDbType.Date).Value = startDate;
-                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = endDate;
+                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = endDate.AddDays(1);
 
                     try
                     {

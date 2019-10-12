@@ -884,5 +884,61 @@ namespace Electricity_DAL
                 }
             }
         }
+
+        public int RecentTransaction()
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("GET_RECENT_WALLET_TRANSACTION_ID", connection))
+                {
+                    try
+                    {
+
+                        return Convert.ToInt32(command.ExecuteScalar().ToString());
+                    }
+                    catch (Exception ex)
+                    {
+                        return 0;
+                    }
+                }
+            }
+        }
+
+        public bool InsertBankTransaction(decimal amount, int userID, string transactionID, string accountNumber, int walletTransactionID)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT_BANK_TRANSACTION", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@accountNumber", SqlDbType.VarChar, 50).Value = accountNumber;
+                    command.Parameters.Add("@transactionID", SqlDbType.VarChar, 50).Value = transactionID;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@amount", SqlDbType.Decimal, 18).Value = amount;
+                    command.Parameters.Add("@verified", SqlDbType.Bit, 1).Value = 0;
+                    command.Parameters.Add("@received", SqlDbType.Bit, 1).Value = 0;
+                    command.Parameters.Add("@walletTransactionID", SqlDbType.Int).Value = walletTransactionID;
+                    try
+                    {
+
+                        if (command.ExecuteNonQuery() > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
     }
 }

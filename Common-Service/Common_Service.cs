@@ -159,5 +159,16 @@ namespace Electricity_Service
         {
             return await _common.FetchAllCompanyBankInfo();
         }
+
+        public int FetchRecentTransaction()
+        {
+            return _common.RecentTransaction();
+        }
+
+        public bool InsertBankTransaction(BankTransaction bankTransaction)
+        {
+            return _common.InsertBankTransaction(bankTransaction.Amount, 
+                bankTransaction.UserID, bankTransaction.TransactionID, bankTransaction.AccountNumber, bankTransaction.walletTransactionID);
+        }
     }
 }

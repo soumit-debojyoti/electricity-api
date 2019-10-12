@@ -323,5 +323,18 @@ namespace Electricity_API.Controllers
             return await rs.FetchAllCompanyBankInfo();
         }
 
+        [HttpGet]
+        [Route("recent/transaction")]
+        public int FetchRecentTransaction()
+        {
+            return rs.FetchRecentTransaction();
+        }
+
+        [HttpPost]
+        [Route("bank/transaction")]
+        public bool BankTransaction([FromBody] BankTransaction bankTransaction)
+        {
+            return rs.InsertBankTransaction(bankTransaction);
+        }
     }
 }
