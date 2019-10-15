@@ -1,6 +1,8 @@
 ﻿using Electricity_DAL.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -92,6 +94,16 @@ namespace Electricity_Service
         public async Task<bool> UpdateComplaint(Complaint complaint)
         {
             return await this._rechargeApiDAL.UpdateComplaint(complaint);
+        }
+
+        public async Task<JObject> Recharge(string rechargetype, dynamic rechargeObject)
+        {
+            return await this._rechargeApiDAL.Recharge(rechargetype, rechargeObject);
+        }
+
+        public async Task<JObject> ValidateUtilityRecharge(string rechargetype, string operatorName, string consumer_number, string customer_mobile)
+        {
+            return await this._rechargeApiDAL.ValidateUtilityRecharge(rechargetype, operatorName, consumer_number, customer_mobile);
         }
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Electricity_DAL.Models;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using System.Text;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace Electricity_DAL
@@ -592,6 +593,94 @@ namespace Electricity_DAL
                     }
                 }
             }
+        }
+
+        public string FormPrepaidAPIString(string apiValue, dynamic rechargeObject)
+        {
+            apiValue = apiValue.Replace("#Mobile#", rechargeObject.mobileNumber.Value);
+            apiValue = apiValue.Replace("#Amount#", rechargeObject.amount.Value);
+            apiValue = apiValue.Replace("#Order#", rechargeObject.orderNumber.Value);
+            return apiValue;
+
+        }
+
+        public async Task<JObject> Recharge(string rechargetype, dynamic rechargeObject)
+        {
+            JObject json = null;
+            try
+            {
+                List<RechargeAPI> apiList = await this.GetRechargeAPI(rechargetype);
+                string apiValue = apiList.Find(x => x.OperatorName == rechargeObject.operatorName.Value).ApiValue;
+                if (rechargetype.ToUpper() == "PREPAID")
+                {
+                    apiValue = FormPrepaidAPIString(apiValue, rechargeObject);
+                }
+
+                if (rechargetype.ToUpper() == "ELECTRICITY" || rechargetype.ToUpper() == "GAS" || rechargetype.ToUpper() == "WATER")
+                {
+                    apiValue = FormUtilityAPIString(apiValue, rechargeObject);
+                }
+                
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+                    var response = httpClient.GetStringAsync(new Uri(apiValue)).Result;
+                    json = JObject.Parse(response);
+                    // var releases = JArray.Parse(response);
+                }
+                return json;
+            }
+            catch(Exception ex)
+            {
+                JObject errorJson = JObject.Parse(ex.Message);
+                return errorJson;
+            }
+            
+        }
+
+        public async Task<JObject> ValidateUtilityRecharge(string rechargetype, string operatorName, string consumer_number, string customer_mobile)
+        {
+            JObject json = null;
+            RechargeAPI api = new RechargeAPI();
+            try
+            {
+                api = await this.FetchValidationApiDetails(rechargetype, operatorName);
+                api.ApiValue = FormUtilityValidtaionAPIString(api.ApiValue, consumer_number, customer_mobile);
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
+                    var response = httpClient.GetStringAsync(new Uri(api.ApiValue)).Result;
+                    json = JObject.Parse(response);
+                    // var releases = JArray.Parse(response);
+                }
+                return json;
+            }
+            catch (Exception ex)
+            {
+                JObject errorJson = JObject.Parse(ex.Message);
+                return errorJson;
+            }
+        }
+
+        public string FormUtilityValidtaionAPIString(string apiValue, string consumer_number, dynamic customer_mobile)
+        {
+            apiValue = apiValue.Replace("#consumer_number#", consumer_number);
+            apiValue = apiValue.Replace("#customer_mobile#", customer_mobile);
+            apiValue = apiValue.Replace("#order#", "001");
+            apiValue = apiValue.Replace("#customer_name#", "XX");
+            return apiValue;
+        }
+
+        public string FormUtilityAPIString(string apiValue, dynamic rechargeObject)
+        {
+            apiValue = apiValue.Replace("#consumer_number#", rechargeObject.consumerNumber.Value);
+            apiValue = apiValue.Replace("#amount#", rechargeObject.amount.Value);
+            apiValue = apiValue.Replace("#order#", rechargeObject.orderNumber.Value);
+            apiValue = apiValue.Replace("#customer_mobile#", rechargeObject.customerMobileNumber.Value);
+            apiValue = apiValue.Replace("#customer_name#", rechargeObject.customerName.Value);
+            apiValue = apiValue.Replace("#reference_id#", rechargeObject.validationReferenceID.Value);
+            return apiValue;
+
         }
     }
 }

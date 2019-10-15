@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Electricity_DAL.Models;
+using Newtonsoft.Json.Linq;
 
 namespace Electricity_API.Controllers
 {
@@ -128,6 +129,19 @@ namespace Electricity_API.Controllers
         public async Task<bool> UpdateComplaint([FromBody] Complaint complaint)
         {
             return await this.rs.UpdateComplaint(complaint);
+        }
+
+        [Route("api/recharge/{rechargetype}")]
+        [HttpPost]
+        public async Task<JObject> Recharge(string rechargetype,[FromBody] dynamic rechargeObject)
+        {
+            return await this.rs.Recharge(rechargetype, rechargeObject);
+        }
+        [Route("api/recharge/validate/{rechargetype}/operator/{operatorName}/consumer/{consumer_number}/mobile/{customer_mobile}")]
+        [HttpPost]
+        public async Task<JObject> ValidateUtilityRecharge(string rechargetype, string operatorName, string consumer_number, string customer_mobile)
+        {
+            return await this.rs.ValidateUtilityRecharge(rechargetype, operatorName, consumer_number, customer_mobile);
         }
     }
 }
