@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -323,7 +324,7 @@ namespace Electricity_DAL
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
                     command.Parameters.Add("@startDate", SqlDbType.Date).Value = Convert.ToDateTime(startDate).Date;
-                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = Convert.ToDateTime(endDate).Date;
+                    command.Parameters.Add("@endDate", SqlDbType.Date).Value = Convert.ToDateTime(endDate).Date.AddDays(1);
                     
                     try
                     {
@@ -344,7 +345,7 @@ namespace Electricity_DAL
                                 transactions.Add(transaction);
                             }
                         }
-                        return transactions;
+                        return transactions = transactions.OrderByDescending( o => o.TransactionDate).ToList();
                     }
                     catch (Exception ex)
                     {
