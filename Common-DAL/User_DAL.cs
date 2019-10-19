@@ -195,6 +195,8 @@ namespace Electricity_DAL
                     command.Parameters["@is_user_exist"].Direction = ParameterDirection.Output;
                     command.Parameters.Add("@role_id", SqlDbType.Int, 12);
                     command.Parameters["@role_id"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@user_id", SqlDbType.Int, 12);
+                    command.Parameters["@user_id"].Direction = ParameterDirection.Output;
                     command.Parameters.Add("@message", SqlDbType.NVarChar, 123232);
                     command.Parameters["@message"].Direction = ParameterDirection.Output;
                     try
@@ -203,6 +205,7 @@ namespace Electricity_DAL
                         {
                             fur.IsUserExist = (bool)command.Parameters["@is_user_exist"].Value;
                             fur.role_id = (int)command.Parameters["@role_id"].Value;
+                            fur.user_id = (int)command.Parameters["@user_id"].Value;
                             fur.message = (string)command.Parameters["@message"].Value;
                         }
                     }

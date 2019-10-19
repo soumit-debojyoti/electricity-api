@@ -4,6 +4,7 @@
     {
         public bool IsUserExist { get; set; }
         public int role_id { get; set; } = 0;
+        public int user_id { get; set; } = 0;
         public string message { get; set; }
     }
 }

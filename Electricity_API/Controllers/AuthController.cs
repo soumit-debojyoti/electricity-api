@@ -59,11 +59,11 @@ namespace Electricity_API.Controllers
                     response.message = responseKYC.message;
                     if (responseKYC.is_success)
                     {
-                        return Ok(new ResponseModel() { isLoginSuccess = true, access_token = tokenString, role_id = response.role_id, message = response.message });
+                        return Ok(new ResponseModel() { isLoginSuccess = true, access_token = tokenString, role_id = response.role_id, user_id = response.user_id, message = response.message });
                     }
                     else
                     {
-                        return Ok(new ResponseModel() { isLoginSuccess = false, access_token = tokenString, role_id = response.role_id, message = response.message });
+                        return Ok(new ResponseModel() { isLoginSuccess = false, access_token = tokenString, role_id = response.role_id, user_id = response.user_id, message = response.message });
                     }
                 }
             }
