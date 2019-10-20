@@ -117,6 +117,18 @@ namespace Electricity_DAL.Models
         public bool is_pay_online { get; set; }
     }
 
+    public class MobileValidationResponse
+    {
+        public bool isValid { get; set; }
+        public int user_id { get; set; }
+    }
+
+    public class AccountValidationResponse
+    {
+        public bool isValid { get; set; }
+        public string message { get; set; }
+    }
+
     public class KYCDetails
     {
         public int kyc_detail_id { get; set; }
