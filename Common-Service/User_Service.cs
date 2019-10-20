@@ -294,5 +294,19 @@ namespace Electricity_Service
         {
             return await this._user.UpdateIntroducerReferralBonus(introducerBonus.IntroducerLevel, introducerBonus.ReferralBonus, introducerBonus.MonthlyPayout);
         }
+
+        public async Task<List<RegisterUser>> FetchAllUserDetails()
+        {
+            return await this._user.GetAllUsersDetails();
+        }
+
+        public async Task<RegisterUser> GetAllUsersDetails(int userID)
+        {
+            return await this._user.GetAllUsersDetails(userID);
+        }
+        public async Task<bool> UpdateUserDetails(int userID, RegisterUser user_info)
+        {
+            return await this._user.UpdateUserDetails(userID, user_info);
+        }
     }
 }

@@ -1913,5 +1913,171 @@ namespace Electricity_DAL
                 }
             }
         }
+
+        public async Task<List<RegisterUser>> GetAllUsersDetails()
+        {
+            List<RegisterUser> results = new List<RegisterUser>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("FETCH_ALL_USERS", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                var user = new RegisterUser
+                                {
+                                    firstName = Convert.ToString(reader["first_name"]),
+                                    username = Convert.ToString(reader["user_name"]),
+                                    email = Convert.ToString(reader["email"]),
+                                    lastName = Convert.ToString(reader["last_name"]),
+                                    gender = Convert.ToString(reader["sex"]).ToLower() == "male" ? 1 : 0,
+                                    dob = Convert.ToString(reader["dob"]),
+                                    address = Convert.ToString(reader["address"]),
+                                    po = Convert.ToString(reader["post_office"]),
+                                    ps = Convert.ToString(reader["police_station"]),
+                                    district = Convert.ToString(reader["district"]),
+                                    city = Convert.ToString(reader["city"]),
+                                    state = Convert.ToInt32(reader["state"]),
+                                    pincode = Convert.ToString(reader["pin"]),
+                                    mobile = Convert.ToString(reader["mobile_number"]),
+                                    password = Convert.ToString(reader["password"]),
+
+                                    //,
+                                    //first_name = Convert.ToString(reader["first_name"]),
+                                    //last_name = Convert.ToString(reader["last_name"]),
+                                    //father_name = Convert.ToString(reader["father_name"]),
+                                    //dob = Convert.ToDateTime(reader["dob"]).ToString("dd/MM/yyyy"),
+                                    //mobile_number = Convert.ToString(reader["mobile_number"]),
+                                    //pan_card = Convert.ToString(reader["pan_card"]),
+                                    //aadhar_card = Convert.ToString(reader["aadhar_card"]),
+                                    //address = Convert.ToString(reader["address"]),
+                                    //post_office = Convert.ToString(reader["post_office"]),
+                                    //police_station = Convert.ToString(reader["police_station"]),
+                                    //district = Convert.ToString(reader["district"]),
+                                    //city = Convert.ToString(reader["city"]),
+                                    //state_name = Convert.ToString(reader["state_name"]),
+                                    //pin = Convert.ToString(reader["pin"]),
+                                    //sex = Convert.ToString(reader["sex"])
+                                };
+                                results.Add(user);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                            }
+
+                        }
+                    }
+                }
+            }
+            return results;
+        }
+
+        public async Task<RegisterUser> GetAllUsersDetails(int userID)
+        {
+            RegisterUser user = null;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_USER_DETAILS_BY_ID", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = userID;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                user = new RegisterUser
+                                {
+                                    firstName = Convert.ToString(reader["first_name"]),
+                                    username = Convert.ToString(reader["user_name"]),
+                                    email = Convert.ToString(reader["email"]),
+                                    lastName = Convert.ToString(reader["last_name"]),
+                                    gender = Convert.ToString(reader["sex"]).ToLower() == "male" ? 1 : 0,
+                                    dob = Convert.ToString(reader["dob"]),
+                                    address = Convert.ToString(reader["address"]),
+                                    po = Convert.ToString(reader["post_office"]),
+                                    ps = Convert.ToString(reader["police_station"]),
+                                    district = Convert.ToString(reader["district"]),
+                                    city = Convert.ToString(reader["city"]),
+                                    state = Convert.ToInt32(reader["state"]),
+                                    pincode = Convert.ToString(reader["pin"]),
+                                    mobile = Convert.ToString(reader["mobile_number"]),
+                                    password = Convert.ToString(reader["password"])
+                                };
+                                
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                return null;
+                            }
+                            
+                        }
+                    }
+                }
+            }
+            return user;
+        }
+
+        public async Task<bool> UpdateUserDetails(int userID, RegisterUser user_info)
+        {
+            string user_security_stamp = string.Empty;
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("UPDATE_USER", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@userID", SqlDbType.Int).Value = userID;
+                    command.Parameters.Add("@email", SqlDbType.VarChar, 50).Value = user_info.email;
+                    command.Parameters.Add("@password", SqlDbType.VarChar, 50).Value = user_info.password;
+                    command.Parameters.Add("@firstName", SqlDbType.VarChar, 50).Value = user_info.firstName;
+                    command.Parameters.Add("@lastName", SqlDbType.VarChar, 50).Value = user_info.lastName;
+                    command.Parameters.Add("@dob", SqlDbType.DateTime).Value = Convert.ToDateTime(user_info.dob);
+                    command.Parameters.Add("@mobileNumber", SqlDbType.NVarChar).Value = user_info.mobile;
+                    command.Parameters.Add("@address", SqlDbType.NVarChar).Value = user_info.address;
+                    command.Parameters.Add("@postOffice", SqlDbType.NVarChar).Value = user_info.po;
+                    command.Parameters.Add("@policeStation", SqlDbType.NVarChar).Value = user_info.ps;
+                    command.Parameters.Add("@district", SqlDbType.NVarChar).Value = user_info.district;
+                    command.Parameters.Add("@city", SqlDbType.NVarChar).Value = user_info.city;
+                    command.Parameters.Add("@state", SqlDbType.Int).Value = user_info.state;
+                    switch(user_info.gender)
+                    {
+                        case 0:
+                            command.Parameters.Add("@sex", SqlDbType.NVarChar).Value = "Male";
+                            break;
+                        case 1:
+                            command.Parameters.Add("@sex", SqlDbType.NVarChar).Value = "Female";
+                            break;
+                    }
+                    command.Parameters.Add("@pin", SqlDbType.NVarChar).Value = user_info.pincode;
+                    
+                    try
+                    {
+                        var result = await command.ExecuteNonQueryAsync();
+                        return result > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return false;
+                    }
+
+                }
+            }            
+        }
     }
 }
