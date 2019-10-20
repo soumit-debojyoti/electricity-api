@@ -58,6 +58,24 @@ namespace Electricity_API.Controllers
             return Ok(response);
         }
 
+        [Authorize]
+        [Route("validatemobile/{mobile}")]
+        [HttpGet]
+        public async Task<ActionResult> ValidateMobileByMobileNumber(string mobile)
+        {
+            var response = await rs.ValidateMobileByMobileNumber(mobile);
+            return Ok(response);
+        }
+
+        [Authorize]
+        [Route("validateaccount/{userid}")]
+        [HttpGet]
+        public async Task<ActionResult> ValidateAccountByUserId(int userid)
+        {
+            var response = await rs.ValidateAccountByUserId(userid);
+            return Ok(response);
+        }
+
         [Authorize]// GET api/values
         [Route("qualifyusertorefer/{userId}")]
         [HttpGet]

@@ -176,6 +176,78 @@ namespace Electricity_DAL
             return results;
         }
 
+        public async Task<MobileValidationResponse> ValidateMobileByMobileNumber(string mobile_number)
+        {
+            MobileValidationResponse result = new MobileValidationResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("validate_mobile", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@mobile", SqlDbType.NVarChar).Value = mobile_number;
+                    command.Parameters.Add("@bit", SqlDbType.Bit, 1);
+                    command.Parameters["@bit"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@user_id", SqlDbType.Int, 12);
+                    command.Parameters["@user_id"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        {
+                            result.isValid = (bool)command.Parameters["@bit"].Value;
+                            result.user_id = (int)command.Parameters["@user_id"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return result;
+        }
+
+        public async Task<AccountValidationResponse> ValidateAccountByUserId(int userid)
+        {
+            AccountValidationResponse result = new AccountValidationResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("validate_bank_account", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@user_id", SqlDbType.Int).Value = userid;
+                    command.Parameters.Add("@isSuccess", SqlDbType.Bit, 1);
+                    command.Parameters["@isSuccess"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@message", SqlDbType.VarChar, 500);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        {
+                            result.isValid = (bool)command.Parameters["@isSuccess"].Value;
+                            result.message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return result;
+        }
+
         public async Task<FindUserResponse> Find_Users(string user_name, string password)
         {
             FindUserResponse fur = new FindUserResponse();
@@ -1546,7 +1618,7 @@ namespace Electricity_DAL
                     {
                         while (reader.Read())
                         {
-                           return Convert.ToDecimal(reader["bonus_amount"].ToString());
+                            return Convert.ToDecimal(reader["bonus_amount"].ToString());
                         }
                         return -1;
                     }
@@ -1592,7 +1664,7 @@ namespace Electricity_DAL
                     /* Add introducer bonus for succssfull referral */
                     var bonusAmount = FetchReferralBonus(
                         FetchUserRank(introducer.SecurityStamp).UserRank).Result;
-                    if(bonusAmount > 0)
+                    if (bonusAmount > 0)
                     {
                         int introducerID = (Get_User(introducer.UserName).Result).user_id;
                         await AddWalletBalance(introducerID, bonusAmount, "Referral bonus");
@@ -1873,13 +1945,13 @@ namespace Electricity_DAL
                 using (SqlCommand command = new SqlCommand("FETCH_ALL_INTRODUCER_BONUS", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    
+
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         while (reader.Read())
                         {
                             var info = new IntroducerBonus();
-                            info.IntroducerLevel =  Convert.ToInt32(reader["introducer_level"].ToString());
+                            info.IntroducerLevel = Convert.ToInt32(reader["introducer_level"].ToString());
                             info.ReferralBonus = Convert.ToDecimal(reader["bonus_amount"].ToString());
                             info.MonthlyPayout = Convert.ToDecimal(reader["monthly_payout"].ToString());
                             introducerBonusInfo.Add(info);

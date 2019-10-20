@@ -30,6 +30,16 @@ namespace Electricity_Service
             return await _user.SearchUser(user_name);
         }
 
+        public async Task<MobileValidationResponse> ValidateMobileByMobileNumber(string mobile_number)
+        {
+            return await _user.ValidateMobileByMobileNumber(mobile_number);
+        }
+
+        public async Task<AccountValidationResponse> ValidateAccountByUserId(int userid)
+        {
+            return await _user.ValidateAccountByUserId(userid);
+        }
+
         public async Task<string> GetUserKey(string userName)
         {
             List<User> users = await _user.Get_Users();
