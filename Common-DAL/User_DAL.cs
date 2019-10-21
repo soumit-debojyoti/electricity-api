@@ -276,9 +276,9 @@ namespace Electricity_DAL
                         await command.ExecuteReaderAsync();
                         {
                             fur.IsUserExist = (bool)command.Parameters["@is_user_exist"].Value;
-                            fur.role_id = (int)command.Parameters["@role_id"].Value;
-                            fur.user_id = (int)command.Parameters["@user_id"].Value;
-                            fur.message = (string)command.Parameters["@message"].Value;
+                            fur.role_id = command.Parameters["@role_id"].Value == DBNull.Value ? 0 :  (int)command.Parameters["@role_id"].Value;
+                            fur.user_id = command.Parameters["@user_id"].Value == DBNull.Value ? 0 : (int)command.Parameters["@user_id"].Value;
+                            fur.message = command.Parameters["@message"].Value == DBNull.Value ? "no value" : (string)command.Parameters["@message"].Value;
                         }
                     }
                     catch (Exception ex)
