@@ -2151,5 +2151,44 @@ namespace Electricity_DAL
                 }
             }            
         }
+
+        public async Task<CommissionSetting> FetchCommissionAmount(string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            CommissionSetting cs = null;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("calculate_commission", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@recharge_type", SqlDbType.VarChar, 100).Value = rechargeType;
+                    command.Parameters.Add("@operator_name", SqlDbType.VarChar, 100).Value = operatorName;
+                    command.Parameters.Add("@transaction_amount", SqlDbType.Decimal).Value = transactionAmount;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                cs = new CommissionSetting
+                                {
+                                    WalletMode = Convert.ToInt32(reader["wallet_mode"]),
+                                    Amount = Convert.ToDecimal(reader["amount"])
+                                };
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                cs = null;
+                            }
+
+                        }
+                    }
+
+                }
+            }
+            return cs;
+        }
     }
 }

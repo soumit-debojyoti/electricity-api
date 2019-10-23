@@ -455,6 +455,10 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.UpdateUserDetails(userID, user_info);
         }
-
+        [HttpGet("commission/rechargetype/{rechargeType}/operatorname/{operatorName}/amount/{transactionAmount}")]
+        public async Task<CommissionSetting> FetchCommissionAmount(string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            return await this.rs.FetchCommissionAmount(rechargeType, operatorName, transactionAmount);
+        }
     }
 }

@@ -318,5 +318,10 @@ namespace Electricity_Service
         {
             return await this._user.UpdateUserDetails(userID, user_info);
         }
+
+        public async Task<CommissionSetting> FetchCommissionAmount(string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            return await this._user.FetchCommissionAmount(rechargeType, operatorName, transactionAmount);
+        }
     }
 }
