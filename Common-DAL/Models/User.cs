@@ -129,6 +129,12 @@ namespace Electricity_DAL.Models
         public string message { get; set; }
     }
 
+    public class MobileUniqueValidationResponse
+    {
+        public bool has_present { get; set; }
+        public string message { get; set; }
+    }
+
     public class KYCDetails
     {
         public int kyc_detail_id { get; set; }

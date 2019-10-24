@@ -212,6 +212,42 @@ namespace Electricity_DAL
             return result;
         }
 
+        public async Task<MobileUniqueValidationResponse> ValidateUniqueMobileByMobileNumber(string mobile_number)
+        {
+            MobileUniqueValidationResponse result = new MobileUniqueValidationResponse();
+            Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
+            Console.Write("Connecting to SQL Server ... ");
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("validate_unique_mobile", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@mobile", SqlDbType.NVarChar).Value = mobile_number;
+                    command.Parameters.Add("@has_present", SqlDbType.Bit, 1);
+                    command.Parameters["@has_present"].Direction = ParameterDirection.Output;
+                    command.Parameters.Add("@message", SqlDbType.NVarChar, 200);
+                    command.Parameters["@message"].Direction = ParameterDirection.Output;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                        {
+                            result.has_present = (bool)command.Parameters["@has_present"].Value;
+                            result.message = (string)command.Parameters["@message"].Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+
+                }
+            }
+            Console.WriteLine("All done. Press any key to finish...");
+            return result;
+        }
+
         public async Task<AccountValidationResponse> ValidateAccountByUserId(int userid)
         {
             AccountValidationResponse result = new AccountValidationResponse();

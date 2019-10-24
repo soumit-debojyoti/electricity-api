@@ -35,6 +35,11 @@ namespace Electricity_Service
             return await _user.ValidateMobileByMobileNumber(mobile_number);
         }
 
+        public async Task<MobileUniqueValidationResponse> ValidateUniqueMobileByMobileNumber(string mobile_number)
+        {
+            return await _user.ValidateUniqueMobileByMobileNumber(mobile_number);
+        }
+
         public async Task<AccountValidationResponse> ValidateAccountByUserId(int userid)
         {
             return await _user.ValidateAccountByUserId(userid);
