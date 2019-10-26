@@ -432,11 +432,13 @@ namespace Electricity_API.Controllers
         {
             return await rs.FetchAllWalletTransaction(requestorID, startDate, endDate);
         }
+
         [HttpGet("rankachiever")]
         public async Task<List<RankAcheiver>> FetchAllRankAcheiver()
         {
             return await rs.FetchAllRankAcheiver();
         }
+
         [HttpGet("levelbonusinfo")]
         public async Task<List<IntroducerBonus>> FetchAllReferralBonus()
         {
@@ -448,21 +450,25 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.UpdateIntroducerReferralBonus(introducerInfo);
         }
+
         [HttpGet("alluserinfo")]
         public async Task<List<RegisterUser>> FetchAllUserDetails()
         {
             return await this.rs.FetchAllUserDetails();
         }
+
         [HttpGet("alluserinfo/user/{userID}")]
         public async Task<RegisterUser> GetAllUsersDetails(int userID)
         {
             return await this.rs.GetAllUsersDetails(userID);
         }
+
         [HttpPost("details/user/{userID}")]
         public async Task<bool> UpdateUserDetails(int userID, [FromBody] RegisterUser user_info)
         {
             return await this.rs.UpdateUserDetails(userID, user_info);
         }
+
         [HttpGet("commission/rechargetype/{rechargeType}/operatorname/{operatorName}/amount/{transactionAmount}")]
         public async Task<CommissionSetting> FetchCommissionAmount(string rechargeType, string operatorName, decimal transactionAmount)
         {
