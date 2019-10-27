@@ -249,7 +249,15 @@ namespace Electricity_API.Controllers
             registerUser.ps = Request.Form["ps"];
             registerUser.district = Request.Form["district"];
             registerUser.city = Request.Form["city"];
-            registerUser.state = Convert.ToInt32(Request.Form["state"]);
+            if (Request.Form["state"] != "")
+            {
+                registerUser.state = Convert.ToInt32(Request.Form["state"]);
+            }
+            else
+            {
+                registerUser.state = 0;
+            }
+               
             registerUser.pincode = Request.Form["pincode"];
             registerUser.bankname = Request.Form["bankname"];
             registerUser.accholdername = Request.Form["accholdername"];
@@ -261,9 +269,25 @@ namespace Electricity_API.Controllers
 
             if (!registerUser.isKYCLater)
             {
-                registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
+                if ((Request.Form["idprooftype"].ToString()) != "")
+                {
+                    registerUser.idprooftype = Convert.ToInt32(Request.Form["idprooftype"].ToString());
+                }
+                else
+                {
+                    registerUser.idprooftype = 0;
+                }
+                
                 registerUser.idproof = Request.Form["idproof"];
-                registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
+                if (Request.Form["addressprooftype"].ToString()!="")
+                {
+                    registerUser.addressprooftype = Convert.ToInt32(Request.Form["addressprooftype"].ToString());
+                }
+                else
+                {
+                    registerUser.addressprooftype = 0;
+                }
+                    
                 registerUser.addressproof = Request.Form["addressproof"];
                 registerUser.bankdetails = Request.Form["bankdetails"];
             }
