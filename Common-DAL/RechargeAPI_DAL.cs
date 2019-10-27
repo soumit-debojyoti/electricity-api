@@ -611,7 +611,7 @@ namespace Electricity_DAL
             {
                 List<RechargeAPI> apiList = await this.GetRechargeAPI(rechargetype);
                 string apiValue = apiList.Find(x => x.OperatorName == rechargeObject.operatorName.Value).ApiValue;
-                if (rechargetype.ToUpper() == "PREPAID")
+                if (rechargetype.ToUpper() == "PREPAID" || rechargetype.ToUpper() == "DTH")
                 {
                     apiValue = FormPrepaidAPIString(apiValue, rechargeObject);
                 }
@@ -619,6 +619,11 @@ namespace Electricity_DAL
                 if (rechargetype.ToUpper() == "ELECTRICITY" || rechargetype.ToUpper() == "GAS" || rechargetype.ToUpper() == "WATER")
                 {
                     apiValue = FormUtilityAPIString(apiValue, rechargeObject);
+                }
+
+                if(rechargetype.ToUpper() == "POSTPAID")
+                {
+                    apiValue = FormPostpaidAPIString(apiValue, rechargeObject);
                 }
                 
                 using (var httpClient = new HttpClient())
@@ -679,6 +684,17 @@ namespace Electricity_DAL
             apiValue = apiValue.Replace("#customer_mobile#", rechargeObject.customerMobileNumber.Value);
             apiValue = apiValue.Replace("#customer_name#", rechargeObject.customerName.Value);
             apiValue = apiValue.Replace("#reference_id#", rechargeObject.validationReferenceID.Value);
+            return apiValue;
+
+        }
+
+        public string FormPostpaidAPIString(string apiValue, dynamic rechargeObject)
+        {
+            apiValue = apiValue.Replace("#mobileno#", rechargeObject.rechargeMobileNumber.Value);
+            apiValue = apiValue.Replace("#amount#", rechargeObject.amount.Value);
+            apiValue = apiValue.Replace("#orderid#", rechargeObject.orderNumber.Value);
+            apiValue = apiValue.Replace("#customermobile#", rechargeObject.customerMobileNumber.Value);
+            apiValue = apiValue.Replace("#customername#", rechargeObject.customerName.Value);
             return apiValue;
 
         }
