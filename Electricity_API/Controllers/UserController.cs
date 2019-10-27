@@ -111,6 +111,15 @@ namespace Electricity_API.Controllers
             return Ok(token);
         }
 
+        
+        [Route("gettodayuserjoincount")]
+        [HttpGet]
+        public async Task<ActionResult> GetTodayUserJoinCount()
+        {
+            var userCount = await rs.GetTodayUserJoinCount();
+            return Ok(userCount);
+        }
+
         [Authorize]// GET api/values
         [Route("unusedtokendetails/{token}")]
         [HttpGet]

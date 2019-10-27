@@ -123,6 +123,12 @@ namespace Electricity_DAL.Models
         public int user_id { get; set; }
     }
 
+    public class TodayUserJoinCountResponse
+    {
+        public bool isValid { get; set; }
+        public int count { get; set; }
+    }
+
     public class AccountValidationResponse
     {
         public bool isValid { get; set; }
