@@ -1748,8 +1748,9 @@ namespace Electricity_DAL
         }
         public async Task AddReferralBonus(string userSecurityStamp)
         {
+            int count = 1;
             bool response = true;
-            while (response)
+            while (response && count <= 12)
             {
                 Introducer introducer = GetIntroducerInfo(userSecurityStamp);
                 // response = false;
@@ -1757,13 +1758,14 @@ namespace Electricity_DAL
                 {
                     /* Add introducer bonus for succssfull referral */
                     var bonusAmount = FetchReferralBonus(
-                        FetchUserRank(introducer.SecurityStamp).UserRank).Result;
+                        count).Result;
                     if (bonusAmount > 0)
                     {
                         int introducerID = (Get_User(introducer.UserName).Result).user_id;
                         await AddWalletBalance(introducerID, bonusAmount, "Referral bonus");
                     }
                     userSecurityStamp = introducer.SecurityStamp;
+                    count++;
                 }
                 else
                 {
