@@ -45,6 +45,11 @@ namespace Electricity_Service
             return await _user.ValidateAccountByUserId(userid);
         }
 
+        public async Task<TodayUserJoinCountResponse> GetTodayUserJoinCount()
+        {
+            return await _user.GetTodayUserJoinCount();
+        }
+
         public async Task<string> GetUserKey(string userName)
         {
             List<User> users = await _user.Get_Users();

@@ -1,13 +1,18 @@
-﻿using Electricity_DAL.Models;
+﻿using Electricity_API.schedular;
+using Electricity_DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Serialization;
+using Quartz;
+using Quartz.Impl;
+using Quartz.Spi;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
 
@@ -23,7 +28,7 @@ namespace Electricity_API
         }
 
 
-        public Startup(IHostingEnvironment env)
+        public Startup(Microsoft.AspNetCore.Hosting.IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
              .SetBasePath(env.ContentRootPath)
@@ -43,9 +48,6 @@ namespace Electricity_API
                        .AllowAnyHeader();
             }));
 
-
-
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -60,10 +62,6 @@ namespace Electricity_API
                 };
             });
 
-
-
-
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1).AddJsonOptions(x =>
             {
                 x.SerializerSettings.ContractResolver = new DefaultContractResolver
@@ -76,6 +74,16 @@ namespace Electricity_API
             });
             services.AddOptions();
             services.Configure<ConnectionStrings>(Configuration.GetSection("ConnectionStrings"));
+            
+            //// Add our job
+            //services.AddSingleton<IJobFactory, SingletonJobFactory>();
+            //services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+            //services.AddSingleton<SchedularJob>();
+            //services.AddSingleton(new JobSchedule(
+            //    jobType: typeof(SchedularJob),
+            //    cronExpression: "0/5 * * * * ?")); // run every 5 seconds
+            //services.AddHostedService<QuartzHostedService>();
+            //// Add our job
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info
@@ -91,7 +99,7 @@ namespace Electricity_API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, Microsoft.AspNetCore.Hosting.IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseStaticFiles();
             if (env.IsDevelopment())
@@ -100,7 +108,8 @@ namespace Electricity_API
             }
             app.UseCors("MyPolicy");
 
-            loggerFactory.AddLog4Net();
+            //loggerFactory.AddLog4Net();
+            loggerFactory.AddFile("Logs/mylog-{Date}.txt");
             app.UseAuthentication();
             app.UseMvc();
             app.UseSwagger();
