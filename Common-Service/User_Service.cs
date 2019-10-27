@@ -328,5 +328,10 @@ namespace Electricity_Service
         {
             return await this._user.FetchCommissionAmount(rechargeType, operatorName, transactionAmount);
         }
+
+        public async Task<bool> PayOutRechargeBonus(int userID, string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            return await this._user.PayOutRechargeBonus(userID, rechargeType, operatorName, transactionAmount);
+        }
     }
 }

@@ -1689,6 +1689,7 @@ namespace Electricity_DAL
         public async Task UpdateNextLevel(string userSecurityStamp, ConfigurationModel configuration)
         {
             bool response = true;
+            await AddReferralBonus(userSecurityStamp);
             while (response)
             {
                 Introducer introducer = GetIntroducerInfo(userSecurityStamp);
@@ -1698,6 +1699,27 @@ namespace Electricity_DAL
                     response = GetUserSamePeer(introducer, configuration.down_side_direct_numer_of_joinee);
                     userSecurityStamp = introducer.SecurityStamp;
                     /* Add introducer bonus for succssfull referral */
+                    //var bonusAmount = FetchReferralBonus(
+                    //    FetchUserRank(introducer.SecurityStamp).UserRank).Result;
+                    //if (bonusAmount > 0)
+                    //{
+                    //    int introducerID = (Get_User(introducer.UserName).Result).user_id;
+                    //    await AddWalletBalance(introducerID, bonusAmount, "Referral bonus");
+                    //}
+                }
+            }
+
+        }
+        public async Task AddReferralBonus(string userSecurityStamp)
+        {
+            bool response = true;
+            while (response)
+            {
+                Introducer introducer = GetIntroducerInfo(userSecurityStamp);
+                // response = false;
+                if (introducer != null && introducer.RoleID != 4)
+                {
+                    /* Add introducer bonus for succssfull referral */
                     var bonusAmount = FetchReferralBonus(
                         FetchUserRank(introducer.SecurityStamp).UserRank).Result;
                     if (bonusAmount > 0)
@@ -1705,11 +1727,15 @@ namespace Electricity_DAL
                         int introducerID = (Get_User(introducer.UserName).Result).user_id;
                         await AddWalletBalance(introducerID, bonusAmount, "Referral bonus");
                     }
+                    userSecurityStamp = introducer.SecurityStamp;
+                }
+                else
+                {
+                    response = false;
                 }
             }
-
+            
         }
-
         /// <summary>
         /// Check user count and update rank for introducer
         /// </summary>
@@ -2225,6 +2251,93 @@ namespace Electricity_DAL
                 }
             }
             return cs;
+        }
+
+        public async Task<decimal> FetchLevelBonusRecharge(string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            decimal levelCommission = 0;
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                Console.WriteLine("Done.");
+                using (SqlCommand command = new SqlCommand("calculate_commission", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@recharge_type", SqlDbType.VarChar, 100).Value = rechargeType;
+                    command.Parameters.Add("@operator_name", SqlDbType.VarChar, 100).Value = operatorName;
+                    command.Parameters.Add("@transaction_amount", SqlDbType.Decimal).Value = transactionAmount;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                levelCommission = Convert.ToDecimal(reader["level_commission"]);                                
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                return 0;
+                            }
+
+                        }
+                        return levelCommission;
+                    }
+
+                }
+            }
+        }
+
+        public async Task<bool> PayOutRechargeBonus(int userID, string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            // Wallet Mode :: 0 - deduct: service charge || 1 - add: commission
+            CommissionSetting csObject = new CommissionSetting();
+            decimal levelCommission = 0;
+            try
+            {
+                csObject = await FetchCommissionAmount(rechargeType, operatorName, transactionAmount);
+                if (csObject.WalletMode == 1)
+                {
+                    await AddWalletBalance(userID, csObject.Amount, "Bill payment commission added, for - " + operatorName);
+                }
+                if (csObject.WalletMode == 0)
+                {
+                    await AddWalletBalance(userID, -csObject.Amount, "Bill payment service charge deducted, for - " + operatorName);
+                }
+                levelCommission = await FetchLevelBonusRecharge(rechargeType, operatorName, transactionAmount);
+                await AddLevelBonus(FetchUserSecurityStamp(userID), levelCommission);
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
+        }
+
+        public async Task AddLevelBonus(string userSecurityStamp, decimal bonusAmount)
+        {
+            bool response = true;
+            while (response)
+            {
+                Introducer introducer = GetIntroducerInfo(userSecurityStamp);
+                // response = false;
+                if (introducer != null && introducer.RoleID != 4)
+                {
+                    /* Add introducer bonus for succssfull referral */
+                    if (bonusAmount > 0)
+                    {
+                        int introducerID = (Get_User(introducer.UserName).Result).user_id;
+                        await AddWalletBalance(introducerID, bonusAmount, "Level recharge bonus added.");
+                    }
+                    userSecurityStamp = introducer.SecurityStamp;
+                }
+                else
+                {
+                    response = false;
+                }
+            }
+
         }
     }
 }

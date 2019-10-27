@@ -7,7 +7,6 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-
 namespace Electricity_DAL
 {
     public class RechargeAPI_DAL
@@ -683,5 +682,45 @@ namespace Electricity_DAL
             return apiValue;
 
         }
+
+        //public async Task PayRechargeCommission(string rechargetype, dynamic rechargeObject)
+        //{
+        //    bool payMode = false; // :: 0 - Deduct && 1 - Add
+        //    double amount = 0;
+
+        //    try
+        //    {
+        //        using (SqlConnection connection = new SqlConnection(this._connectionString))
+        //        {
+        //            connection.Open();
+        //            using (SqlCommand command = new SqlCommand("calculate_commission", connection))
+        //            {
+        //                command.CommandType = CommandType.StoredProcedure;
+        //                command.Parameters.Add("@recharge_type", SqlDbType.VarChar, 100).Value = rechargetype;
+        //                command.Parameters.Add("@operator_name", SqlDbType.VarChar, 100).Value = rechargeObject.operatorName.Value;
+        //                command.Parameters.Add("@transaction_amount", SqlDbType.Decimal).Value = rechargeObject.amount.Value;
+        //                try
+        //                {
+        //                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+        //                    {
+        //                        while (reader.Read())
+        //                        {
+        //                            payMode = Convert.ToBoolean(reader["wallet_mode"].ToString());
+        //                            amount = Convert.ToDouble(reader["amount"].ToString());
+        //                        }
+        //                    }
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    return false;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+
+        //    }
+        //}
     }
 }

@@ -468,5 +468,10 @@ namespace Electricity_API.Controllers
         {
             return await this.rs.FetchCommissionAmount(rechargeType, operatorName, transactionAmount);
         }
+        [HttpPost("commission/payout/user/{userID}/rechargetype/{rechargeType}/operatorname/{operatorName}/amount/{transactionAmount}")]
+        public async Task<bool> PayOutRechargeBonus(int userID, string rechargeType, string operatorName, decimal transactionAmount)
+        {
+            return await this.rs.PayOutRechargeBonus(userID, rechargeType, operatorName, transactionAmount);
+        }
     }
 }
