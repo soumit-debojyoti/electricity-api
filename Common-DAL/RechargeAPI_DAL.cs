@@ -77,7 +77,7 @@ namespace Electricity_DAL
             }
         }
 
-        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount)
+        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount, string serviceNumber)
         {
             using (SqlConnection connection = new SqlConnection(this._connectionString))
             {
@@ -90,6 +90,8 @@ namespace Electricity_DAL
                     command.Parameters.Add("@rechargeMode", SqlDbType.VarChar, 50).Value = rechargeMode.ToUpper();
                     command.Parameters.Add("@rechargeAmount", SqlDbType.Decimal).Value = Convert.ToDecimal(rechargeAmount);
                     command.Parameters.Add("@transactionStatus", SqlDbType.VarChar, 10).Value = "FAILURE";
+                    command.Parameters.Add("@serviceNumber", SqlDbType.NVarChar, 50).Value = serviceNumber;
+                    
                     command.Parameters.Add("@transactionID", SqlDbType.Int).Direction = ParameterDirection.Output;
 
                     try
@@ -339,7 +341,8 @@ namespace Electricity_DAL
                                     TransactionMode = reader["rechargeMode"].ToString(),
                                     TransactionStatus = reader["transactionStatus"].ToString(),
                                     TransactionMessage = reader["errorMessage"].ToString(),
-                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString())
+                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString()),
+                                    ServiceNumber = reader["service_number"].ToString()
                                 };
                                 transactions.Add(transaction);
                             }
@@ -379,12 +382,13 @@ namespace Electricity_DAL
                                     TransactionMode = reader["rechargeMode"].ToString(),
                                     TransactionStatus = reader["transactionStatus"].ToString(),
                                     TransactionMessage = reader["errorMessage"].ToString(),
-                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString())
+                                    TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString()),
+                                    ServiceNumber = reader["service_number"].ToString()
                                 };
                                 transactions.Add(transaction);
                             }
-                        }
-                        return transactions;
+                        }                        
+                        return transactions = transactions.OrderByDescending(x => x.TransactionID).ToList(); ;
                     }
                     catch (Exception ex)
                     {
@@ -698,6 +702,8 @@ namespace Electricity_DAL
             return apiValue;
 
         }
+
+
 
         //public async Task PayRechargeCommission(string rechargetype, dynamic rechargeObject)
         //{

@@ -338,5 +338,45 @@ namespace Electricity_Service
         {
             return await this._user.PayOutRechargeBonus(userID, rechargeType, operatorName, transactionAmount);
         }
+        public async Task<bool> AddCommissionSetting(string rechargeType, string operatorName, string commissionType, string calculationType, decimal value, string levelPayoutType, decimal lValue)
+        {
+            int ct = 0;
+            int calT = 0;
+            int lp = 0;
+            if((commissionType == "Service Charge" || commissionType == "Commission") && 
+                (calculationType == "Percentage" || calculationType == "Amount") && 
+                (levelPayoutType == "Percentage" || levelPayoutType == "Amount"))
+            {
+                if (commissionType == "Service Charge")
+                {
+                    ct = 0;
+                }
+                if (commissionType == "Commission")
+                {
+                    ct = 1;
+                }
+                if( calculationType == "Percentage")
+                {
+                    calT = 0;
+                }
+                if (calculationType == "Amount")
+                {
+                    calT = 1;
+                }
+                if (levelPayoutType == "Percentage")
+                {
+                    lp = 0;
+                }
+                if (levelPayoutType == "Amount")
+                {
+                    lp = 1;
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return await this._user.AddCommissionSetting(rechargeType, operatorName, ct, calT, value, lp, lValue);
+        }
     }
 }

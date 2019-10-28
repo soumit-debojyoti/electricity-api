@@ -2356,7 +2356,8 @@ namespace Electricity_DAL
         public async Task AddLevelBonus(string userSecurityStamp, decimal bonusAmount)
         {
             bool response = true;
-            while (response)
+            int count = 1;
+            while (response && count <= 12)
             {
                 Introducer introducer = GetIntroducerInfo(userSecurityStamp);
                 // response = false;
@@ -2369,6 +2370,7 @@ namespace Electricity_DAL
                         await AddWalletBalance(introducerID, bonusAmount, "Level recharge bonus added.");
                     }
                     userSecurityStamp = introducer.SecurityStamp;
+                    count++;
                 }
                 else
                 {
@@ -2376,6 +2378,34 @@ namespace Electricity_DAL
                 }
             }
 
+        }
+
+        public async Task<bool> AddCommissionSetting(string rechargeType, string operatorName, int commissionType, int calculationType, decimal value, int levelPayoutType, decimal lValue)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("insert_commission_setting_details", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@recharge_type", SqlDbType.VarChar, 100).Value = rechargeType;
+                    command.Parameters.Add("@operator_name", SqlDbType.VarChar, 100).Value = operatorName;
+                    command.Parameters.Add("@commission_type", SqlDbType.Int).Value = commissionType;
+                    command.Parameters.Add("@calculation_type", SqlDbType.Int).Value = calculationType;
+                    command.Parameters.Add("@value", SqlDbType.Decimal).Value = value;
+                    command.Parameters.Add("@level_payout_type", SqlDbType.Int).Value = levelPayoutType;
+                    command.Parameters.Add("@level_payout_value", SqlDbType.Decimal).Value = lValue;
+                    try
+                    {
+                        command.ExecuteNonQuery();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
         }
     }
 }

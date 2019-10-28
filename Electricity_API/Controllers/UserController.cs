@@ -233,6 +233,12 @@ namespace Electricity_API.Controllers
             registerUser.introcode = Request.Form["introcode"];
             registerUser.introname = Request.Form["introname"];
             registerUser.username = Request.Form["username"];
+            if (registerUser.username == string.Empty)
+            {
+                rr.message = "user name not generated due to server issue, can not register";
+                rr.user_security_stamp = "XXXX";
+                return Ok(rr);
+            }
             registerUser.password = Request.Form["password"];
             registerUser.firstName = Request.Form["firstName"];
             registerUser.middleName = Request.Form["middleName"];
@@ -511,6 +517,12 @@ namespace Electricity_API.Controllers
         public async Task<bool> PayOutRechargeBonus(int userID, string rechargeType, string operatorName, decimal transactionAmount)
         {
             return await this.rs.PayOutRechargeBonus(userID, rechargeType, operatorName, transactionAmount);
+        }
+        [HttpPost("commission")]
+        public async Task<bool> AddCommissionSetting([FromBody] CommissionSettingValue csv)
+        {
+            return await this.rs.AddCommissionSetting(csv.RechargeType, csv.OperatorName, csv.CommissionType, csv.CalculationType, csv.Value, csv.LevelPayoutType, csv.LevelPayoutValue);
+
         }
     }
 }

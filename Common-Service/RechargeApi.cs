@@ -29,9 +29,9 @@ namespace Electricity_Service
             return await this._rechargeApiDAL.GetRechargeAPI(rechargeMode);
         }
 
-        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount)
+        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount, string serviceNumber)
         {
-            return await this._rechargeApiDAL.InsertTransaction(userID, rechargeMode, rechargeAmount);
+            return await this._rechargeApiDAL.InsertTransaction(userID, rechargeMode, rechargeAmount, serviceNumber);
         }
 
         public async Task<bool> UpdateRechargeTransactionStatus(string status, string operatortxnid, string joloorderid, string userorderid, int servicetype)

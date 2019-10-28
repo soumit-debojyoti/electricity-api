@@ -40,11 +40,11 @@ namespace Electricity_API.Controllers
             return await this.rs.GetRechargeAPI(rechargeMode);
         }
 
-        [Route("api/recharge/{userID}/rechargemode/{rechargeMode}/amount/{rechargeAmount}")]
+        [Route("api/recharge/{userID}/rechargemode/{rechargeMode}/amount/{rechargeAmount}/servicenumber/{serviceNumber}")]
         [HttpPost]
-        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount)
+        public async Task<int> InsertTransaction(string userID, string rechargeMode, string rechargeAmount, string serviceNumber)
         {
-            return await this.rs.InsertTransaction(userID, rechargeMode, rechargeAmount);
+            return await this.rs.InsertTransaction(userID, rechargeMode, rechargeAmount, serviceNumber);
         }
         //[Route("api/response/status/{status}/transactionid/{operatortxnid}/joloorderid/{joloorderid}/userorderid/{userorderid}/servicetype/{servicetype}")]
         [Route("api/response")]
