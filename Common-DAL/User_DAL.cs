@@ -508,7 +508,7 @@ namespace Electricity_DAL
             return kycs;
         }
 
-        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails()
+        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails(int refered_user)
         {
             List<TokenDetailsGeneric> tokens = new List<TokenDetailsGeneric>();
             Console.WriteLine("Connect to SQL Server and demo Create, Read, Update and Delete operations.");
@@ -521,7 +521,7 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@token", SqlDbType.NVarChar).Value = string.Empty;
-
+                    command.Parameters.Add("@refered_user", SqlDbType.Int).Value = refered_user;
                     try
                     {
                         using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -562,7 +562,7 @@ namespace Electricity_DAL
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.Add("@token", SqlDbType.NVarChar).Value = tokenstring;
-
+                        command.Parameters.Add("@refered_user", SqlDbType.NVarChar).Value = string.Empty;
                         try
                         {
                             using (SqlDataReader reader = await command.ExecuteReaderAsync())

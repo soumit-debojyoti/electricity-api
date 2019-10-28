@@ -103,11 +103,11 @@ namespace Electricity_API.Controllers
         }
 
         [Authorize]// GET api/values
-        [Route("unusedtokendetails")]
+        [Route("unusedtokendetails/{referedUser}")]
         [HttpGet]
-        public async Task<ActionResult> GetUnusedReferalTokenDetails()
+        public async Task<ActionResult> GetUnusedReferalTokenDetails(int referedUser)
         {
-            var token = await rs.GetUnusedReferalTokenDetails();
+            var token = await rs.GetUnusedReferalTokenDetails(referedUser);
             return Ok(token);
         }
 

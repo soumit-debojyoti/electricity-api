@@ -67,9 +67,9 @@ namespace Electricity_Service
             return await _user.QualifyUserToRefer(userName);
         }
 
-        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails()
+        public async Task<List<TokenDetailsGeneric>> GetUnusedReferalTokenDetails(int refered_user)
         {
-            return await _user.GetUnusedReferalTokenDetails();
+            return await _user.GetUnusedReferalTokenDetails(refered_user);
         }
 
         public async Task<List<TokenDetailsSpecific>> GetUnusedReferalTokenDetailsByToken(string token)
