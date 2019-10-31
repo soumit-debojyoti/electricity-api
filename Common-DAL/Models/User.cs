@@ -125,7 +125,6 @@ namespace Electricity_DAL.Models
 
     public class TodayUserJoinCountResponse
     {
-        public bool isValid { get; set; }
         public int count { get; set; }
     }
 

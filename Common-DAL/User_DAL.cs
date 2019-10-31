@@ -137,15 +137,12 @@ namespace Electricity_DAL
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("@isValid", SqlDbType.Bit, 1);
-                    command.Parameters["@isValid"].Direction = ParameterDirection.Output;
                     command.Parameters.Add("@count", SqlDbType.Int, 12);
                     command.Parameters["@count"].Direction = ParameterDirection.Output;
                     try
                     {
                         await command.ExecuteReaderAsync();
                         {
-                            result.isValid = (bool)command.Parameters["@isValid"].Value;
                             result.count = (int)command.Parameters["@count"].Value;
                         }
                     }
