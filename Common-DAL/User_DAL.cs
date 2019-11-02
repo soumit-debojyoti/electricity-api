@@ -348,7 +348,7 @@ namespace Electricity_DAL
                         await command.ExecuteReaderAsync();
                         {
                             fur.IsUserExist = (bool)command.Parameters["@is_user_exist"].Value;
-                            fur.role_id = command.Parameters["@role_id"].Value == DBNull.Value ? 0 :  (int)command.Parameters["@role_id"].Value;
+                            fur.role_id = command.Parameters["@role_id"].Value == DBNull.Value ? 0 : (int)command.Parameters["@role_id"].Value;
                             fur.user_id = command.Parameters["@user_id"].Value == DBNull.Value ? 0 : (int)command.Parameters["@user_id"].Value;
                             fur.message = command.Parameters["@message"].Value == DBNull.Value ? "no value" : (string)command.Parameters["@message"].Value;
                         }
@@ -1772,7 +1772,7 @@ namespace Electricity_DAL
                     response = false;
                 }
             }
-            
+
         }
         /// <summary>
         /// Check user count and update rank for introducer
@@ -2186,14 +2186,14 @@ namespace Electricity_DAL
                                     mobile = Convert.ToString(reader["mobile_number"]),
                                     password = Convert.ToString(reader["password"])
                                 };
-                                
+
                             }
                             catch (Exception ex)
                             {
                                 Console.WriteLine(ex.Message);
                                 return null;
                             }
-                            
+
                         }
                     }
                 }
@@ -2226,7 +2226,7 @@ namespace Electricity_DAL
                     command.Parameters.Add("@district", SqlDbType.NVarChar).Value = user_info.district;
                     command.Parameters.Add("@city", SqlDbType.NVarChar).Value = user_info.city;
                     command.Parameters.Add("@state", SqlDbType.Int).Value = user_info.state;
-                    switch(user_info.gender)
+                    switch (user_info.gender)
                     {
                         case 0:
                             command.Parameters.Add("@sex", SqlDbType.NVarChar).Value = "Male";
@@ -2236,7 +2236,7 @@ namespace Electricity_DAL
                             break;
                     }
                     command.Parameters.Add("@pin", SqlDbType.NVarChar).Value = user_info.pincode;
-                    
+
                     try
                     {
                         var result = await command.ExecuteNonQueryAsync();
@@ -2249,7 +2249,7 @@ namespace Electricity_DAL
                     }
 
                 }
-            }            
+            }
         }
 
         public async Task<CommissionSetting> FetchCommissionAmount(string rechargeType, string operatorName, decimal transactionAmount)
@@ -2298,7 +2298,7 @@ namespace Electricity_DAL
             {
                 connection.Open();
                 Console.WriteLine("Done.");
-                using (SqlCommand command = new SqlCommand("calculate_commission", connection))
+                using (SqlCommand command = new SqlCommand("CALCULATE_LEVEL_COMMISSION", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@recharge_type", SqlDbType.VarChar, 100).Value = rechargeType;
@@ -2310,7 +2310,7 @@ namespace Electricity_DAL
                         {
                             try
                             {
-                                levelCommission = Convert.ToDecimal(reader["level_commission"]);                                
+                                levelCommission = Convert.ToDecimal(reader["level_commission"]);
                             }
                             catch (Exception ex)
                             {
@@ -2346,7 +2346,7 @@ namespace Electricity_DAL
                 await AddLevelBonus(FetchUserSecurityStamp(userID), levelCommission);
                 return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
                 return false;
@@ -2403,6 +2403,49 @@ namespace Electricity_DAL
                     catch (Exception ex)
                     {
                         return false;
+                    }
+                }
+            }
+        }
+        public async Task<List<CommissionSettingValue>> FetchAllCommissionsAdded()
+        {
+            List<CommissionSettingValue> csList = new List<CommissionSettingValue>();
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("FETCH_COMMISSION_SETTING", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                var cs = new CommissionSettingValue
+                                {
+                                    OperatorName = Convert.ToString(reader["operator_name"]),
+                                    RechargeType = reader["recharge_type"].ToString(),
+                                    CommissionType = Convert.ToInt32(reader["commission_type"].ToString()) == 0 ? "Service" : "Commission",
+                                    CalculationType = Convert.ToInt32(reader["tc_type"].ToString()) == 1 ? "Amount" : "Percentage",
+                                    LevelPayoutType = Convert.ToInt32(reader["lc_type"].ToString()) == 1 ? "Amount" : "Percentage",
+                                    Value = Convert.ToInt32(reader["tc_type"].ToString()) == 1 ? Convert.ToDecimal(reader["tc_a_value"].ToString()) : Convert.ToDecimal(reader["tc_p_value"].ToString()),
+                                    LevelPayoutValue = Convert.ToInt32(reader["lc_type"].ToString()) == 1 ? Convert.ToDecimal(reader["lc_a_value"].ToString()) : Convert.ToDecimal(reader["lc_p_value"].ToString()),
+                                    T_ID = Convert.ToInt32(reader["tc_id"].ToString()),
+                                    L_ID = Convert.ToInt32(reader["lc_id"].ToString()),
+                                    Ref_CS_ID = Convert.ToInt32(reader["ref_cs_id"].ToString()),
+                                    CS_ID = Convert.ToInt32(reader["cs_id"].ToString()),
+                                };
+                                csList.Add(cs);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                return null;
+                            }
+
+                        }
+                        return csList;
                     }
                 }
             }

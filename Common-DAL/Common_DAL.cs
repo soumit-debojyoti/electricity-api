@@ -940,5 +940,27 @@ namespace Electricity_DAL
                 }
             }
         }
+        public bool DeleteCompanyBankDetails(string ifscCode, string bankName)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("DELETE_COMPANY_BANK_DETAILS", connection))
+                {
+                    try
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add("@ifscCode", SqlDbType.VarChar, 12).Value = ifscCode;
+                        command.Parameters.Add("@bankName", SqlDbType.VarChar, 70).Value = bankName;
+                        return command.ExecuteNonQuery() > 0;
+                    }
+                    catch (Exception ex)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+
     }
 }

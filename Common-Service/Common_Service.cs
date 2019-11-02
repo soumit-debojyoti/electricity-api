@@ -170,5 +170,10 @@ namespace Electricity_Service
             return _common.InsertBankTransaction(bankTransaction.Amount, 
                 bankTransaction.UserID, bankTransaction.TransactionID, bankTransaction.AccountNumber, bankTransaction.walletTransactionID);
         }
+
+        public bool DeleteCompanyBankDetails(string ifscCode, string bankName)
+        {
+            return _common.DeleteCompanyBankDetails(ifscCode, bankName);
+        }
     }
 }

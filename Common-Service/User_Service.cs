@@ -378,5 +378,10 @@ namespace Electricity_Service
             }
             return await this._user.AddCommissionSetting(rechargeType, operatorName, ct, calT, value, lp, lValue);
         }
-    }
+
+        public async Task<List<CommissionSettingValue>> FetchAllCommissionsAdded()
+        {
+            return await this._user.FetchAllCommissionsAdded();
+        }
+     }
 }

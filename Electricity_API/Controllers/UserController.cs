@@ -524,5 +524,10 @@ namespace Electricity_API.Controllers
             return await this.rs.AddCommissionSetting(csv.RechargeType, csv.OperatorName, csv.CommissionType, csv.CalculationType, csv.Value, csv.LevelPayoutType, csv.LevelPayoutValue);
 
         }
+        [HttpGet("commission")]
+        public async Task<List<CommissionSettingValue>> FetchAllCommissionsAdded()
+        {
+            return await this.rs.FetchAllCommissionsAdded();
+        }
     }
 }

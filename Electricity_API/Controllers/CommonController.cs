@@ -336,5 +336,10 @@ namespace Electricity_API.Controllers
         {
             return rs.InsertBankTransaction(bankTransaction);
         }
+        [HttpDelete("bankinfo")]
+        public bool DeleteCompanyBankDetails(string ifscCode, string bankName)
+        {
+            return rs.DeleteCompanyBankDetails(ifscCode, bankName);
+        }
     }
 }
