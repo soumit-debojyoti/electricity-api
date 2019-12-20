@@ -41,22 +41,20 @@ namespace Electricity_API.Controllers
                     var usernameAndPass = usernameAndPassenc.Split(":");
                     //check in DB username and pass exist
                     FindUserResponse response = await IsUserExist(usernameAndPass[0], usernameAndPass[1]);
-                    if (response.IsUserExist)
+                    var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
+                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ahbasshfbsahjfbshajbfhjasbfashjbfsajhfvashjfashfbsahfbsahfksdjf"));
+                    var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
+                    var token = new JwtSecurityToken(
+                         issuer: "mysite.com",
+                         audience: "mysite.com",
+                         expires: DateTime.Now.AddMinutes(1),
+                         claims: claimsdata,
+                         signingCredentials: signInCred
+                        );
+                    var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+                    KYCDetailsResponse responseKYC = new KYCDetailsResponse();
+                    if (response.IsUserExist && response.role_id != 4)
                     {
-
-                        var claimsdata = new[] { new Claim(ClaimTypes.Name, usernameAndPass[0]) };
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ahbasshfbsahjfbshajbfhjasbfashjbfsajhfvashjfashfbsahfbsahfksdjf"));
-                        var signInCred = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature);
-                        var token = new JwtSecurityToken(
-                             issuer: "mysite.com",
-                             audience: "mysite.com",
-                             expires: DateTime.Now.AddMinutes(1),
-                             claims: claimsdata,
-                             signingCredentials: signInCred
-                            );
-                        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-                        KYCDetailsResponse responseKYC = new KYCDetailsResponse();
                         responseKYC = await us.CheckKYCDetail(usernameAndPass[0]);
                         response.message = responseKYC.message;
                         if (responseKYC.is_success)
@@ -67,6 +65,10 @@ namespace Electricity_API.Controllers
                         {
                             return Ok(new ResponseModel() { isLoginSuccess = false, access_token = tokenString, role_id = response.role_id, user_id = response.user_id, message = response.message });
                         }
+                    }
+                    else
+                    {
+                        return Ok(new ResponseModel() { isLoginSuccess = true, access_token = tokenString, role_id = response.role_id, user_id = response.user_id, message = response.message });
                     }
                 }
             }

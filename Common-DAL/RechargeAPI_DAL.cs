@@ -383,7 +383,8 @@ namespace Electricity_DAL
                                     TransactionStatus = reader["transactionStatus"].ToString(),
                                     TransactionMessage = reader["errorMessage"].ToString(),
                                     TransactionAmount = Convert.ToDecimal(reader["rechargeAmount"].ToString()),
-                                    ServiceNumber = reader["service_number"].ToString()
+                                    ServiceNumber = reader["service_number"].ToString(),
+                                    APIResponse = reader["api_response"].ToString()
                                 };
                                 transactions.Add(transaction);
                             }
@@ -635,6 +636,7 @@ namespace Electricity_DAL
                     httpClient.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36");
                     var response = httpClient.GetStringAsync(new Uri(apiValue)).Result;
                     json = JObject.Parse(response);
+                    await InsertAPIResponse(Convert.ToInt32(rechargeObject.orderNumber.Value), response);
                     // var releases = JArray.Parse(response);
                 }
                 return json;
@@ -646,7 +648,27 @@ namespace Electricity_DAL
             }
             
         }
-
+        private async Task InsertAPIResponse(int transactionID, string apiResponse)
+        {
+            using (SqlConnection connection = new SqlConnection(this._connectionString))
+            {
+                connection.Open();
+                using (SqlCommand command = new SqlCommand("INSERT_RECHARGE_API_RESPONSE", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("@transactionID", SqlDbType.Int).Value = transactionID;
+                    command.Parameters.Add("@apiResponse", SqlDbType.VarChar).Value = apiResponse;
+                    try
+                    {
+                        await command.ExecuteReaderAsync();
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
+            }
+        }
         public async Task<JObject> ValidateUtilityRecharge(string rechargetype, string operatorName, string consumer_number, string customer_mobile)
         {
             JObject json = null;

@@ -14,5 +14,6 @@ namespace Electricity_DAL.Models
         public string TransactionStatus { get; set; }
         public string TransactionMessage { get; set; }
         public string ServiceNumber { get; set; }
+        public string APIResponse { get; set; }
     }
 }
