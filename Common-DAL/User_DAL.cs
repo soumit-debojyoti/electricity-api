@@ -1977,7 +1977,7 @@ namespace Electricity_DAL
                                 walletTransaction.TransactionAmount = Convert.ToDecimal(reader["transaction_amount"].ToString());
                                 walletTransaction.UserName = reader["user_name"].ToString();
                                 walletTransaction.TransactionMessage = reader["message"].ToString();
-                                walletTransaction.TransactionTime = Convert.ToDateTime(reader["created_on"].ToString()).ToShortDateString();
+                                walletTransaction.TransactionTime = Convert.ToDateTime(reader["created_on"].ToString());
                                 walletTransaction.TransactionMode = reader["transaction_mode"].ToString();
                                 walletTransaction.TransactionByFirstName = reader["first_name"].ToString();
                                 walletTransaction.TransactionByLastName = reader["last_name"].ToString();

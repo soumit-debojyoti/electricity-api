@@ -10,7 +10,7 @@ namespace Electricity_DAL.Models
         public decimal TransactionAmount { get; set; }
         public string UserName { get; set; }
         public string TransactionMessage { get; set; }
-        public string TransactionTime { get; set; }
+        public DateTime TransactionTime { get; set; }
         public string TransactionMode { get; set; }
         public string TransactionByFirstName { get; set; }
         public string TransactionByLastName { get; set; }
